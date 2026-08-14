@@ -212,43 +212,61 @@ class RAGEngine:
         }
 
     def search(self, query: str, top_k=3) -> list:
-        """Recherche les segments les plus proches sémantiquement de la requête."""
+        """Recherche les segments les plus proches de la requête (sémantique ou textuelle)."""
         if not self.index:
             return []
 
         try:
             query_embedding = self.get_embedding(query)
-        except Exception as e:
-            print(f"[!] Erreur de génération d'embedding pour la recherche : {e}")
-            return []
-
-        if not query_embedding:
-            return []
-
-        q_vec = np.array(query_embedding)
-        results = []
-
-        for entry in self.index:
-            e_vec = np.array(entry["embedding"])
-            # Calcul de la similarité cosinus avec numpy
-            dot_product = np.dot(q_vec, e_vec)
-            norm_q = np.linalg.norm(q_vec)
-            norm_e = np.linalg.norm(e_vec)
+            if not query_embedding:
+                raise Exception("Embedding vide")
             
-            if norm_q > 0 and norm_e > 0:
-                similarity = float(dot_product / (norm_q * norm_e))
-            else:
-                similarity = 0.0
+            q_vec = np.array(query_embedding)
+            results = []
 
-            results.append({
-                "filename": entry["filename"],
-                "text": entry["text"],
-                "similarity": similarity
-            })
+            for entry in self.index:
+                e_vec = np.array(entry["embedding"])
+                dot_product = np.dot(q_vec, e_vec)
+                norm_q = np.linalg.norm(q_vec)
+                norm_e = np.linalg.norm(e_vec)
+                
+                if norm_q > 0 and norm_e > 0:
+                    similarity = float(dot_product / (norm_q * norm_e))
+                else:
+                    similarity = 0.0
 
-        # Trier par similarité décroissante
-        results.sort(key=lambda x: x["similarity"], reverse=True)
-        return results[:top_k]
+                results.append({
+                    "filename": entry["filename"],
+                    "text": entry["text"],
+                    "similarity": similarity
+                })
+            
+            results.sort(key=lambda x: x["similarity"], reverse=True)
+            return results[:top_k]
+
+        except Exception as e:
+            print(f"[!] Erreur de recherche sémantique (RAG), repli sur la recherche textuelle : {e}")
+            
+            # Recherche textuelle simple par mots-clés
+            query_words = [w.lower() for w in query.split() if len(w) > 2]
+            if not query_words:
+                return []
+            
+            results = []
+            for entry in self.index:
+                text_lower = entry["text"].lower()
+                matches = sum(1 for word in query_words if word in text_lower)
+                if matches > 0:
+                    # Calculer un score de similarité basé sur la proportion de mots-clés présents
+                    similarity = float(matches) / len(query_words)
+                    results.append({
+                        "filename": entry["filename"],
+                        "text": entry["text"],
+                        "similarity": similarity
+                    })
+            
+            results.sort(key=lambda x: x["similarity"], reverse=True)
+            return results[:top_k]
 
     def get_indexed_files(self) -> list:
         """Retourne la liste des fichiers uniques actuellement indexés."""
