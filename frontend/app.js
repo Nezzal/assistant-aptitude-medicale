@@ -446,9 +446,18 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     function checkReadyToAnalyze() {
-        const hasText = recommendationInput.value.trim().length > 5;
-        const hasModel = modelSelect.value !== "";
-        btnAnalyze.disabled = !(hasText && hasModel);
+        const selectedOption = modelSelect.options[modelSelect.selectedIndex];
+        const isNotInstalled = selectedOption && selectedOption.textContent.includes("non installé");
+        
+        if (isNotInstalled) {
+            btnAnalyze.disabled = false;
+            btnText.textContent = "Télécharger et installer le modèle";
+        } else {
+            const hasText = recommendationInput.value.trim().length > 5;
+            const hasModel = modelSelect.value !== "" && modelSelect.value !== "no_model";
+            btnAnalyze.disabled = !(hasText && hasModel);
+            btnText.textContent = "Lancer l'analyse critique";
+        }
     }
 
     recommendationInput.addEventListener("input", checkReadyToAnalyze);
