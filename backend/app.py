@@ -8,6 +8,9 @@ from pydantic import BaseModel
 from pathlib import Path
 import json
 import time
+import zipfile
+import shutil
+import subprocess
 from typing import Optional, List
 
 from config import PORT, DOCUMENTS_DIR
@@ -91,6 +94,86 @@ async def pull_model(request: PullModelRequest):
         return StreamingResponse(generate(), media_type="application/x-ndjson")
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
+
+@app.post("/api/start-ollama")
+async def start_ollama():
+    try:
+        if Path("/Applications/Ollama.app").exists():
+            subprocess.Popen(["open", "/Applications/Ollama.app"])
+            return {"status": "success", "message": "Ollama a été démarré."}
+        else:
+            subprocess.Popen(["open", "-a", "Ollama"])
+            return {"status": "success", "message": "Tentative de démarrage d'Ollama."}
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Impossible de démarrer Ollama : {str(e)}")
+
+@app.post("/api/install-ollama")
+async def install_ollama():
+    def generate():
+        try:
+            yield json.dumps({"status": "downloading", "completed": 0, "total": 100}) + "\n"
+            zip_url = "https://ollama.com/download/Ollama-darwin.zip"
+            
+            # Télécharger le zip en chunks
+            r = requests.get(zip_url, stream=True, timeout=600)
+            if r.status_code != 200:
+                yield json.dumps({"status": "error", "message": f"Erreur de téléchargement d'Ollama (code {r.status_code})"}) + "\n"
+                return
+
+            total_size = int(r.headers.get('content-length', 0))
+            completed_size = 0
+            
+            # Dossier temporaire pour stocker le zip
+            scratch_dir = Path(__file__).resolve().parent / "scratch"
+            scratch_dir.mkdir(exist_ok=True)
+            zip_path = scratch_dir / "ollama.zip"
+
+            with open(zip_path, 'wb') as f:
+                for chunk in r.iter_content(chunk_size=65536):
+                    if chunk:
+                        f.write(chunk)
+                        completed_size += len(chunk)
+                        if total_size > 0:
+                            yield json.dumps({
+                                "status": "downloading", 
+                                "completed": completed_size, 
+                                "total": total_size
+                            }) + "\n"
+
+            yield json.dumps({"status": "extracting", "message": "Extraction de l'application..."}) + "\n"
+            
+            # Extraire le zip
+            extract_dir = scratch_dir / "extracted"
+            extract_dir.mkdir(exist_ok=True)
+            with zipfile.ZipFile(zip_path, 'r') as zip_ref:
+                zip_ref.extractall(extract_dir)
+
+            yield json.dumps({"status": "moving", "message": "Installation dans le dossier Applications..."}) + "\n"
+            
+            app_src = extract_dir / "Ollama.app"
+            app_dest = Path("/Applications/Ollama.app")
+            
+            # Fermer Ollama s'il tourne pour libérer les fichiers
+            subprocess.run(["pkill", "-f", "Ollama"])
+            time.sleep(1)
+            
+            if app_dest.exists():
+                shutil.rmtree(app_dest)
+
+            shutil.move(str(app_src), str(app_dest))
+
+            # Nettoyage
+            zip_path.unlink()
+            shutil.rmtree(extract_dir)
+
+            yield json.dumps({"status": "launching", "message": "Démarrage d'Ollama..."}) + "\n"
+            subprocess.Popen(["open", "/Applications/Ollama.app"])
+            
+            yield json.dumps({"status": "completed", "message": "Ollama a été installé et démarré avec succès !"}) + "\n"
+        except Exception as e:
+            yield json.dumps({"status": "error", "message": str(e)}) + "\n"
+            
+    return StreamingResponse(generate(), media_type="application/x-ndjson")
 
 # 1. Endpoint pour lister les modèles disponibles (Ollama + En ligne)
 @app.get("/api/models")

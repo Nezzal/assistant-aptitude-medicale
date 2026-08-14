@@ -396,6 +396,14 @@ document.addEventListener("DOMContentLoaded", () => {
                 availableModels = data.models;
                 modelSelect.innerHTML = "";
                 
+                // Si Ollama n'est pas détecté, ouvrir le modal d'onboarding
+                const isOllamaOffline = availableModels.some(model => model.name === "no_model");
+                if (isOllamaOffline) {
+                    showOllamaOnboardingModal();
+                } else {
+                    hideOllamaOnboardingModal();
+                }
+
                 availableModels.forEach((model, index) => {
                     const option = document.createElement("option");
                     option.value = model.name;
@@ -408,7 +416,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 
                 checkReadyToAnalyze();
             } else {
-                modelSelect.innerHTML = "<option value=''>Aucun modèle disponible (Lancez Ollama ou configurez .env)</option>";
+                modelSelect.innerHTML = "<option value=''>Aucun modèle disponible (Lancez Ollama)</option>";
                 btnAnalyze.disabled = true;
             }
         } catch (error) {
@@ -416,6 +424,164 @@ document.addEventListener("DOMContentLoaded", () => {
             modelSelect.innerHTML = "<option value=''>Erreur de connexion avec le serveur backend</option>";
             btnAnalyze.disabled = true;
         }
+    }
+
+    // === GESTION DE L'ASSISTANT D'ONBOARDING OLLAMA ===
+    const ollamaModal = document.getElementById("ollama-modal");
+    const btnInstallOllama = document.getElementById("btn-install-ollama");
+    const btnStartOllama = document.getElementById("btn-start-ollama");
+    const ollamaProgressContainer = document.getElementById("ollama-progress-container");
+    const ollamaProgressStatus = document.getElementById("ollama-progress-status");
+    const ollamaProgressBar = document.getElementById("ollama-progress-bar");
+    let isPollingOllama = false;
+
+    function showOllamaOnboardingModal() {
+        if (ollamaModal) {
+            ollamaModal.style.display = "flex";
+        }
+    }
+
+    function hideOllamaOnboardingModal() {
+        if (ollamaModal) {
+            ollamaModal.style.display = "none";
+        }
+    }
+
+    // Démarrer Ollama (déjà installé)
+    if (btnStartOllama) {
+        btnStartOllama.addEventListener("click", async () => {
+            btnStartOllama.disabled = true;
+            btnStartOllama.textContent = "Lancement en cours...";
+            try {
+                const response = await fetch("/api/start-ollama", { method: "POST" });
+                const data = await response.json();
+                if (data.status === "success") {
+                    startOllamaPolling();
+                } else {
+                    alert("Erreur : " + data.detail);
+                    btnStartOllama.disabled = false;
+                    btnStartOllama.textContent = "⚡ Démarrer Ollama (déjà installé)";
+                }
+            } catch (error) {
+                console.error("Erreur de lancement :", error);
+                alert("Erreur de connexion.");
+                btnStartOllama.disabled = false;
+                btnStartOllama.textContent = "⚡ Démarrer Ollama (déjà installé)";
+            }
+        });
+    }
+
+    // Télécharger et installer Ollama automatiquement
+    if (btnInstallOllama) {
+        btnInstallOllama.addEventListener("click", async () => {
+            btnInstallOllama.disabled = true;
+            if (btnStartOllama) btnStartOllama.disabled = true;
+            ollamaProgressContainer.style.display = "block";
+            ollamaProgressStatus.textContent = "Démarrage du téléchargement d'Ollama...";
+
+            try {
+                const response = await fetch("/api/install-ollama", { method: "POST" });
+                if (!response.ok) {
+                    throw new Error("Impossible d'initier le téléchargement d'Ollama.");
+                }
+
+                const reader = response.body.getReader();
+                const decoder = new TextDecoder();
+                let buffer = "";
+
+                while (true) {
+                    const { done, value } = await reader.read();
+                    if (done) break;
+
+                    buffer += decoder.decode(value, { stream: true });
+                    const lines = buffer.split("\n");
+                    buffer = lines.pop();
+
+                    for (const line of lines) {
+                        if (line.trim() === "") continue;
+                        try {
+                            const statusObj = JSON.parse(line);
+                            
+                            if (statusObj.status === "downloading" && statusObj.total) {
+                                const pct = Math.round((statusObj.completed / statusObj.total) * 100);
+                                ollamaProgressBar.style.width = `${pct}%`;
+                                ollamaProgressStatus.textContent = `Téléchargement d'Ollama : ${pct}%`;
+                            } else if (statusObj.status === "error") {
+                                throw new Error(statusObj.message);
+                            } else if (statusObj.status) {
+                                let statusMsg = statusObj.status;
+                                if (statusMsg === "extracting") statusMsg = "Extraction d'Ollama...";
+                                if (statusMsg === "moving") statusMsg = "Installation dans le dossier Applications...";
+                                if (statusMsg === "launching") statusMsg = "Démarrage d'Ollama...";
+                                if (statusMsg === "completed") statusMsg = "Installation terminée avec succès !";
+                                ollamaProgressStatus.textContent = statusMsg;
+                            }
+                        } catch (e) {
+                            // Ignorer les erreurs de parsing partielles
+                        }
+                    }
+                }
+
+                // Démarrer le polling pour attendre qu'Ollama réponde
+                startOllamaPolling();
+
+            } catch (error) {
+                console.error("Erreur d'installation :", error);
+                alert("L'installation automatique a échoué : " + error.message + "\n\nVeuillez télécharger Ollama manuellement sur ollama.com.");
+                btnInstallOllama.disabled = false;
+                if (btnStartOllama) btnStartOllama.disabled = false;
+                ollamaProgressContainer.style.display = "none";
+            }
+        });
+    }
+
+    // Polling pour vérifier si Ollama s'est lancé
+    function startOllamaPolling() {
+        if (isPollingOllama) return;
+        isPollingOllama = true;
+        
+        let attempts = 0;
+        const interval = setInterval(async () => {
+            attempts++;
+            try {
+                const response = await fetch("/api/models");
+                const data = await response.json();
+                
+                if (data.status === "success" && data.models.length > 0) {
+                    const isOllamaOffline = data.models.some(model => model.name === "no_model");
+                    if (!isOllamaOffline) {
+                        clearInterval(interval);
+                        isPollingOllama = false;
+                        hideOllamaOnboardingModal();
+                        
+                        btnInstallOllama.disabled = false;
+                        if (btnStartOllama) {
+                            btnStartOllama.disabled = false;
+                            btnStartOllama.textContent = "⚡ Démarrer Ollama (déjà installé)";
+                        }
+                        ollamaProgressContainer.style.display = "none";
+                        ollamaProgressBar.style.width = "0%";
+
+                        await loadModels();
+                        return;
+                    }
+                }
+            } catch (e) {
+                // Échec de la requête, Ollama démarre encore
+            }
+            
+            if (attempts > 30) {
+                clearInterval(interval);
+                isPollingOllama = false;
+                alert("Ollama met trop de temps à répondre. Veuillez vous assurer qu'il est bien démarré sur votre ordinateur.");
+                btnInstallOllama.disabled = false;
+                if (btnStartOllama) {
+                    btnStartOllama.disabled = false;
+                    btnStartOllama.textContent = "⚡ Démarrer Ollama (déjà installé)";
+                }
+                ollamaProgressContainer.style.display = "none";
+            }
+        }, 2000);
     }
 
     async function loadIndexedDocuments() {

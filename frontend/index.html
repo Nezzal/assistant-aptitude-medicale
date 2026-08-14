@@ -717,6 +717,42 @@
         </div>
     </div>
 
+    <!-- Modal d'onboarding Ollama (Assistant de configuration) -->
+    <div id="ollama-modal" class="modal-overlay" style="display: none;">
+        <div class="modal-content glass-card" style="max-width: 500px; text-align: center; display: flex; flex-direction: column; align-items: center;">
+            <div class="brand-icon" style="margin-bottom: 1.5rem; width: 60px; height: 60px; border-radius: 16px; background: linear-gradient(135deg, var(--success), var(--primary)); box-shadow: 0 0 25px rgba(0, 230, 118, 0.4);">
+                <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#0a0f1d" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
+                    <path d="M8 11h8"></path>
+                    <path d="M12 7v8"></path>
+                </svg>
+            </div>
+            <h3 style="font-family: var(--font-heading); font-size: 1.5rem; margin-bottom: 1rem; color: var(--text-primary);">Configuration de l'IA Locale</h3>
+            <p id="ollama-modal-description" style="font-size: 0.95rem; color: var(--text-secondary); margin-bottom: 2rem; line-height: 1.6;">
+                L'assistant de rédaction sécurisé s'exécute localement sur votre ordinateur. Pour fonctionner, le moteur d'IA Ollama doit être démarré en arrière-plan.
+            </p>
+            
+            <div id="ollama-progress-container" class="glass-card" style="display: none; width: 100%; margin-bottom: 2rem; padding: 1.25rem; border: 1px solid var(--border-color); background: rgba(5, 8, 16, 0.4);">
+                <div id="ollama-progress-status" style="font-size: 0.9rem; color: var(--text-primary); margin-bottom: 0.5rem; font-weight: 600;">Téléchargement d'Ollama...</div>
+                <div style="width: 100%; height: 8px; background: rgba(255,255,255,0.05); border-radius: 4px; overflow: hidden; position: relative;">
+                    <div id="ollama-progress-bar" style="width: 0%; height: 100%; background: linear-gradient(90deg, var(--success), var(--primary)); transition: width 0.2s ease;"></div>
+                </div>
+            </div>
+
+            <div class="ollama-actions" style="display: flex; flex-direction: column; gap: 1rem; width: 100%;">
+                <button id="btn-install-ollama" class="btn" style="width: 100%; padding: 14px; font-weight: 600; background: linear-gradient(135deg, var(--success), var(--primary)); color: #0a0f1d; border: none; cursor: pointer; border-radius: 8px; font-size: 0.95rem; box-shadow: 0 4px 15px rgba(0, 242, 254, 0.2); transition: var(--transition-smooth);">
+                    📥 Télécharger et installer Ollama automatiquement
+                </button>
+                <button id="btn-start-ollama" class="btn" style="width: 100%; padding: 14px; font-weight: 600; background: transparent; color: var(--text-primary); border: 1px solid var(--border-color); cursor: pointer; border-radius: 8px; font-size: 0.95rem; transition: var(--transition-smooth);">
+                    ⚡ Démarrer Ollama (déjà installé)
+                </button>
+                <a href="https://ollama.com" target="_blank" style="font-size: 0.85rem; color: var(--text-muted); text-decoration: underline; margin-top: 0.5rem; transition: var(--transition-smooth);">
+                    Visiter le site officiel ollama.com
+                </a>
+            </div>
+        </div>
+    </div>
+
     <!-- Script de logique JS -->
     <script src="/static/app.js?v=2.5"></script>
 </body>
