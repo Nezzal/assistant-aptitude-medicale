@@ -119,19 +119,10 @@ class LLMConnector:
                 "display_name": "OpenAI - GPT-4o (En ligne)"
             })
 
-        # 3. Toujours proposer l'analyseur déterministe hors-ligne (sans IA)
-        models.append({
-            "name": "local_rules",
-            "provider": "local",
-            "display_name": "Moteur d'Analyse Local (Déterministe - Sans IA)"
-        })
-
         return models
 
     def analyze_recommendation(self, model_name: str, provider: str, recommendation: str, context_chunks: list) -> dict:
         """Envoie la préconisation médicale et le contexte RAG pour analyse par le LLM."""
-        if provider == "local" or model_name == "local_rules":
-            return self._analyze_local_rules(recommendation)
 
         # Construire le prompt avec le contexte documentaire s'il y en a un
         context_str = ""
@@ -224,138 +215,13 @@ class LLMConnector:
                 raise Exception(f"Provider inconnu : {provider}")
 
         except Exception as e:
-            print(f"[!] Échec de l'appel LLM ({provider}), repli automatique sur le moteur d'analyse de règles locales : {e}")
-            fallback_res = self._analyze_local_rules(recommendation)
-            fallback_res["reformulation_proposed"] += f"\n\n(⚠️ Le serveur d'IA {provider} n'a pas répondu. L'application a basculé automatiquement sur le moteur de secours local sans IA)."
-            return fallback_res
-
-    def _analyze_local_rules(self, rec: str) -> dict:
-        rec_lower = rec.lower()
-        
-        # 1. Imprécisions et difficultés d'application
-        c1_defect = False
-        c1_explanation = "Aucune imprécision flagrante détectée."
-        c1_suggestions = []
-        vague_terms = ["temporaire", "temporairement", "à revoir", "renouvelable", "provisoire", "quelques mois"]
-        found_vague = [t for t in vague_terms if t in rec_lower]
-        if found_vague:
-            c1_defect = True
-            c1_explanation = f"Le texte contient des termes vagues ou temporaires sans préciser de durée limite claire (termes trouvés : {', '.join(found_vague)})."
-            c1_suggestions.append("Précisez une date de fin exacte ou une durée explicite pour cet aménagement (ex: 'pour une durée de 3 mois').")
-            
-        # 2. Doute sur la force d'obligation
-        c2_defect = False
-        c2_explanation = "Formulations directives et affirmatives correctes."
-        c2_suggestions = []
-        conditional_verbs = ["devrait", "pourrait", "serait", "aurait", "conseillé", "conseillée", "recommandé", "recommandée", "souhaitable", "suggéré", "optionnel"]
-        found_cond = [t for t in conditional_verbs if t in rec_lower]
-        if found_cond:
-            c2_defect = True
-            c2_explanation = f"Le texte utilise des verbes au conditionnel ou des formules facultatives qui diminuent le caractère obligatoire pour l'employeur (mots trouvés : {', '.join(found_cond)})."
-            c2_suggestions.append("Utilisez le présent de l'indicatif à la forme active directive (ex: 'doit porter', 'ne doit pas soulever' au lieu de 'devrait porter').")
-            
-        # 3. Informations hors cadre réglementaire
-        c3_defect = False
-        c3_explanation = "L'avis se concentre correctement sur les restrictions physiques."
-        c3_suggestions = []
-        out_of_bounds = ["discuté avec", "entretien", "le patron", "l'employeur a dit", "le salarié veut", "le médecin estime que"]
-        found_oob = [t for t in out_of_bounds if t in rec_lower]
-        if found_oob:
-            c3_defect = True
-            c3_explanation = f"Contient des détails narratifs ou administratifs superflus sur les entretiens ou les avis subjectifs (mots trouvés : {', '.join(found_oob)})."
-            c3_suggestions.append("Supprimez tout historique des discussions avec le salarié ou l'employeur. Rédigez uniquement la restriction physique.")
-
-        # 4. Changement de poste ou inaptitude déguisée
-        c4_defect = False
-        c4_explanation = "Aucune demande inappropriée de changement de poste ou d'inaptitude détectée."
-        c4_suggestions = []
-        job_change = ["mutation", "changer de poste", "autre poste", "reclasser", "reclassement", "inapte", "inaptitude"]
-        found_change = [t for t in job_change if t in rec_lower]
-        if found_change:
-            c4_defect = True
-            c4_explanation = f"Suggère explicitement une réaffectation de poste ou une inaptitude (termes trouvés : {', '.join(found_change)})."
-            c4_suggestions.append("Formulez des limites physiques applicables au poste actuel (ex: 'sans travail sur écran' plutôt que 'doit changer de poste').")
-
-        # 5. Rupture du secret médical ou vie privée
-        c5_defect = False
-        c5_explanation = "Le secret médical semble respecté."
-        c5_suggestions = []
-        pathologies = [
-            # Pathologies communes
-            "diabète", "diabétique", "hypertension", "tension", "cardiaque", "coeur", "infarctus", 
-            "cancer", "tumeur", "chimiothérapie", "épilepsie", "épileptique", "crise", "crises", 
-            "vertige", "vertiges", "migraine", "céphalée", "asthénie", "sommeil", "insomnie", "apnée",
-            "hernie", "discale", "sciatique", "arthrose", "tendinite", "canal", "tassement", "vertébral",
-            # ORL & Vision
-            "acouphène", "acouphènes", "surdité", "audition", "auditif", "auditive", "vision", "visuel", 
-            "visuelle", "ophtalmique", "ophtalmo", "orl", "otite",
-            # Respiration & Peau
-            "asthme", "asthmatique", "pulmonaire", "respiratoire", "respiratoires", "dyspnée", "eczéma", 
-            "allergie", "allergique", "dermatite", "cutané", "cutanée",
-            # Squelette & Lombalgies
-            "dos", "lombaire", "lombalgie", "cervicale", "cervicalgie", "tms", "tendinopathie",
-            # Actes et termes cliniques
-            "opération", "opéré", "opérée", "chirurgie", "chirurgical", "chirurgicale", "hospitalisation", 
-            "soins", "traitement", "thérapie", "médicament", "médicaments", "ordonnance", "patient", 
-            "malade", "maladie", "pathologie", "syndrome", "affection", "trouble", "troubles", "déficit", 
-            "insuffisance", "fracture", "lésion", "blessure", "entorse", "douleur", "douleurs",
-            # Psychologie / Psychiatrie
-            "dépression", "dépressif", "anxiété", "anxieux", "burnout", "burn-out", "stress", "angoisse", 
-            "psychologique", "psychiatrique", "psy",
-            # Verbes et expressions de santé
-            "souffre", "souffrant", "atteint", "atteinte", "médical", "médicale"
-        ]
-        found_path = [t for t in pathologies if t in rec_lower]
-        if found_path:
-            c5_defect = True
-            c5_explanation = f"Présence de mots liés à des diagnostics, symptômes ou pathologies, constituant une violation potentielle du secret médical vis-à-vis de l'employeur (mots trouvés : {', '.join(found_path)})."
-            c5_suggestions.append("Retirez toute évocation de diagnostic clinique, symptôme ou cause de santé. Ne décrivez que les conséquences ergonomiques concrètes.")
-
-        has_defects = c1_defect or c2_defect or c3_defect or c4_defect or c5_defect
-        
-        # Reformulation basique par règles (remplace les verbes les plus courants)
-        ref = rec
-        ref = re.sub(r'\bdevrait\b', 'doit', ref, flags=re.IGNORECASE)
-        ref = re.sub(r'\bpourrait\b', 'doit', ref, flags=re.IGNORECASE)
-        ref = re.sub(r'\bil est conseillé de\b', 'obligation de', ref, flags=re.IGNORECASE)
-        ref = re.sub(r'\bil est recommandé de\b', 'obligation de', ref, flags=re.IGNORECASE)
-        
-        # Nettoyage des justifications médicales interdites en cas de violation du secret médical
-        if c5_defect:
-            causal_patterns = [
-                r'\bcar\b.*', 
-                r'\bparce\s+(que\b|qu\').*', 
-                r'\ben\s+raison\s+(de\b|d\').*', 
-                r'\bpuisque\b.*', 
-                r'\bsuite\s+à\b.*',
-                r'\bsuite\s+d\'.*', 
-                r'\bà\s+cause\s+(de\b|d\').*'
-            ]
-            for pattern in causal_patterns:
-                temp_ref = re.sub(pattern, '', ref, flags=re.IGNORECASE).strip()
-                if temp_ref != ref.strip():
-                    ref = temp_ref
-                    if not ref.endswith('.'):
-                        ref += '.'
-                    break
-        
-        # Ajouter une note explicative
-        if has_defects:
-            reformulation = f"{ref} (⚠️ Note : Reformulation automatique simplifiée sans IA)."
-        else:
-            reformulation = f"{ref} (Avis correct et conforme)."
-
-        return {
-            "has_defects": has_defects,
-            "analysis": [
-                {"criterion": 1, "name": "Imprécisions et difficultés d'application", "has_defect": c1_defect, "explanation": c1_explanation, "suggestions": c1_suggestions},
-                {"criterion": 2, "name": "Doute sur la force d'obligation", "has_defect": c2_defect, "explanation": c2_explanation, "suggestions": c2_suggestions},
-                {"criterion": 3, "name": "Informations hors cadre réglementaire", "has_defect": c3_defect, "explanation": c3_explanation, "suggestions": c3_suggestions},
-                {"criterion": 4, "name": "Changement de poste ou inaptitude déguisée", "has_defect": c4_defect, "explanation": c4_explanation, "suggestions": c4_suggestions},
-                {"criterion": 5, "name": "Rupture du secret médical ou vie privée", "has_defect": c5_defect, "explanation": c5_explanation, "suggestions": c5_suggestions}
-            ],
-            "reformulation_proposed": reformulation
-        }
+            err_msg = str(e)
+            if "ConnectionRefusedError" in err_msg or "Failed to establish a new connection" in err_msg or "Max retries exceeded" in err_msg:
+                if provider == "ollama":
+                    raise Exception("Ollama hors-ligne. Veuillez démarrer l'application Ollama sur votre ordinateur pour utiliser l'IA locale.")
+                else:
+                    raise Exception("Serveur d'analyse en ligne injoignable. Veuillez vérifier votre connexion Internet.")
+            raise Exception(f"Erreur de communication avec l'IA ({model_name}) : {err_msg}")
 
     def _repair_json_string(self, text: str) -> str:
         """Tente de réparer les guillemets non échappés dans les chaînes JSON."""
