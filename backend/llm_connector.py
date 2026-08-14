@@ -316,11 +316,12 @@ class LLMConnector:
         if c5_defect:
             causal_patterns = [
                 r'\bcar\b.*', 
-                r'\bparce\s+que\b.*', 
-                r'\ben\s+raison\s+de\b.*', 
+                r'\bparce\s+(que\b|qu\').*', 
+                r'\ben\s+raison\s+(de\b|d\').*', 
                 r'\bpuisque\b.*', 
-                r'\bsuite\s+à\b.*', 
-                r'\bà\s+cause\s+de\b.*'
+                r'\bsuite\s+à\b.*',
+                r'\bsuite\s+d\'.*', 
+                r'\bà\s+cause\s+(de\b|d\').*'
             ]
             for pattern in causal_patterns:
                 temp_ref = re.sub(pattern, '', ref, flags=re.IGNORECASE).strip()
