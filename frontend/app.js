@@ -541,7 +541,7 @@ document.addEventListener("DOMContentLoaded", () => {
                         if (line.trim() === "") continue;
                         try {
                             const statusObj = JSON.parse(line);
-                            if (statusObj.status === "downloading" && statusObj.total) {
+                            if (statusObj.total && statusObj.completed !== undefined && statusObj.total > 0) {
                                 const pct = Math.round((statusObj.completed / statusObj.total) * 100);
                                 btnText.textContent = `Téléchargement : ${pct}%`;
                             } else if (statusObj.status) {
