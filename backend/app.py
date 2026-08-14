@@ -142,11 +142,15 @@ async def install_ollama():
 
             yield json.dumps({"status": "extracting", "message": "Extraction de l'application..."}) + "\n"
             
-            # Extraire le zip
+            # Extraire le zip en préservant les permissions d'exécution Unix (chmod +x)
             extract_dir = scratch_dir / "extracted"
             extract_dir.mkdir(exist_ok=True)
             with zipfile.ZipFile(zip_path, 'r') as zip_ref:
-                zip_ref.extractall(extract_dir)
+                for info in zip_ref.infolist():
+                    extracted_file = zip_ref.extract(info, extract_dir)
+                    permission = info.external_attr >> 16
+                    if permission:
+                        os.chmod(extracted_file, permission)
 
             yield json.dumps({"status": "moving", "message": "Installation dans le dossier Applications..."}) + "\n"
             
