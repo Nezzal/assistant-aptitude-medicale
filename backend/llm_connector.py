@@ -68,11 +68,12 @@ class LLMConnector:
         self.ollama_url = OLLAMA_BASE_URL
 
     def get_available_models(self) -> list:
-        """Récupère la liste des modèles locaux (Ollama) et en ligne disponibles."""
+        """Récupère la liste des modèles locaux (Ollama) disponibles."""
         models = []
+        installed_names = []
+        ollama_running = False
         
         # 1. Modèles locaux (Ollama)
-        ollama_running = False
         try:
             r = requests.get(f"{self.ollama_url}/api/tags", timeout=3)
             if r.status_code == 200:
@@ -82,6 +83,7 @@ class LLMConnector:
                     model_name = m["name"]
                     if "embed" in model_name.lower():
                         continue
+                    installed_names.append(model_name.lower())
                     models.append({
                         "name": model_name,
                         "provider": "ollama",
@@ -90,30 +92,32 @@ class LLMConnector:
         except Exception:
             pass
 
-        if not models:
-            if ollama_running:
-                # Suggérer les modèles les plus performants et légers à installer
-                models.append({
-                    "name": "qwen2.5:3b",
-                    "provider": "ollama",
-                    "display_name": "Qwen 2.5 3B (Recommandé - non installé)"
-                })
-                models.append({
-                    "name": "deepseek-r1:1.5b",
-                    "provider": "ollama",
-                    "display_name": "DeepSeek-R1 1.5B (Ultra-léger - non installé)"
-                })
-                models.append({
-                    "name": "deepseek-r1:8b",
-                    "provider": "ollama",
-                    "display_name": "DeepSeek-R1 8B (Raisonnement - non installé)"
-                })
-            else:
-                models.append({
-                    "name": "no_model",
-                    "provider": "ollama",
-                    "display_name": "Aucun modèle détecté (Veuillez lancer Ollama)"
-                })
+        if ollama_running:
+            # Recommandations à proposer s'ils ne sont pas déjà installés
+            recommendations = [
+                ("qwen2.5:3b", "Qwen 2.5 3B (Recommandé - non installé)"),
+                ("deepseek-r1:1.5b", "DeepSeek-R1 1.5B (Ultra-léger - non installé)"),
+                ("deepseek-r1:8b", "DeepSeek-R1 8B (Raisonnement - non installé)")
+            ]
+            for rec_name, rec_display in recommendations:
+                already_installed = False
+                for installed in installed_names:
+                    # Comparer si le modèle recommandé est déjà présent (partiellement ou totalement)
+                    if rec_name in installed or installed.startswith(rec_name.split(":")[0]):
+                        already_installed = True
+                        break
+                if not already_installed:
+                    models.append({
+                        "name": rec_name,
+                        "provider": "ollama",
+                        "display_name": rec_display
+                    })
+        else:
+            models.append({
+                "name": "no_model",
+                "provider": "ollama",
+                "display_name": "Aucun modèle détecté (Veuillez lancer Ollama)"
+            })
 
         return models
 
