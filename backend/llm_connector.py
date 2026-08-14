@@ -72,13 +72,14 @@ class LLMConnector:
         models = []
         
         # 1. Modèles locaux (Ollama)
+        ollama_running = False
         try:
             r = requests.get(f"{self.ollama_url}/api/tags", timeout=3)
             if r.status_code == 200:
+                ollama_running = True
                 local_models = r.json().get("models", [])
                 for m in local_models:
                     model_name = m["name"]
-                    # Filtrer les modèles d'embedding (incompatibles avec le chat)
                     if "embed" in model_name.lower():
                         continue
                     models.append({
@@ -87,15 +88,32 @@ class LLMConnector:
                         "display_name": f"Ollama - {model_name}"
                     })
         except Exception:
-            # Ollama n'est pas lancé ou n'est pas installé
             pass
 
         if not models:
-            models.append({
-                "name": "no_model",
-                "provider": "ollama",
-                "display_name": "Aucun modèle détecté (Veuillez lancer Ollama)"
-            })
+            if ollama_running:
+                # Suggérer les modèles les plus performants et légers à installer
+                models.append({
+                    "name": "qwen2.5:3b",
+                    "provider": "ollama",
+                    "display_name": "Qwen 2.5 3B (Recommandé - non installé)"
+                })
+                models.append({
+                    "name": "deepseek-r1:1.5b",
+                    "provider": "ollama",
+                    "display_name": "DeepSeek-R1 1.5B (Ultra-léger - non installé)"
+                })
+                models.append({
+                    "name": "deepseek-r1:8b",
+                    "provider": "ollama",
+                    "display_name": "DeepSeek-R1 8B (Raisonnement - non installé)"
+                })
+            else:
+                models.append({
+                    "name": "no_model",
+                    "provider": "ollama",
+                    "display_name": "Aucun modèle détecté (Veuillez lancer Ollama)"
+                })
 
         return models
 
@@ -133,7 +151,11 @@ class LLMConnector:
                     response_json = r.json()
                     content = response_json.get("message", {}).get("content", "")
                     return self._parse_json_response(content)
-                raise Exception(f"Erreur Ollama : {r.text}")
+                else:
+                    err_body = r.text
+                    if "not found" in err_body.lower():
+                        raise Exception(f"Le modèle '{model_name}' n'est pas encore téléchargé. Veuillez exécuter la commande 'ollama pull {model_name}' dans votre terminal pour l'installer.")
+                    raise Exception(f"Erreur du serveur Ollama : {err_body}")
 
             elif provider == "openrouter":
                 if not OPENROUTER_API_KEY:
