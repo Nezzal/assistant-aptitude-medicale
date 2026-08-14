@@ -72,6 +72,26 @@ class AnalyzeRequest(BaseModel):
     provider: str
     use_rag: bool = True
 
+from fastapi.responses import StreamingResponse
+import requests
+
+class PullModelRequest(BaseModel):
+    model_name: str
+
+@app.post("/api/pull")
+async def pull_model(request: PullModelRequest):
+    try:
+        from config import OLLAMA_BASE_URL
+        def generate():
+            url = f"{OLLAMA_BASE_URL}/api/pull"
+            payload = {"name": request.model_name, "stream": True}
+            r = requests.post(url, json=payload, stream=True, timeout=600)
+            for chunk in r.iter_content(chunk_size=None):
+                yield chunk
+        return StreamingResponse(generate(), media_type="application/x-ndjson")
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
 # 1. Endpoint pour lister les modèles disponibles (Ollama + En ligne)
 @app.get("/api/models")
 async def get_models():

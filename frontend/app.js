@@ -480,12 +480,100 @@ document.addEventListener("DOMContentLoaded", () => {
     });
 
     // === LOGIQUE DE LA VUE 1 : ANALYSE DIRECTE (COPILOTE) ===
+    // === LOGIQUE DE LA VUE 1 : ANALYSE DIRECTE (COPILOTE) ===
     btnAnalyze.addEventListener("click", async () => {
         const text = recommendationInput.value.trim();
         const selectedOption = modelSelect.options[modelSelect.selectedIndex];
         const modelName = selectedOption.value;
         const provider = selectedOption.dataset.provider;
         const useRag = ragToggle.checked;
+
+        // Si le modèle sélectionné n'est pas encore installé, proposer le téléchargement automatique
+        if (selectedOption.textContent.includes("non installé")) {
+            const confirmDownload = confirm(
+                `Le modèle "${selectedOption.textContent.split(" (")[0]}" n'est pas encore téléchargé sur votre ordinateur.\n\n` +
+                `Souhaitez-vous le télécharger et l'installer automatiquement ?\n` +
+                `(C'est entièrement gratuit. Le téléchargement prendra quelques minutes selon votre connexion Internet).`
+            );
+            if (!confirmDownload) {
+                return;
+            }
+
+            btnAnalyze.disabled = true;
+            recommendationInput.disabled = true;
+            analyzeSpinner.style.display = "inline-block";
+            btnText.textContent = "Démarrage...";
+
+            try {
+                const response = await fetch("/api/pull", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ model_name: modelName })
+                });
+
+                if (!response.ok) {
+                    throw new Error("Impossible de démarrer le téléchargement.");
+                }
+
+                const reader = response.body.getReader();
+                const decoder = new TextDecoder();
+                let buffer = "";
+
+                while (true) {
+                    const { done, value } = await reader.read();
+                    if (done) break;
+
+                    buffer += decoder.decode(value, { stream: true });
+                    const lines = buffer.split("\n");
+                    buffer = lines.pop();
+
+                    for (const line of lines) {
+                        if (line.trim() === "") continue;
+                        try {
+                            const statusObj = JSON.parse(line);
+                            if (statusObj.status === "downloading" && statusObj.total) {
+                                const pct = Math.round((statusObj.completed / statusObj.total) * 100);
+                                btnText.textContent = `Téléchargement : ${pct}%`;
+                            } else if (statusObj.status) {
+                                // Traduire ou raccourcir le statut pour l'affichage du bouton
+                                let statusMsg = statusObj.status;
+                                if (statusMsg === "pulling manifest") statusMsg = "Vérification...";
+                                if (statusMsg === "verifying sha256") statusMsg = "Finalisation...";
+                                btnText.textContent = statusMsg;
+                            }
+                        } catch (e) {
+                            // Ignorer les erreurs de parsing partielles
+                        }
+                    }
+                }
+
+                btnText.textContent = "Téléchargement terminé !";
+                await loadModels();
+
+                // Sélectionner le nouveau modèle dans la liste
+                for (let i = 0; i < modelSelect.options.length; i++) {
+                    if (modelSelect.options[i].value === modelName) {
+                        modelSelect.selectedIndex = i;
+                        break;
+                    }
+                }
+
+                // Relancer l'analyse automatiquement après une courte pause
+                setTimeout(() => {
+                    btnAnalyze.click();
+                }, 1000);
+                return;
+
+            } catch (error) {
+                console.error("Erreur lors du téléchargement :", error);
+                alert("Échec du téléchargement automatique : " + error.message);
+                btnAnalyze.disabled = false;
+                recommendationInput.disabled = false;
+                analyzeSpinner.style.display = "none";
+                btnText.textContent = "Lancer l'analyse critique";
+                return;
+            }
+        }
 
         btnAnalyze.disabled = true;
         recommendationInput.disabled = true;
