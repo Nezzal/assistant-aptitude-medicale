@@ -215,12 +215,14 @@ class LLMConnector:
                 raise Exception(f"Provider inconnu : {provider}")
 
         except Exception as e:
+            import traceback
+            traceback.print_exc()
             err_msg = str(e)
             if "ConnectionRefusedError" in err_msg or "Failed to establish a new connection" in err_msg or "Max retries exceeded" in err_msg:
                 if provider == "ollama":
-                    raise Exception("Ollama hors-ligne. Veuillez démarrer l'application Ollama sur votre ordinateur pour utiliser l'IA locale.")
+                    raise Exception(f"Ollama hors-ligne. Veuillez démarrer l'application Ollama. (Détail : {err_msg})")
                 else:
-                    raise Exception("Serveur d'analyse en ligne injoignable. Veuillez vérifier votre connexion Internet.")
+                    raise Exception(f"Serveur d'analyse en ligne injoignable. (Détail : {err_msg})")
             raise Exception(f"Erreur de communication avec l'IA ({model_name}) : {err_msg}")
 
     def _repair_json_string(self, text: str) -> str:
