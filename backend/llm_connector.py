@@ -286,6 +286,14 @@ class LLMConnector:
             "cancer", "tumeur", "chimiothérapie", "épilepsie", "épileptique", "crise", "crises", 
             "vertige", "vertiges", "migraine", "céphalée", "asthénie", "sommeil", "insomnie", "apnée",
             "hernie", "discale", "sciatique", "arthrose", "tendinite", "canal", "tassement", "vertébral",
+            # ORL & Vision
+            "acouphène", "acouphènes", "surdité", "audition", "auditif", "auditive", "vision", "visuel", 
+            "visuelle", "ophtalmique", "ophtalmo", "orl", "otite",
+            # Respiration & Peau
+            "asthme", "asthmatique", "pulmonaire", "respiratoire", "respiratoires", "dyspnée", "eczéma", 
+            "allergie", "allergique", "dermatite", "cutané", "cutanée",
+            # Squelette & Lombalgies
+            "dos", "lombaire", "lombalgie", "cervicale", "cervicalgie", "tms", "tendinopathie",
             # Actes et termes cliniques
             "opération", "opéré", "opérée", "chirurgie", "chirurgical", "chirurgicale", "hospitalisation", 
             "soins", "traitement", "thérapie", "médicament", "médicaments", "ordonnance", "patient", 
