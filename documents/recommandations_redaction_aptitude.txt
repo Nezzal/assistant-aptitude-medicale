@@ -1,0 +1,25 @@
+RECOMMANDATIONS NATIONALES POUR LA RÉDACTION DES AVIS D'APTITUDE MÉDICALE
+
+
+1. RESPECT DU SECRET MÉDICAL ET DE LA VIE PRIVÉE (Critère 5)
+Il est strictement interdit de mentionner des éléments d'ordre médical ou des éléments relatifs à la vie privée du salarié sur la fiche de préconisations (Annexe 4) transmise à l'employeur.
+Ne jamais faire mention de :
+- L'invalidité ou l'état de santé du salarié.
+- La nature de la pathologie, des symptômes ou des traitements en cours.
+- L'état de grossesse.
+- Tout autre renseignement d'ordre médical ou personnel non requis pour la mise en œuvre de l'aptitude.
+
+Exemple non conforme : "Le salarié souffre de lombalgie chronique à réorienter vers un poste moins fatiguant."
+Exemple conforme : "Éviter le port de charges supérieures à 5 kg."
+
+2. CLARTÉ ET APPLICABILITÉ DES MESURES (Critère 1)
+Les préconisations doivent être rédigées de manière à ce que l'employeur comprenne parfaitement la contrainte et puisse l'appliquer sans ambiguïté.
+- Déterminer des limites temporelles claires (ex: "Jusqu'au 31 décembre 2026").
+- Éviter la mention vague "renouvelable" sans périodicité définie (préférer "Revue prévue lors de la prochaine visite de suivi dans 3 mois").
+- Préciser les notions subjectives (ex: au lieu de "éviter de rester trop longtemps debout", préférer "alterner station debout et assise toutes les 2 heures").
+
+3. FORCE D'OBLIGATION DE L'AVIS MÉDICAL (Critère 2)
+Le médecin du travail émet des prescriptions et non des suggestions.
+- Ne pas utiliser le conditionnel (ex: "Le salarié devrait", "Il serait souhaitable de").
+- Utiliser le présent de l'indicatif à valeur directive (ex: "Le salarié doit", "Éviter de", "Interdiction de").
+- Ne pas laisser de choix ou de marge de manœuvre à l'employeur dans la mise en œuvre (ex: éviter "si possible", "selon l'activité de l'entreprise").

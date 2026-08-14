@@ -1,0 +1,29 @@
+# Dépendances Node
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+dist/
+
+# Environnement virtuel Python
+backend/venv/
+.venv/
+env/
+venv/
+ENV/
+
+# Caches Python et temporaires
+**/__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.pytest_cache/
+.ipynb_checkpoints/
+
+# Configuration et secrets (TRÈS IMPORTANT)
+.env
+saved_fiches.json
+
+# Fichiers OS
+.DS_Store
+Thumbs.db

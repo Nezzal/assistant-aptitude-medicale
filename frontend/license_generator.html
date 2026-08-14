@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Générateur de Licences - PedagogiAfrica</title>
+    <style>
+        :root {
+            --bg-base: #0b132b;
+            --bg-surface: rgba(28, 37, 65, 0.65);
+            --primary: #00f2fe;
+            --secondary: #4facfe;
+            --success: #00e676;
+            --text-primary: #ffffff;
+            --text-secondary: #a0aec0;
+            --border-color: rgba(255, 255, 255, 0.08);
+            --transition-smooth: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            --font-heading: 'SF Pro Display', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            --font-body: 'SF Pro Text', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-base);
+            color: var(--text-primary);
+            font-family: var(--font-body);
+            margin: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            background-image: radial-gradient(circle at 10% 20%, rgba(79, 172, 254, 0.1) 0%, transparent 40%),
+                              radial-gradient(circle at 90% 80%, rgba(0, 242, 254, 0.1) 0%, transparent 40%);
+        }
+
+        .container {
+            width: 100%;
+            max-width: 580px;
+            padding: 1.5rem;
+        }
+
+        .glass-card {
+            background: var(--bg-surface);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            padding: 2.5rem;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+            text-align: center;
+        }
+
+        h1 {
+            font-family: var(--font-heading);
+            font-size: 1.8rem;
+            font-weight: 700;
+            margin-top: 0;
+            margin-bottom: 0.5rem;
+            background: linear-gradient(135deg, var(--text-primary) 30%, var(--secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .subtitle {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            margin-bottom: 2rem;
+        }
+
+        .input-group {
+            text-align: left;
+            margin-bottom: 1.25rem;
+        }
+
+        label {
+            display: block;
+            font-size: 0.85rem;
+            font-weight: 600;
+            margin-bottom: 0.4rem;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .form-input {
+            width: 100%;
+            box-sizing: border-box;
+            background: rgba(0, 0, 0, 0.25);
+            border: 1px solid var(--border-color);
+            color: var(--text-primary);
+            padding: 0.75rem 1rem;
+            border-radius: 8px;
+            font-size: 1rem;
+            outline: none;
+            transition: var(--transition-smooth);
+            font-family: monospace;
+        }
+
+        .form-input:focus {
+            border-color: var(--primary);
+            box-shadow: 0 0 10px rgba(0, 242, 254, 0.2);
+        }
+
+        .btn {
+            background: linear-gradient(135deg, var(--secondary) 0%, var(--primary) 100%);
+            color: #0b132b;
+            border: none;
+            padding: 0.8rem 1.8rem;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            width: 100%;
+            transition: var(--transition-smooth);
+            margin-top: 0.5rem;
+            box-shadow: 0 4px 15px rgba(0, 242, 254, 0.3);
+        }
+
+        .btn:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 6px 20px rgba(0, 242, 254, 0.4);
+        }
+
+        .result-box {
+            display: none;
+            margin-top: 2rem;
+            padding-top: 2rem;
+            border-top: 1px solid var(--border-color);
+            text-align: left;
+            animation: fadeIn 0.4s ease;
+        }
+
+        .key-display {
+            font-family: monospace;
+            font-size: 1.5rem;
+            font-weight: bold;
+            text-align: center;
+            background: rgba(0, 230, 118, 0.05);
+            color: var(--success);
+            padding: 0.8rem;
+            border-radius: 8px;
+            border: 1px dashed var(--success);
+            margin-top: 0.5rem;
+            margin-bottom: 1.5rem;
+            letter-spacing: 1px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 1rem;
+        }
+
+        .copy-btn-link {
+            font-size: 0.8rem;
+            color: var(--success);
+            cursor: pointer;
+            text-decoration: underline;
+            background: transparent;
+            border: none;
+        }
+
+        .email-template {
+            background: rgba(0, 0, 0, 0.15);
+            border: 1px solid var(--border-color);
+            padding: 1rem;
+            border-radius: 8px;
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+            white-space: pre-wrap;
+            line-height: 1.45;
+            max-height: 150px;
+            overflow-y: auto;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="glass-card">
+            <h1 style="color: var(--text-primary);">PedagogiAfrica</h1>
+            <div class="subtitle">Générateur Officiel de Clés d'Activation</div>
+
+            <div class="input-group">
+                <label for="machine-id-input">Identifiant d'installation unique (Machine ID) :</label>
+                <input type="text" id="machine-id-input" placeholder="Ex: MED-ABCD-EFGH" class="form-input" autocomplete="off" style="text-transform: uppercase;">
+            </div>
+
+            <button id="btn-generate" class="btn">Générer la Clé de Licence</button>
+
+            <!-- Résultats -->
+            <div id="result-container" class="result-box">
+                <label>Clé d'activation générée :</label>
+                <div class="key-display">
+                    <span id="output-key">ACT-XXXX-XXXX</span>
+                    <button id="btn-copy-key" class="copy-btn-link">Copier la clé</button>
+                </div>
+
+                <div class="input-group">
+                    <label style="display: flex; justify-content: space-between;">
+                        <span>Modèle de réponse e-mail :</span>
+                        <button id="btn-copy-email" class="copy-btn-link" style="color: var(--secondary)">Copier le texte</button>
+                    </label>
+                    <div class="email-template" id="email-body"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            const machineIdInput = document.getElementById("machine-id-input");
+            const btnGenerate = document.getElementById("btn-generate");
+            const resultContainer = document.getElementById("result-container");
+            const outputKey = document.getElementById("output-key");
+            const btnCopyKey = document.getElementById("btn-copy-key");
+            const btnCopyEmail = document.getElementById("btn-copy-email");
+            const emailBody = document.getElementById("email-body");
+
+            function generateActivationKey(macId) {
+                // Algorithme identique à celui du frontend
+                const salt = "PedagogiAfrica2026SecretSalt";
+                const input = macId + salt;
+                let hash = 5381;
+                for (let i = 0; i < input.length; i++) {
+                    hash = ((hash << 5) + hash) + input.charCodeAt(i);
+                }
+                const absHash = Math.abs(hash).toString(16).toUpperCase();
+                let padded = absHash.padEnd(8, "A");
+                const p1 = padded.substring(0, 4);
+                const p2 = padded.substring(4, 8);
+                return `ACT-${p1}-${p2}`;
+            }
+
+            btnGenerate.addEventListener("click", () => {
+                const macId = machineIdInput.value.trim().toUpperCase();
+                if (!macId || !macId.startsWith("MED-")) {
+                    alert("Veuillez saisir un Identifiant Machine valide (commençant par MED-).");
+                    return;
+                }
+
+                const key = generateActivationKey(macId);
+                outputKey.textContent = key;
+
+                // Préparer le modèle d'email
+                const responseText = `Bonjour,\n\nNous avons bien reçu votre justificatif de paiement et nous vous en remercions.\n\nVoici votre clé d'activation personnalisée pour votre ordinateur :\n👉  ${key}\n\nCopiez cette clé et collez-la dans le champ d'activation de votre application pour démarrer l'assistant.\n\nCordialement,\nL'équipe PedagogiAfrica`;
+                emailBody.textContent = responseText;
+
+                resultContainer.style.display = "block";
+            });
+
+            btnCopyKey.addEventListener("click", () => {
+                navigator.clipboard.writeText(outputKey.textContent);
+                alert("Clé d'activation copiée !");
+            });
+
+            btnCopyEmail.addEventListener("click", () => {
+                navigator.clipboard.writeText(emailBody.textContent);
+                alert("Modèle d'e-mail copié !");
+            });
+        });
+    </script>
+</body>
+</html>

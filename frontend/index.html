@@ -1,0 +1,723 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Aide à la Décision : Préconisations d'Aptitude Médicale</title>
+    <meta name="description" content="Assistant virtuel d'aide à la décision pour les médecins du travail afin d'améliorer la clarté et la conformité des préconisations d'aptitude médicale.">
+    <link rel="stylesheet" href="/static/style.css?v=2.5">
+</head>
+<body>
+
+    <!-- 1. PORTAIL D'ACCUEIL / DEMANDE DE LICENCE / GUIDE -->
+    <div id="landing-page" class="no-print">
+        <!-- Header Landing -->
+        <header class="landing-header">
+            <div class="brand">
+                <img src="/static/logo.png" alt="PedagogiAfrica Logo" class="brand-logo">
+                <div>
+                    <h1 style="background: linear-gradient(to right, #ffffff, var(--primary)); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">Assistant d'Aptitude Médicale</h1>
+                    <div class="brand-subtitle">Algérie - Portail d'accès & Guide de bonne pratique</div>
+                </div>
+            </div>
+            <nav class="nav-links">
+                <a href="#guide-section" class="nav-link">Guide d'Utilisation</a>
+                <a href="#license-section" class="btn-secondary" style="padding: 0.4rem 1rem; border-radius: 8px; text-decoration: none; border: 1px solid var(--primary); color: var(--primary);">Activer Licence</a>
+            </nav>
+        </header>
+
+        <!-- Hero Section -->
+        <section class="hero-section">
+            <div class="hero-content">
+                <span class="hero-badge">Médecine & Législation Algérienne</span>
+                <h2 class="hero-title">Rédigez des préconisations d'aptitude claires, conformes et sécurisées</h2>
+                <p class="hero-subtitle">Le copilote intelligent d'aide à la décision pour les médecins du travail. Évaluez la conformité de vos écrits par rapport à la Loi 88-07, au Décret 93-120 et au secret médical grâce aux textes réglementaires intégrés.</p>
+                <div class="hero-actions">
+                    <a href="#license-section" class="btn" style="text-decoration: none; text-align: center;">Accéder au Copilote</a>
+                    <a href="#guide-section" class="btn-secondary" style="text-decoration: none; text-align: center;">Consulter le Guide d'Utilisation</a>
+                </div>
+            </div>
+        </section>
+
+        <!-- Benefits Grid -->
+        <section class="benefits-grid">
+            <div class="benefit-card">
+                <div class="benefit-icon">⚖️</div>
+                <h3>Conformité Légale</h3>
+                <p>Garantit le respect des articles réglementaires algériens (Loi 88-07 relative à l'hygiène/sécurité, Décret 93-120) pour des écrits inattaquables.</p>
+            </div>
+            <div class="benefit-card">
+                <div class="benefit-icon">🔒</div>
+                <h3>Respect du Secret Médical</h3>
+                <p>Alerte de manière proactive si un diagnostic médical, une pathologie ou une donnée sensible se glisse dans la préconisation.</p>
+            </div>
+            <div class="benefit-card">
+                <div class="benefit-icon">⚡</div>
+                <h3>Guides & Réglementation</h3>
+                <p>Recherche sémantique instantanée basée sur les textes législatifs officiels (décrets, arrêtés, guides d'aptitude) intégrés à l'application.</p>
+            </div>
+        </section>
+
+        <!-- Guide Section -->
+        <section id="guide-section" class="guide-section glass-card">
+            <h2 class="section-title">Guide d'Utilisation : Les 5 Critères de Rédaction</h2>
+            <p class="section-subtitle">Une préconisation d'aptitude ou d'aménagement de poste doit être juridiquement valide et applicable par l'employeur. Elle doit respecter ces 5 règles fondamentales :</p>
+            
+            <div class="guide-grid">
+                <div class="guide-item">
+                    <div class="guide-num">1</div>
+                    <div>
+                        <h4>Imprécisions temporelles</h4>
+                        <p>Indiquer des durées ou des limites temporelles claires. Éviter la mention "renouvelable" sans périodicité définie.</p>
+                        <div class="guide-example"><span class="badge-defect">DÉFAUT :</span> "À revoir si besoin" ou "Inapte temporairement"<br><span class="badge-correct">CORRECT :</span> "Inaptitude temporaire pour une durée de 3 mois."</div>
+                    </div>
+                </div>
+                <div class="guide-item">
+                    <div class="guide-num">2</div>
+                    <div>
+                        <h4>Doute sur la force d'obligation</h4>
+                        <p>Utiliser des verbes impératifs et directs (doit, éviter) au lieu du conditionnel (devrait, pourrait) qui laisse le choix à l'employeur.</p>
+                        <div class="guide-example"><span class="badge-defect">DÉFAUT :</span> "Le salarié devrait éviter de porter des charges..."<br><span class="badge-correct">CORRECT :</span> "Contre-indication stricte au port de charges de plus de 10 kg."</div>
+                    </div>
+                </div>
+                <div class="guide-item">
+                    <div class="guide-num">3</div>
+                    <div>
+                        <h4>Informations hors cadre</h4>
+                        <p>Se limiter aux restrictions fonctionnelles. Ne pas faire de commentaires descriptifs ou relater les conflits.</p>
+                        <div class="guide-example"><span class="badge-defect">DÉFAUT :</span> "L'employeur ayant refusé le reclassement, je propose..."<br><span class="badge-correct">CORRECT :</span> "Aptitude avec réserves : poste sans conduite de nuit."</div>
+                    </div>
+                </div>
+                <div class="guide-item">
+                    <div class="guide-num">4</div>
+                    <div>
+                        <h4>Inaptitude déguisée</h4>
+                        <p>Ne pas éditer des restrictions si restrictives qu'elles empêchent le salarié de travailler au lieu de prononcer l'inaptitude.</p>
+                        <div class="guide-example"><span class="badge-defect">DÉFAUT :</span> "Éviter la station assise, debout, et le travail sur écran."<br><span class="badge-correct">CORRECT :</span> "Inapte temporaire au poste de secrétaire pour 1 mois."</div>
+                    </div>
+                </div>
+                <div class="guide-item">
+                    <div class="guide-num">5</div>
+                    <div>
+                        <h4>Rupture du secret médical</h4>
+                        <p>Ne mentionner aucun diagnostic, nom de maladie, traitement, ni statut social (invalidité, etc.).</p>
+                        <div class="guide-example"><span class="badge-defect">DÉFAUT :</span> "À réorienter suite à son infarctus du myocarde..."<br><span class="badge-correct">CORRECT :</span> "Inapte temporaire au poste actuel pour motif de santé pour 2 mois."</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- License Portal Section -->
+        <section id="license-section" class="license-portal-section">
+            <h2 class="section-title" id="activation-title" style="cursor: pointer; user-select: none;">Activation de l'Application</h2>
+            
+            <!-- Écran de Connexion Simplifié (Visible uniquement si la licence est déjà activée) -->
+            <div id="login-portal-card" class="glass-card" style="display: none; max-width: 480px; margin: 2rem auto 0 auto; padding: 2.5rem; text-align: center;">
+                <span style="font-size: 3rem; display: block; margin-bottom: 1rem;">🩺</span>
+                <h3 style="margin-bottom: 0.5rem; font-family: var(--font-heading); font-size: 1.4rem;">Assistant d'Aptitude Médicale</h3>
+                <p style="color: var(--success); font-size: 0.95rem; margin-bottom: 2rem; display: flex; align-items: center; justify-content: center; gap: 0.4rem; font-weight: 600;">
+                    <span>✓</span> Licence active sur cet ordinateur
+                </p>
+                <button id="btn-login-session" class="btn" style="width: 100%; padding: 0.85rem; font-size: 1.1rem; background: linear-gradient(135deg, var(--secondary) 0%, var(--primary) 100%); color: #0b132b;">
+                    🔓 Se connecter à l'Espace de Travail
+                </button>
+                <p style="margin-top: 1.5rem; font-size: 0.85rem; margin-bottom: 0;">
+                    <a href="#" id="link-change-license" style="color: var(--text-secondary); text-decoration: underline;">Changer la clé de licence</a>
+                </p>
+            </div>
+
+            <div id="activation-grid" class="license-grid">
+                <!-- Activation -->
+                <div class="glass-card">
+                    <h3 style="margin-bottom: 0.5rem; display: flex; align-items: center; gap: 0.5rem;">
+                        🔑 Saisir votre clé de licence
+                    </h3>
+                    <p style="color: var(--text-secondary); font-size: 0.9rem; margin-bottom: 1.5rem;">Entrez la clé d'activation pour démarrer la relecture et l'impression.</p>
+                    <div class="input-group">
+                        <label for="license-input">Clé de licence :</label>
+                        <input type="text" id="license-input" placeholder="Ex: ALGERIA-MED-2026" class="form-text-input" style="text-transform: uppercase;">
+                    </div>
+                    <button id="btn-activate-license" class="btn" style="width: 100%; margin-top: 1rem;">Activer l'accès</button>
+                    <div id="license-error-msg" class="error-msg" style="display: none; color: var(--danger); margin-top: 0.8rem; font-size: 0.9rem;"></div>
+                </div>
+
+                <!-- Demande de licence -->
+                <div class="glass-card">
+                    <h3 style="margin-bottom: 0.5rem; display: flex; align-items: center; gap: 0.5rem;">
+                        ✉️ Obtenir votre clé de licence
+                    </h3>
+                    <p style="color: var(--text-secondary); font-size: 0.9rem; margin-bottom: 1rem;">
+                        Pour activer l'application définitivement, effectuez votre virement BaridiMob ci-dessous puis transmettez votre reçu de paiement pour recevoir votre clé.
+                    </p>
+
+                    <!-- Pavé des Tarifs & BaridiMob -->
+                    <div style="background: rgba(255, 242, 204, 0.04); border: 1px solid rgba(245, 158, 11, 0.2); border-radius: 8px; padding: 0.85rem 1rem; margin-bottom: 1.2rem; text-align: left;">
+                        <h4 style="color: #f59e0b; margin: 0 0 0.5rem 0; font-size: 0.88rem; font-family: var(--font-heading); display: flex; align-items: center; gap: 0.4rem; font-weight: 700;">
+                            💳 Tarifs & Règlement (Algérie)
+                        </h4>
+                        <ul style="margin: 0; padding-left: 1.1rem; font-size: 0.8rem; color: var(--text-secondary); line-height: 1.5;">
+                            <li style="margin-bottom: 0.25rem;"><strong>Abonnement Annuel en Ligne :</strong> <span style="color: var(--primary); font-weight: bold;">3 000 DA</span> / an</li>
+                            <li style="margin-bottom: 0.4rem;"><strong>Application Bureau (À vie) :</strong> <span style="color: var(--primary); font-weight: bold;">5 000 DA</span> (Licence définitive)</li>
+                            <li style="margin-top: 0.4rem; list-style-type: none; margin-left: -1.1rem; border-top: 1px dashed rgba(255,255,255,0.06); padding-top: 0.4rem; display: flex; flex-direction: column; gap: 0.25rem;">
+                                <div>📱 <strong>BaridiMob (RIP Code) :</strong></div>
+                                <div style="font-family: monospace; color: var(--text-primary); font-weight: bold; font-size: 0.9rem; letter-spacing: 0.5px; background: rgba(0,0,0,0.2); padding: 0.3rem 0.5rem; border-radius: 4px; text-align: center;">00799999002345678990</div>
+                            </li>
+                        </ul>
+                    </div>
+                    
+                    <div class="input-group">
+                        <label>Votre identifiant d'installation unique :</label>
+                        <div style="background: rgba(0, 0, 0, 0.2); border: 1px solid var(--border-color); padding: 0.6rem 0.8rem; border-radius: 6px; font-family: monospace; font-size: 1.05rem; display: flex; align-items: center; justify-content: space-between; margin-top: 0.3rem; margin-bottom: 1.2rem;">
+                            <span id="display-machine-id" style="color: var(--primary); font-weight: bold; letter-spacing: 1px;">Génération...</span>
+                            <button id="btn-copy-machine-id" style="background: transparent; border: none; color: var(--primary); font-size: 0.8rem; cursor: pointer; text-decoration: underline; font-weight: 500; font-family: var(--font-body);">Copier</button>
+                        </div>
+                    </div>
+
+                    <div class="input-group">
+                        <label for="req-name">Votre Nom & Prénom :</label>
+                        <input type="text" id="req-name" placeholder="Dr. / Pr. Nom" class="form-text-input">
+                    </div>
+                    <div class="input-group" style="margin-top: 0.8rem;">
+                        <label for="req-structure">Structure de Médecine du Travail :</label>
+                        <input type="text" id="req-structure" placeholder="CHU Annaba, EPH Alger, etc." class="form-text-input">
+                    </div>
+                    
+                    <button id="btn-send-email-request" class="btn" style="width: 100%; margin-top: 1.2rem; background: rgba(0, 242, 254, 0.1); color: var(--primary); border: 1px solid rgba(0, 242, 254, 0.3); box-shadow: none;">
+                        📧 Envoyer la demande par E-mail
+                    </button>
+                    <p style="font-size: 0.75rem; color: var(--text-muted); text-align: center; margin-top: 0.6rem;">
+                        * N'oubliez pas de joindre votre reçu de paiement/virement dans le mail ouvert.
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Petit Footer Discret de la Landing Page -->
+        <footer style="margin-top: 4rem; padding-bottom: 2rem; text-align: center; font-size: 0.8rem; color: var(--text-muted); border-top: 1px solid rgba(255, 255, 255, 0.05); padding-top: 1.5rem;">
+            <p>© 2026 PedagogiAfrica. Tous droits réservés.</p>
+            <p style="margin-top: 0.5rem;">
+                <a href="/static/license_generator.html" id="admin-link" target="_blank" class="admin-portal-link" style="color: var(--text-muted); text-decoration: none; display: none; align-items: center; justify-content: center; gap: 0.3rem; opacity: 0.5; transition: opacity 0.2s;">
+                    ⚙️ Portail Administrateur (Générateur de clés)
+                </a>
+            </p>
+        </footer>
+    </div>
+
+    <!-- 2. APPLICATION PRINCIPALE (Masquée par défaut) -->
+    <div class="app-container no-print" id="main-workspace" style="display: none;">
+        <!-- En-tête -->
+        <header>
+            <div class="brand">
+                <img src="/static/logo.png" alt="PedagogiAfrica Logo" class="brand-logo">
+                <div>
+                    <h1>Assistant d'Aptitude Médicale</h1>
+                    <div class="brand-subtitle">Algérie - Aide à la décision & fiches réglementaires</div>
+                </div>
+            </div>
+            
+            <!-- Navigation par onglets -->
+            <nav class="nav-tabs">
+                <button class="tab-btn active" id="btn-tab-copilot">Copilote de Relecture</button>
+                <button class="tab-btn" id="btn-tab-forms">Modèles de Fiches & Impression</button>
+                <button class="tab-btn" id="btn-tab-database">Base de Données</button>
+                <button class="tab-btn" id="btn-show-guide" style="border-left: 1px solid var(--border-color); margin-left: 10px; color: var(--primary);">Guide d'Utilisation</button>
+                <button class="tab-btn" id="btn-logout" style="color: var(--danger);">Déconnexion</button>
+            </nav>
+        </header>
+
+        <!-- VUE 1 : Copilote de Relecture (Grille Principale) -->
+        <main class="main-grid" id="view-copilot">
+            <!-- Colonne Gauche : Saisie et Configuration -->
+            <section class="glass-card">
+                <h2 class="card-title">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color: var(--primary);">
+                        <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
+                        <path d="M18.5 2.5a2.121 2.121 0 1 1 3 3L12 15l-4 1 1-4z"></path>
+                    </svg>
+                    Saisie de la Préconisation
+                </h2>
+
+                <div class="input-group">
+                    <label for="recommendation-input">Rédiger ou coller la préconisation médicale :</label>
+                    <textarea id="recommendation-input" placeholder="Exemple : Patient présentant une contre-indication définitive à l'exposition aux fumées de soudure..."></textarea>
+                </div>
+
+                <div class="control-row">
+                    <div>
+                        <label for="model-select">Modèle d'analyse :</label>
+                        <select id="model-select">
+                            <option value="">Chargement des modèles...</option>
+                        </select>
+                    </div>
+                    <div style="display: flex; flex-direction: column; justify-content: flex-end;">
+                        <div class="switch-container">
+                            <span class="switch-label">Se baser sur les textes réglementaires et guides de référence</span>
+                            <input type="checkbox" id="rag-toggle" checked style="width: auto; cursor: pointer;">
+                        </div>
+                    </div>
+                </div>
+
+                <button id="btn-analyze" class="btn" disabled>
+                    <span class="spinner" id="analyze-spinner"></span>
+                    <span id="btn-text">Lancer l'analyse critique</span>
+                </button>
+
+                <!-- Zone Documents RAG -->
+                <div class="doc-box">
+                    <div class="doc-header">
+                        <span class="switch-label" style="font-weight: 600;">Textes de référence et guides officiels</span>
+                        <button id="btn-sync-docs" class="btn-secondary" style="display: flex; align-items: center; gap: 0.3rem;">
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M21.5 2v6h-6M21.34 15.57a10 10 0 1 1-.57-8.38l5.67-5.67"></path>
+                            </svg>
+                            Synchroniser
+                        </button>
+                    </div>
+                    <div class="doc-list" id="indexed-docs-list">
+                        <div class="doc-item">Aucun document indexé.</div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Colonne Droite : Résultats de l'analyse -->
+            <section class="glass-card">
+                <h2 class="card-title">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color: var(--secondary);">
+                        <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                        <polyline points="14 2 14 8 20 8"></polyline>
+                        <line x1="16" y1="13" x2="8" y2="13"></line>
+                        <line x1="16" y1="17" x2="8" y2="17"></line>
+                        <polyline points="10 9 9 9 8 9"></polyline>
+                    </svg>
+                    Évaluation critique
+                </h2>
+
+                <div class="result-placeholder" id="placeholder-view">
+                    <svg fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 00-3.375-3.375h-1.5A1.125 1.125 0 0113.5 7.125v-1.5a3.375 3.375 0 00-3.375-3.375H8.25m0 12.75h7.5m-7.5 3H12M10.5 2.25H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 00-9-9z"></path>
+                    </svg>
+                    <p>Saisissez une préconisation médicale à gauche et lancez l'analyse pour afficher l'évaluation.</p>
+                </div>
+
+                <div class="result-content" id="result-view">
+                    <div id="score-badge" class="score-badge-container">
+                        <span id="score-status-text">Analyse complétée</span>
+                        <span id="score-subtext" class="status-indicator"></span>
+                    </div>
+
+                    <div class="reformulation-card">
+                        <div class="reformulation-header">
+                            <span class="reformulation-title">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                                    <polyline points="20 6 9 17 4 12"></polyline>
+                                </svg>
+                                Reformulation recommandée
+                            </span>
+                            <button id="btn-copy-reformulation" class="btn-copy">Copier</button>
+                        </div>
+                        <div class="reformulation-text" id="reformulation-text-content"></div>
+                    </div>
+
+                    <h3 class="switch-label" style="font-weight: 600; margin-bottom: 1rem;">Analyse détaillée</h3>
+                    <div class="criteria-list" id="criteria-analysis-list"></div>
+
+                    <div class="sources-card" id="rag-sources-section" style="display: none;">
+                        <h3 class="sources-title">Documents de référence associés</h3>
+                        <div class="sources-container" id="rag-sources-list"></div>
+                    </div>
+                </div>
+            </section>
+        </main>
+
+        <!-- VUE 2 : Modèles de Fiches (Grille Principale) -->
+        <main class="main-grid" id="view-forms" style="display: none;">
+            <!-- Colonne Gauche : Formulaire de Saisie -->
+            <section class="glass-card">
+                <h2 class="card-title">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color: var(--primary);">
+                        <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                        <polyline points="14 2 14 8 20 8"></polyline>
+                        <line x1="16" y1="13" x2="8" y2="13"></line>
+                        <line x1="16" y1="17" x2="8" y2="17"></line>
+                    </svg>
+                    Saisie réglementaire de la Fiche
+                </h2>
+
+                <input type="hidden" id="form-fiche-id" value="">
+
+                <div class="control-row" style="grid-template-columns: 1fr;">
+                    <div class="input-group">
+                        <label for="form-type-select">Type de fiche d'aptitude :</label>
+                        <select id="form-type-select">
+                            <option value="embauche">1. Fiche de visite médicale d'embauchage</option>
+                            <option value="periodique">2. Fiche de visite médicale périodique</option>
+                            <option value="reprise">3. Fiche de visite médicale de reprise</option>
+                            <option value="inaptitude">4. Avis d'inaptitude médicale / préconisations</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="control-row">
+                    <div class="input-group">
+                        <label for="form-doctor">Nom & Prénom du médecin :</label>
+                        <div style="display: flex; gap: 0.5rem;">
+                            <select id="form-doctor-title" class="form-text-input" style="width: 80px; flex-shrink: 0; cursor: pointer;">
+                                <option value="Dr.">Dr.</option>
+                                <option value="Pr.">Pr.</option>
+                            </select>
+                            <input type="text" id="form-doctor" placeholder="Ex: Nezzal Abdelmalek..." class="form-text-input" style="flex-grow: 1;">
+                        </div>
+                    </div>
+                    <div class="input-group">
+                        <label for="form-structure">Structure de médecine du travail :</label>
+                        <input type="text" id="form-structure" placeholder="Ex: SPST Rouiba..." class="form-text-input">
+                    </div>
+                </div>
+
+                <div class="control-row">
+                    <div class="input-group">
+                        <label for="form-employeur">Organisme Employeur :</label>
+                        <input type="text" id="form-employeur" placeholder="Ex: Sonatrach, Cévital..." class="form-text-input">
+                    </div>
+                    <div class="input-group">
+                        <label for="form-worker">Nom & Prénom du travailleur :</label>
+                        <input type="text" id="form-worker" placeholder="Ex: Mustapha..." class="form-text-input">
+                    </div>
+                </div>
+
+                <div class="control-row">
+                    <div class="input-group">
+                        <label for="form-post">Profession / Poste de travail :</label>
+                        <input type="text" id="form-post" placeholder="Ex: Soudeur, Chauffeur..." class="form-text-input">
+                    </div>
+                </div>
+
+                <div class="control-row">
+                    <div class="input-group">
+                        <label for="form-date">Date de l'examen :</label>
+                        <input type="date" id="form-date" class="form-text-input">
+                    </div>
+                    <div class="input-group">
+                        <label for="form-city">Fait à (Lieu) :</label>
+                        <input type="text" id="form-city" placeholder="Ex: Annaba, Alger..." class="form-text-input">
+                    </div>
+                </div>
+
+                <div class="input-group">
+                    <label for="form-conclusion">Conclusion médicale d'aptitude :</label>
+                    <select id="form-conclusion">
+                        <option value="APTE">APTE (sans restriction)</option>
+                        <option value="APTE_RESERVES">APTE AVEC RÉSERVES (Aménagements requis)</option>
+                        <option value="INAPTE_TEMPORAIRE">INAPTE TEMPORAIRE (Inaptitude momentanée)</option>
+                        <option value="INAPTE_DEFINITIF">INAPTE DÉFINITIF (Contre-indication permanente)</option>
+                    </select>
+                </div>
+
+                <div class="input-group">
+                    <label for="form-recommendation">Préconisations / Restrictions de poste :</label>
+                    <textarea id="form-recommendation" placeholder="Rédiger ici les restrictions médicales (ex: éviter de porter des charges...)" style="height: 120px;"></textarea>
+                </div>
+
+                <div class="control-row" style="margin-top: 1.25rem; display: flex; flex-wrap: wrap; gap: 0.5rem;">
+                    <button id="btn-form-analyze" class="btn" style="flex: 1.2; min-width: 140px; background: rgba(0, 242, 254, 0.1); color: var(--primary); border: 1px solid rgba(0, 242, 254, 0.3); box-shadow: none;">
+                        <span class="spinner" id="form-spinner"></span>
+                        Relecture (IA)
+                    </button>
+                    <button id="btn-form-save" class="btn" style="flex: 1.2; min-width: 140px; background: rgba(0, 230, 118, 0.1); color: var(--success); border: 1px solid rgba(0, 230, 118, 0.3); box-shadow: none;">
+                        Sauvegarder
+                    </button>
+                    <button id="btn-form-clear" class="btn" style="flex: 1; min-width: 100px; background: rgba(255, 255, 255, 0.05); color: var(--text-secondary); border: 1px solid var(--border-color); box-shadow: none;">
+                        Nouveau
+                    </button>
+                    <button id="btn-form-print" class="btn" style="flex: 2; min-width: 180px;">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-right: 0.3rem;">
+                            <polyline points="6 9 6 2 18 2 18 9"></polyline>
+                            <path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"></path>
+                            <rect x="6" y="14" width="12" height="8"></rect>
+                        </svg>
+                        Imprimer A4
+                    </button>
+                </div>
+            </section>
+
+            <!-- Colonne Droite : Relecture et feedback IA -->
+            <section class="glass-card">
+                <h2 class="card-title">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color: var(--secondary);">
+                        <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
+                    </svg>
+                    Aide à la validation (Copilote)
+                </h2>
+
+                <div class="result-placeholder" id="form-placeholder-view">
+                    <svg fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12c0 1.268-.63 2.39-1.593 3.068a3.745 3.745 0 01-1.043 3.296 3.745 3.745 0 01-3.296 1.043A3.745 3.745 0 0112 21c-1.268 0-2.39-.63-3.068-1.593a3.746 3.746 0 01-3.296-1.043 3.745 3.745 0 01-1.043-3.296A3.745 3.745 0 013 12c0-1.268.63-2.39 1.593-3.068a3.745 3.745 0 011.043-3.296 3.746 3.746 0 013.296-1.043A3.746 3.746 0 0112 3c1.268 0 2.39.63 3.068 1.593a3.746 3.746 0 013.296 1.043 3.746 3.746 0 011.043 3.296A3.745 3.745 0 0121 12z"></path>
+                    </svg>
+                    <p>Remplissez la zone "Préconisations" à gauche et cliquez sur "Relecture critique" pour valider juridiquement le texte avant l'impression.</p>
+                </div>
+
+                <div class="result-content" id="form-result-view">
+                    <div id="form-score-badge" class="score-badge-container">
+                        <span id="form-score-status-text">Relecture effectuée</span>
+                        <span id="form-score-subtext" class="status-indicator"></span>
+                    </div>
+
+                    <div class="reformulation-card">
+                        <div class="reformulation-header">
+                            <span class="reformulation-title">Reformulation automatique appliquée</span>
+                            <button id="btn-form-use-reformulation" class="btn-copy">Utiliser cette version</button>
+                        </div>
+                        <div class="reformulation-text" id="form-reformulation-content"></div>
+                    </div>
+
+                    <h3 class="switch-label" style="font-weight: 600; margin-bottom: 1rem;">Analyse des critères de qualité</h3>
+                    <div class="criteria-list" id="form-criteria-list"></div>
+                </div>
+            </section>
+
+        </main>
+
+        <!-- VUE 3 : Base de Données (Gestion et Exports) -->
+        <main class="main-grid" id="view-database" style="display: none; grid-template-columns: 1fr;">
+            <!-- Panneau de Statistiques -->
+            <section class="stats-row" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1.5rem; margin-bottom: 1.5rem;">
+                <div class="glass-card metric-card" style="border-left: 4px solid var(--primary); padding: 1.5rem; text-align: left;">
+                    <div class="metric-title" style="color: var(--text-secondary); font-size: 0.85rem; text-transform: uppercase; font-family: var(--font-heading); font-weight: 600;">Total Fiches Archivées</div>
+                    <div class="metric-value" id="stats-total-fiches" style="font-size: 2.2rem; font-weight: 700; color: var(--text-primary); margin: 0.5rem 0;">0</div>
+                    <div class="metric-sub" style="color: var(--text-muted); font-size: 0.8rem;">Fiches enregistrées localement</div>
+                </div>
+                <div class="glass-card metric-card" style="border-left: 4px solid var(--success); padding: 1.5rem; text-align: left;">
+                    <div class="metric-title" style="color: var(--text-secondary); font-size: 0.85rem; text-transform: uppercase; font-family: var(--font-heading); font-weight: 600;">Taux d'Aptitude</div>
+                    <div class="metric-value" id="stats-aptitude-rate" style="font-size: 2.2rem; font-weight: 700; color: var(--success); margin: 0.5rem 0;">0%</div>
+                    <div class="metric-sub" id="stats-aptitude-sub" style="color: var(--text-muted); font-size: 0.8rem;">Fiches de type APTE</div>
+                </div>
+                <div class="glass-card metric-card" style="border-left: 4px solid var(--danger); padding: 1.5rem; text-align: left;">
+                    <div class="metric-title" style="color: var(--text-secondary); font-size: 0.85rem; text-transform: uppercase; font-family: var(--font-heading); font-weight: 600;">Fiches d'Inaptitude</div>
+                    <div class="metric-value" id="stats-inaptitude-count" style="font-size: 2.2rem; font-weight: 700; color: var(--danger); margin: 0.5rem 0;">0</div>
+                    <div class="metric-sub" style="color: var(--text-muted); font-size: 0.8rem;">Temporaires ou définitives</div>
+                </div>
+            </section>
+
+            <!-- Outils de recherche, filtrage et actions globales -->
+            <section class="glass-card" style="margin-bottom: 1.5rem; padding: 2rem;">
+                <h2 class="card-title" style="margin-bottom: 1.5rem;">🔍 Recherche & Outils de la Base</h2>
+                
+                <div class="filter-bar" style="display: flex; flex-wrap: wrap; gap: 1rem; align-items: center; margin-bottom: 1.5rem;">
+                    <!-- Recherche textuelle -->
+                    <div class="input-group" style="flex: 2; min-width: 250px; margin-bottom: 0;">
+                        <input type="text" id="db-search-input" placeholder="Rechercher par nom de travailleur, employeur..." class="form-text-input" style="height: 42px;">
+                    </div>
+                    <!-- Filtre type -->
+                    <div class="input-group" style="flex: 1; min-width: 180px; margin-bottom: 0;">
+                        <select id="db-filter-type" class="form-text-input" style="height: 42px; cursor: pointer;">
+                            <option value="ALL">Tous les types de visites</option>
+                            <option value="embauche">Visites d'embauchage</option>
+                            <option value="periodique">Visites périodiques</option>
+                            <option value="reprise">Visites de reprise</option>
+                            <option value="inaptitude">Avis d'inaptitude</option>
+                        </select>
+                    </div>
+                    <!-- Filtre conclusion -->
+                    <div class="input-group" style="flex: 1; min-width: 180px; margin-bottom: 0;">
+                        <select id="db-filter-conclusion" class="form-text-input" style="height: 42px; cursor: pointer;">
+                            <option value="ALL">Toutes les conclusions</option>
+                            <option value="APTE">APTE (Sans restriction)</option>
+                            <option value="APTE_RESERVES">APTE AVEC RÉSERVES</option>
+                            <option value="INAPTE_TEMPORAIRE">INAPTE TEMPORAIRE</option>
+                            <option value="INAPTE_DEFINITIF">INAPTE DÉFINITIF</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- Export et Import de données -->
+                <div class="db-actions" style="display: flex; flex-wrap: wrap; gap: 0.75rem; border-top: 1px solid var(--border-color); padding-top: 1.25rem;">
+                    <button id="btn-export-csv" class="btn" style="background: rgba(0, 230, 118, 0.1); color: var(--success); border: 1px solid rgba(0, 230, 118, 0.3); box-shadow: none; font-size: 0.9rem; padding: 0.6rem 1.2rem; width: auto; height: 42px;">
+                        📥 Exporter en CSV (Excel)
+                    </button>
+                    <button id="btn-export-json" class="btn" style="background: rgba(79, 172, 254, 0.1); color: var(--secondary); border: 1px solid rgba(79, 172, 254, 0.3); box-shadow: none; font-size: 0.9rem; padding: 0.6rem 1.2rem; width: auto; height: 42px;">
+                        💾 Télécharger Sauvegarde JSON
+                    </button>
+                    
+                    <button id="btn-trigger-import" class="btn" style="background: rgba(255, 255, 255, 0.05); color: var(--text-secondary); border: 1px solid var(--border-color); box-shadow: none; font-size: 0.9rem; padding: 0.6rem 1.2rem; width: auto; margin-left: auto; height: 42px;">
+                        📤 Importer Sauvegarde JSON
+                    </button>
+                    <input type="file" id="db-import-file" style="display: none;" accept=".json">
+                </div>
+            </section>
+
+            <!-- Table d'Historique Principale -->
+            <section class="glass-card" style="padding: 2rem;">
+                <h2 class="card-title" style="margin-bottom: 1.5rem;">📋 Base de Données des Fiches</h2>
+                <div class="table-container" style="overflow-x: auto; max-height: 500px;">
+                    <table class="history-table" style="width: 100%; border-collapse: collapse; text-align: left;">
+                        <thead>
+                            <tr style="border-bottom: 2px solid var(--border-color); color: var(--text-secondary); font-size: 0.9rem;">
+                                <th style="padding: 0.75rem 1rem;">Date de visite</th>
+                                <th style="padding: 0.75rem 1rem;">Travailleur</th>
+                                <th style="padding: 0.75rem 1rem;">Employeur</th>
+                                <th style="padding: 0.75rem 1rem;">Type de Fiche</th>
+                                <th style="padding: 0.75rem 1rem;">Conclusion</th>
+                                <th style="padding: 0.75rem 1rem;">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="saved-fiches-tbody">
+                            <!-- Les fiches seront injectées ici par app.js -->
+                            <tr>
+                                <td colspan="6" style="padding: 2rem; text-align: center; color: var(--text-muted); font-style: italic;">
+                                    Aucune fiche sauvegardée localement.
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <!-- Modal d'Utilisation Interactif (Workspace) -->
+    <div id="guide-modal" class="modal-overlay" style="display: none;">
+        <div class="modal-content glass-card">
+            <div class="modal-header">
+                <h3>Guide d'Utilisation de l'Assistant</h3>
+                <button class="close-modal" id="btn-close-guide">&times;</button>
+            </div>
+            <div class="modal-body" style="max-height: 70vh; overflow-y: auto; display: flex; flex-direction: column; gap: 1.5rem; padding-right: 0.5rem;">
+                
+                <!-- Partie 1 : Utilisation de l'application -->
+                <div>
+                    <h3 style="color: var(--secondary); border-bottom: 1px solid var(--border-color); padding-bottom: 0.5rem; margin-bottom: 1rem; font-family: var(--font-heading); font-size: 1.25rem; font-weight: 700; display: flex; align-items: center; gap: 0.5rem;">
+                        <span>🛠️</span> Mode d'Emploi de l'Application
+                    </h3>
+                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1rem;">
+                        <div style="background: rgba(255, 255, 255, 0.02); padding: 1rem; border-radius: 8px; border: 1px solid var(--border-color);">
+                            <h4 style="color: var(--primary); font-size: 0.95rem; margin-bottom: 0.4rem; font-weight: 600; font-family: var(--font-heading);">1. Copilote de Relecture</h4>
+                            <p style="font-size: 0.85rem; color: var(--text-secondary); line-height: 1.45; margin: 0;">
+                                Rédigez ou collez une préconisation brute à gauche dans l'onglet **Copilote de Relecture**. Sélectionnez votre modèle d'analyse (local via Ollama ou en ligne Qwen 2.5), cochez la case d'activation des guides réglementaires de référence s'il y a des documents officiels, et cliquez sur **Lancer l'analyse**.
+                            </p>
+                        </div>
+                        <div style="background: rgba(255, 255, 255, 0.02); padding: 1rem; border-radius: 8px; border: 1px solid var(--border-color);">
+                            <h4 style="color: var(--primary); font-size: 0.95rem; margin-bottom: 0.4rem; font-weight: 600; font-family: var(--font-heading);">2. Formulaire & Relecture IA</h4>
+                            <p style="font-size: 0.85rem; color: var(--text-secondary); line-height: 1.45; margin: 0;">
+                                Basculez sur l'onglet **Modèles de Fiches & Impression**. Remplissez les données de visite (médecin, travailleur, poste, employeur). Vous pouvez cliquer sur **Relecture (IA)** pour obtenir une critique directe de vos restrictions ou cliquer sur **Utiliser cette version** pour appliquer la reformulation propre proposée par l'IA.
+                            </p>
+                        </div>
+                        <div style="background: rgba(255, 255, 255, 0.02); padding: 1rem; border-radius: 8px; border: 1px solid var(--border-color);">
+                            <h4 style="color: var(--primary); font-size: 0.95rem; margin-bottom: 0.4rem; font-weight: 600; font-family: var(--font-heading);">3. Sauvegarde & Impression A4</h4>
+                            <p style="font-size: 0.85rem; color: var(--text-secondary); line-height: 1.45; margin: 0;">
+                                Cliquez sur **Sauvegarder** pour inscrire ou mettre à jour la fiche dans votre historique. Une fois prêt, cliquez sur **Imprimer A4** : le navigateur générera le document officiel mis en page automatiquement pour tenir sur une seule page A4 (sans les boutons de l'interface).
+                            </p>
+                        </div>
+                        <div style="background: rgba(255, 255, 255, 0.02); padding: 1rem; border-radius: 8px; border: 1px solid var(--border-color);">
+                            <h4 style="color: var(--primary); font-size: 0.95rem; margin-bottom: 0.4rem; font-weight: 600; font-family: var(--font-heading);">4. Gestion de la Base de Données</h4>
+                            <p style="font-size: 0.85rem; color: var(--text-secondary); line-height: 1.45; margin: 0;">
+                                Consultez l'onglet **Base de Données** pour surveiller vos statistiques (taux d'aptitude, inaptitudes). Vous pouvez filtrer ou rechercher n'importe quel travailleur, recharger un dossier pour l'éditer/imprimer, ou faire des exports Excel (CSV) et des sauvegardes JSON.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Partie 2 : Les 5 règles de rédaction -->
+                <div>
+                    <h3 style="color: var(--secondary); border-bottom: 1px solid var(--border-color); padding-bottom: 0.5rem; margin-bottom: 1rem; font-family: var(--font-heading); font-size: 1.25rem; font-weight: 700; display: flex; align-items: center; gap: 0.5rem;">
+                        <span>⚖️</span> Les 5 Règles d'Or de Rédaction
+                    </h3>
+                    <p style="margin-bottom: 1rem; color: var(--text-secondary); font-size: 0.88rem; line-height: 1.45;">
+                        Pour que vos préconisations d'aptitude médicale soient claires pour l'employeur, légalement applicables et conformes aux obligations déontologiques, veillez à appliquer ces 5 critères rédactionnels :
+                    </p>
+                    <div class="guide-modal-list" style="display: flex; flex-direction: column; gap: 0.75rem;">
+                        <div style="background: rgba(255, 255, 255, 0.01); padding: 0.8rem 1rem; border-radius: 6px; border-left: 3px solid var(--primary); border: 1px solid var(--border-color); border-left: 3px solid var(--primary);">
+                            <h4 style="color: var(--text-primary); font-size: 0.92rem; margin: 0 0 0.2rem 0; font-weight: 600;">1. Limite temporelle précise</h4>
+                            <p style="font-size: 0.85rem; color: var(--text-secondary); margin: 0; line-height: 1.4;">Toute restriction temporaire doit comporter des dates de début et de fin ou une périodicité de suivi claire. Évitez les formules floues comme "provisoirement".</p>
+                        </div>
+                        <div style="background: rgba(255, 255, 255, 0.01); padding: 0.8rem 1rem; border-radius: 6px; border-left: 3px solid var(--primary); border: 1px solid var(--border-color); border-left: 3px solid var(--primary);">
+                            <h4 style="color: var(--text-primary); font-size: 0.92rem; margin: 0 0 0.2rem 0; font-weight: 600;">2. Force d'obligation (Verbes directifs)</h4>
+                            <p style="font-size: 0.85rem; color: var(--text-secondary); margin: 0; line-height: 1.4;">Utilisez des verbes affirmés ("doit", "ne doit pas", "contre-indication à"). Évitez les formules suggérant un choix à l'employeur ("il conviendrait de", "pourrait").</p>
+                        </div>
+                        <div style="background: rgba(255, 255, 255, 0.01); padding: 0.8rem 1rem; border-radius: 6px; border-left: 3px solid var(--primary); border: 1px solid var(--border-color); border-left: 3px solid var(--primary);">
+                            <h4 style="color: var(--text-primary); font-size: 0.92rem; margin: 0 0 0.2rem 0; font-weight: 600;">3. Restriction fonctionnelle stricte</h4>
+                            <p style="font-size: 0.85rem; color: var(--text-secondary); margin: 0; line-height: 1.4;">Décrivez des limitations physiques ou d'expositions (ex : "éviter le port de charges > 10 kg"). N'interférez pas dans l'organisation de l'employeur et n'insérez pas de commentaires descriptifs.</p>
+                        </div>
+                        <div style="background: rgba(255, 255, 255, 0.01); padding: 0.8rem 1rem; border-radius: 6px; border-left: 3px solid var(--primary); border: 1px solid var(--border-color); border-left: 3px solid var(--primary);">
+                            <h4 style="color: var(--text-primary); font-size: 0.92rem; margin: 0 0 0.2rem 0; font-weight: 600;">4. Pas d'inaptitude déguisée</h4>
+                            <p style="font-size: 0.85rem; color: var(--text-secondary); margin: 0; line-height: 1.4;">Si l'aménagement requis vide le poste de l'essentiel de ses tâches, prononcez une inaptitude temporaire ou définitive plutôt que de rédiger des réserves impraticables.</p>
+                        </div>
+                        <div style="background: rgba(255, 255, 255, 0.01); padding: 0.8rem 1rem; border-radius: 6px; border-left: 3px solid var(--primary); border: 1px solid var(--border-color); border-left: 3px solid var(--primary);">
+                            <h4 style="color: var(--text-primary); font-size: 0.92rem; margin: 0 0 0.2rem 0; font-weight: 600;">5. Secret médical absolu</h4>
+                            <p style="font-size: 0.85rem; color: var(--text-secondary); margin: 0; line-height: 1.4;">La fiche étant destinée à l'employeur, ne nommez jamais de diagnostic, de symptômes (ex: sciatique, épuisement) ou de traitements. Ne mentionnez aucun statut social confidentiel (RQTH, invalidité, etc.).</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ZONE D'IMPRESSION A4 OFFICIELLE (Masquée en écran standard) -->
+    <div id="print-area">
+        <div class="print-header">
+            <div class="print-subheader-box">
+                <span class="print-subheader-label">SERVICE DE MÉDECINE DU TRAVAIL :</span>
+                <span class="print-subheader-val" id="print-val-structure">......................................................................</span>
+            </div>
+        </div>
+
+        <h2 class="print-title" id="print-doc-title">FICHE DE VISITE MÉDICALE INDIVIDUELLE</h2>
+
+        <div class="print-body">
+            <p>Je soussigné, <strong><span id="print-val-doctor">Dr. ...................................</span></strong>, Médecin du Travail du service susvisé,</p>
+            <p>Certifie avoir examiné ce jour, conformément à la réglementation en vigueur (Décret exécutif n° 93-120 du 15 mai 1993) :</p>
+            
+            <table class="print-table">
+                <tr>
+                    <td class="td-label">Nom et Prénom du travailleur :</td>
+                    <td class="td-val" id="print-val-worker">......................................................................</td>
+                </tr>
+                <tr>
+                    <td class="td-label">Organisme Employeur :</td>
+                    <td class="td-val" id="print-val-employeur">......................................................................</td>
+                </tr>
+                <tr>
+                    <td class="td-label">Profession / Poste de travail :</td>
+                    <td class="td-val" id="print-val-post">......................................................................</td>
+                </tr>
+                <tr>
+                    <td class="td-label">Nature de la visite médicale :</td>
+                    <td class="td-val" id="print-val-type">......................................................................</td>
+                </tr>
+            </table>
+
+            <div class="print-conclusions">
+                <h4>CONCLUSIONS MÉDICALES D'APTITUDE :</h4>
+                <div class="checkbox-row">
+                    <span class="check-box" id="check-apte">[ ] APTE</span>
+                    <span class="check-box" id="check-apte-reserves">[ ] APTE AVEC RÉSERVES (Aménagements requis)</span>
+                </div>
+                <div class="checkbox-row">
+                    <span class="check-box" id="check-inapte-temp">[ ] INAPTE TEMPORAIRE (Inaptitude momentanée)</span>
+                    <span class="check-box" id="check-inapte-def">[ ] INAPTE DÉFINITIF (Contre-indication permanente)</span>
+                </div>
+            </div>
+
+            <div class="print-recommendations-section">
+                <h4>PRÉCONISATIONS ET RECOMMANDATIONS PARTICULIÈRES :</h4>
+                <div class="print-recommendations-box" id="print-val-recommendations">
+                    (Aucune préconisation formulée)
+                </div>
+            </div>
+        </div>
+
+        <div class="print-footer">
+            <div class="print-date-place">
+                Fait à <span id="print-val-city">...................................</span>, le <span id="print-val-date">........................</span>
+            </div>
+            <div class="print-signatures">
+                <strong>Cachet et Signature du Médecin du Travail</strong>
+                <br><br><br>
+                <div class="stamp-box">Cachet professionnel</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Script de logique JS -->
+    <script src="/static/app.js?v=2.5"></script>
+</body>
+</html>
