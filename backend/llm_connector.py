@@ -280,7 +280,23 @@ class LLMConnector:
         c5_defect = False
         c5_explanation = "Le secret médical semble respecté."
         c5_suggestions = []
-        pathologies = ["diabète", "hypertension", "dépression", "cancer", "épilepsie", "maladie", "fracture", "accident", "souffre", "traitement", "médicament", "cardiaque", "tension", "psy", "médical", "pathologie", "douleur"]
+        pathologies = [
+            # Pathologies communes
+            "diabète", "diabétique", "hypertension", "tension", "cardiaque", "coeur", "infarctus", 
+            "cancer", "tumeur", "chimiothérapie", "épilepsie", "épileptique", "crise", "crises", 
+            "vertige", "vertiges", "migraine", "céphalée", "asthénie", "sommeil", "insomnie", "apnée",
+            "hernie", "discale", "sciatique", "arthrose", "tendinite", "canal", "tassement", "vertébral",
+            # Actes et termes cliniques
+            "opération", "opéré", "opérée", "chirurgie", "chirurgical", "chirurgicale", "hospitalisation", 
+            "soins", "traitement", "thérapie", "médicament", "médicaments", "ordonnance", "patient", 
+            "malade", "maladie", "pathologie", "syndrome", "affection", "trouble", "troubles", "déficit", 
+            "insuffisance", "fracture", "lésion", "blessure", "entorse", "douleur", "douleurs",
+            # Psychologie / Psychiatrie
+            "dépression", "dépressif", "anxiété", "anxieux", "burnout", "burn-out", "stress", "angoisse", 
+            "psychologique", "psychiatrique", "psy",
+            # Verbes et expressions de santé
+            "souffre", "souffrant", "atteint", "atteinte", "médical", "médicale"
+        ]
         found_path = [t for t in pathologies if t in rec_lower]
         if found_path:
             c5_defect = True
