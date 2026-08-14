@@ -90,33 +90,11 @@ class LLMConnector:
             # Ollama n'est pas lancé ou n'est pas installé
             pass
 
-        # 2. Modèles en ligne configurés (OpenRouter / Qwen)
-        if OPENROUTER_API_KEY:
+        if not models:
             models.append({
-                "name": "qwen/qwen-2.5-72b-instruct",
-                "provider": "openrouter",
-                "display_name": "Qwen 2.5 72B Instruct (En ligne - Conseillé)"
-            })
-            models.append({
-                "name": "qwen/qwen-2.5-14b-instruct",
-                "provider": "openrouter",
-                "display_name": "Qwen 2.5 14B Instruct (En ligne)"
-            })
-            models.append({
-                "name": "qwen/qwen-2.5-7b-instruct",
-                "provider": "openrouter",
-                "display_name": "Qwen 2.5 7B Instruct (En ligne)"
-            })
-        if OPENAI_API_KEY:
-            models.append({
-                "name": "gpt-4o-mini",
-                "provider": "openai",
-                "display_name": "OpenAI - GPT-4o Mini (En ligne)"
-            })
-            models.append({
-                "name": "gpt-4o",
-                "provider": "openai",
-                "display_name": "OpenAI - GPT-4o (En ligne)"
+                "name": "no_model",
+                "provider": "ollama",
+                "display_name": "Aucun modèle détecté (Veuillez lancer Ollama)"
             })
 
         return models
