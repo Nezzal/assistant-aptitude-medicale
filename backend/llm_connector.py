@@ -103,8 +103,8 @@ class LLMConnector:
             for rec_name, rec_display in recommendations:
                 already_installed = False
                 for installed in installed_names:
-                    # Comparer si le modèle recommandé est déjà présent (partiellement ou totalement)
-                    if rec_name in installed or installed.startswith(rec_name.split(":")[0]):
+                    # Comparer de manière précise avec le nom et la taille (ex: deepseek-r1:1.5b)
+                    if rec_name in installed or installed.startswith(rec_name):
                         already_installed = True
                         break
                 if not already_installed:
