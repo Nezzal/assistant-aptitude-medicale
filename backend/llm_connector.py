@@ -296,6 +296,24 @@ class LLMConnector:
         ref = re.sub(r'\bil est conseillé de\b', 'obligation de', ref, flags=re.IGNORECASE)
         ref = re.sub(r'\bil est recommandé de\b', 'obligation de', ref, flags=re.IGNORECASE)
         
+        # Nettoyage des justifications médicales interdites en cas de violation du secret médical
+        if c5_defect:
+            causal_patterns = [
+                r'\bcar\b.*', 
+                r'\bparce\s+que\b.*', 
+                r'\ben\s+raison\s+de\b.*', 
+                r'\bpuisque\b.*', 
+                r'\bsuite\s+à\b.*', 
+                r'\bà\s+cause\s+de\b.*'
+            ]
+            for pattern in causal_patterns:
+                temp_ref = re.sub(pattern, '', ref, flags=re.IGNORECASE).strip()
+                if temp_ref != ref.strip():
+                    ref = temp_ref
+                    if not ref.endswith('.'):
+                        ref += '.'
+                    break
+        
         # Ajouter une note explicative
         if has_defects:
             reformulation = f"{ref} (⚠️ Note : Reformulation automatique simplifiée sans IA)."
