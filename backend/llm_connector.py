@@ -87,7 +87,8 @@ class LLMConnector:
                     models.append({
                         "name": model_name,
                         "provider": "ollama",
-                        "display_name": f"Ollama - {model_name}"
+                        "display_name": f"Ollama - {model_name}",
+                        "installed": True
                     })
         except Exception:
             pass
@@ -110,13 +111,15 @@ class LLMConnector:
                     models.append({
                         "name": rec_name,
                         "provider": "ollama",
-                        "display_name": rec_display
+                        "display_name": rec_display,
+                        "installed": False
                     })
         else:
             models.append({
                 "name": "no_model",
                 "provider": "ollama",
-                "display_name": "Aucun modèle détecté (Veuillez lancer Ollama)"
+                "display_name": "Aucun modèle détecté (Veuillez lancer Ollama)",
+                "installed": False
             })
 
         return models

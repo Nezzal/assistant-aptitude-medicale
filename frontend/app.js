@@ -401,6 +401,7 @@ document.addEventListener("DOMContentLoaded", () => {
                     option.value = model.name;
                     option.textContent = model.display_name;
                     option.dataset.provider = model.provider;
+                    option.dataset.installed = model.installed;
                     if (index === 0) option.selected = true;
                     modelSelect.appendChild(option);
                 });
@@ -447,7 +448,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     function checkReadyToAnalyze() {
         const selectedOption = modelSelect.options[modelSelect.selectedIndex];
-        const isNotInstalled = selectedOption && selectedOption.textContent.includes("non installé");
+        const isNotInstalled = selectedOption && selectedOption.dataset.installed === "false";
         
         if (isNotInstalled) {
             btnAnalyze.disabled = false;
@@ -498,7 +499,7 @@ document.addEventListener("DOMContentLoaded", () => {
         const useRag = ragToggle.checked;
 
         // Si le modèle sélectionné n'est pas encore installé, proposer le téléchargement automatique
-        if (selectedOption.textContent.includes("non installé")) {
+        if (selectedOption.dataset.installed === "false") {
             const confirmDownload = confirm(
                 `Le modèle "${selectedOption.textContent.split(" (")[0]}" n'est pas encore téléchargé sur votre ordinateur.\n\n` +
                 `Souhaitez-vous le télécharger et l'installer automatiquement ?\n` +
