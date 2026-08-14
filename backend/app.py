@@ -201,5 +201,7 @@ else:
     print("[!] Attention : Dossier frontend/ non trouvé. Le serveur ne servira que l'API.")
 
 if __name__ == "__main__":
-    print(f"[*] Démarrage du serveur sur http://localhost:{PORT}")
-    uvicorn.run("app:app", host="127.0.0.1", port=PORT, reload=True)
+    host = os.getenv("HOST", "127.0.0.1")
+    reload_mode = os.getenv("RENDER") is None
+    print(f"[*] Démarrage du serveur sur http://{host}:{PORT}")
+    uvicorn.run("app:app", host=host, port=PORT, reload=reload_mode)
