@@ -98,12 +98,24 @@ async def pull_model(request: PullModelRequest):
 @app.post("/api/start-ollama")
 async def start_ollama():
     try:
-        if Path("/Applications/Ollama.app").exists():
-            subprocess.Popen(["open", "/Applications/Ollama.app"])
-            return {"status": "success", "message": "Ollama a été démarré."}
+        import platform
+        current_os = platform.system().lower()
+        if "darwin" in current_os:
+            if Path("/Applications/Ollama.app").exists():
+                subprocess.Popen(["open", "/Applications/Ollama.app"])
+            else:
+                subprocess.Popen(["open", "-a", "Ollama"])
+            return {"status": "success", "message": "Tentative de démarrage d'Ollama sur macOS."}
+        elif "win" in current_os:
+            ollama_exe = Path(os.path.expandvars(r"%LOCALAPPDATA%\Programs\Ollama\ollama.exe"))
+            if ollama_exe.exists():
+                subprocess.Popen([str(ollama_exe), "app"])
+            else:
+                subprocess.Popen(["cmd", "/c", "start", "ollama"])
+            return {"status": "success", "message": "Tentative de démarrage d'Ollama sur Windows."}
         else:
-            subprocess.Popen(["open", "-a", "Ollama"])
-            return {"status": "success", "message": "Tentative de démarrage d'Ollama."}
+            subprocess.Popen(["ollama", "serve"])
+            return {"status": "success", "message": "Tentative de démarrage d'Ollama sur Linux."}
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Impossible de démarrer Ollama : {str(e)}")
 

@@ -108,10 +108,22 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     }
 
+    // Toggle affichage champs facturation
+    const reqInvoice = document.getElementById("req-invoice");
+    const reqInvoiceFields = document.getElementById("invoice-fields");
+    if (reqInvoice && reqInvoiceFields) {
+        reqInvoice.addEventListener("change", () => {
+            reqInvoiceFields.style.display = reqInvoice.checked ? "block" : "none";
+        });
+    }
+
     if (btnSendEmailRequest) {
         btnSendEmailRequest.addEventListener("click", () => {
             const docName = reqName.value.trim();
             const struct = reqStructure.value.trim();
+            const invoiceChecked = reqInvoice ? reqInvoice.checked : false;
+            const billingName = document.getElementById("req-billing-name") ? document.getElementById("req-billing-name").value.trim() : "";
+            const clientNif = document.getElementById("req-nif") ? document.getElementById("req-nif").value.trim() : "";
             
             if (!docName || !struct) {
                 alert("Veuillez renseigner votre nom et votre structure de médecine du travail avant d'envoyer la demande.");
@@ -119,8 +131,8 @@ document.addEventListener("DOMContentLoaded", () => {
             }
 
             const subject = encodeURIComponent("Demande d'activation - Assistant d'Aptitude Médicale");
-            const body = encodeURIComponent(
-                `Bonjour PedagogiAfrica,\n\n` +
+            
+            let bodyText = `Bonjour PedagogiAfrica,\n\n` +
                 `Veuillez trouver ci-joint le reçu de mon virement BaridiMob pour l'activation de mon assistant d'aptitude médicale.\n\n` +
                 `OPTION CHOISIE (Cochez avec un X) :\n` +
                 `[ ] Abonnement annuel en ligne (3 000 DA / an)\n` +
@@ -130,11 +142,23 @@ document.addEventListener("DOMContentLoaded", () => {
                 `Identifiant unique de ma machine : ${machineId}\n` +
                 `Médecin demandeur : ${docName}\n` +
                 `Structure médicale : ${struct}\n` +
-                `--------------------------------------------------\n\n` +
-                `Merci de bien vouloir me renvoyer ma clé d'activation.\n\n` +
+                `--------------------------------------------------\n`;
+
+            if (invoiceChecked) {
+                bodyText += `\n--- DEMANDE DE FACTURE ACQUITTEE ---\n` +
+                    `• Facture demandée : Oui\n` +
+                    `• Raison sociale / Nom : ${billingName || docName}\n`;
+                if (clientNif) {
+                    bodyText += `• NIF Client : ${clientNif}\n`;
+                }
+                bodyText += `------------------------------------\n`;
+            }
+
+            bodyText += `\nMerci de bien vouloir me renvoyer ma clé d'activation.\n\n` +
                 `Cordialement,\n` +
-                `${docName}`
-            );
+                `${docName}`;
+
+            const body = encodeURIComponent(bodyText);
 
             window.location.href = `mailto:pedagogiafrica@gmail.com?subject=${subject}&body=${body}`;
         });
@@ -382,11 +406,12 @@ document.addEventListener("DOMContentLoaded", () => {
         btnTabForms.classList.remove("active");
         viewDatabase.style.display = "grid";
         viewCopilot.style.display = "none";
-        viewForms.style.display = "none";
         loadSavedFiches(); // Recharger et calculer les stats
     });
 
-    // === CHARGEMENT DES MODÈLES & DOCUMENTS (COMMUNS) ===
+    // === CHARGEMENT DES MODÈLES & DOCUMENTS (HYBRIDE) ===
+    let autoPollingTimer = null;
+
     async function loadModels() {
         try {
             const response = await fetch("/api/models");
@@ -396,11 +421,20 @@ document.addEventListener("DOMContentLoaded", () => {
                 availableModels = data.models;
                 modelSelect.innerHTML = "";
                 
-                // Si Ollama n'est pas détecté, ouvrir le modal d'onboarding
                 const isOllamaOffline = availableModels.some(model => model.name === "no_model");
+                const hasInstalledModel = availableModels.some(model => model.provider === "ollama" && model.installed === true);
+
                 if (isOllamaOffline) {
-                    showOllamaOnboardingModal();
+                    // ÉTAPE 1 : Moteur Ollama absent / éteint
+                    showOllamaStep1();
+                    startAutoPolling();
+                } else if (!hasInstalledModel) {
+                    // ÉTAPE 2 : Ollama actif, mais aucun modèle installé (ex: qwen2.5:3b)
+                    stopAutoPolling();
+                    showOllamaStep2();
                 } else {
+                    // PRÊT : Tout est configuré
+                    stopAutoPolling();
                     hideOllamaOnboardingModal();
                 }
 
@@ -416,74 +450,131 @@ document.addEventListener("DOMContentLoaded", () => {
                 
                 checkReadyToAnalyze();
             } else {
-                modelSelect.innerHTML = "<option value=''>Aucun modèle disponible (Lancez Ollama)</option>";
-                btnAnalyze.disabled = true;
+                showOllamaStep1();
+                startAutoPolling();
             }
         } catch (error) {
             console.error("Erreur de chargement des modèles :", error);
-            modelSelect.innerHTML = "<option value=''>Erreur de connexion avec le serveur backend</option>";
-            btnAnalyze.disabled = true;
+            showOllamaStep1();
+            startAutoPolling();
         }
     }
 
-    // === GESTION DE L'ASSISTANT D'ONBOARDING OLLAMA ===
+    // === GESTION DU WIZARD HYBRIDE OLLAMA & QWEN (2 ÉTAPES) ===
     const ollamaModal = document.getElementById("ollama-modal");
-    const btnInstallOllama = document.getElementById("btn-install-ollama");
+    const modalStepBadge = document.getElementById("modal-step-badge");
+    const ollamaModalTitle = document.getElementById("ollama-modal-title");
+    const ollamaModalDescription = document.getElementById("ollama-modal-description");
+    const step1Actions = document.getElementById("step-1-actions");
+    const step2Actions = document.getElementById("step-2-actions");
     const btnStartOllama = document.getElementById("btn-start-ollama");
+    const btnSkipOllama = document.getElementById("btn-skip-ollama");
+    const btnPullQwen = document.getElementById("btn-pull-qwen");
+    const btnSkipModel = document.getElementById("btn-skip-model");
     const ollamaProgressContainer = document.getElementById("ollama-progress-container");
     const ollamaProgressStatus = document.getElementById("ollama-progress-status");
     const ollamaProgressBar = document.getElementById("ollama-progress-bar");
-    let isPollingOllama = false;
 
-    function showOllamaOnboardingModal() {
-        if (ollamaModal) {
-            ollamaModal.style.display = "flex";
-        }
+    function showOllamaStep1() {
+        if (!ollamaModal) return;
+        ollamaModal.style.display = "flex";
+        if (modalStepBadge) modalStepBadge.textContent = "Étape 1 / 2 : Moteur Système";
+        if (ollamaModalTitle) ollamaModalTitle.textContent = "Configuration du Moteur IA (Ollama)";
+        if (ollamaModalDescription) ollamaModalDescription.innerHTML = "L'assistant médical fonctionne localement. Téléchargez d'abord le moteur Ollama (officiel & sécurisé).";
+        if (step1Actions) step1Actions.style.display = "flex";
+        if (step2Actions) step2Actions.style.display = "none";
+        if (ollamaProgressContainer) ollamaProgressContainer.style.display = "none";
+    }
+
+    function showOllamaStep2() {
+        if (!ollamaModal) return;
+        ollamaModal.style.display = "flex";
+        if (modalStepBadge) modalStepBadge.textContent = "Étape 2 / 2 : Modèle IA";
+        if (ollamaModalTitle) ollamaModalTitle.textContent = "Téléchargement de l'IA (Qwen 2.5 3B)";
+        if (ollamaModalDescription) ollamaModalDescription.innerHTML = "Le moteur Ollama est actif ! Téléchargez le modèle médical <b>Qwen 2.5 (3B - ~2.0 Go)</b> sans droit administrateur.";
+        if (step1Actions) step1Actions.style.display = "none";
+        if (step2Actions) step2Actions.style.display = "flex";
     }
 
     function hideOllamaOnboardingModal() {
-        if (ollamaModal) {
-            ollamaModal.style.display = "none";
+        if (ollamaModal) ollamaModal.style.display = "none";
+        stopAutoPolling();
+    }
+
+    function startAutoPolling() {
+        if (autoPollingTimer) return;
+        autoPollingTimer = setInterval(async () => {
+            try {
+                const res = await fetch("/api/models");
+                const d = await res.json();
+                if (d.status === "success" && d.models.length > 0) {
+                    const isOffline = d.models.some(m => m.name === "no_model");
+                    if (!isOffline) {
+                        stopAutoPolling();
+                        await loadModels();
+                    }
+                }
+            } catch (e) {}
+        }, 3000);
+    }
+
+    function stopAutoPolling() {
+        if (autoPollingTimer) {
+            clearInterval(autoPollingTimer);
+            autoPollingTimer = null;
         }
     }
 
-    // Démarrer Ollama (déjà installé)
+    // Étape 1 : Démarrer Ollama si déjà installé
     if (btnStartOllama) {
         btnStartOllama.addEventListener("click", async () => {
             btnStartOllama.disabled = true;
-            btnStartOllama.textContent = "Lancement en cours...";
+            btnStartOllama.textContent = "⚡ Lancement d'Ollama en cours...";
             try {
-                const response = await fetch("/api/start-ollama", { method: "POST" });
-                const data = await response.json();
-                if (data.status === "success") {
-                    startOllamaPolling();
-                } else {
-                    alert("Erreur : " + data.detail);
+                await fetch("/api/start-ollama", { method: "POST" });
+                setTimeout(() => loadModels(), 2500);
+            } catch (err) {
+                console.error("Erreur de lancement :", err);
+            } finally {
+                setTimeout(() => {
                     btnStartOllama.disabled = false;
-                    btnStartOllama.textContent = "⚡ Démarrer Ollama (déjà installé)";
-                }
-            } catch (error) {
-                console.error("Erreur de lancement :", error);
-                alert("Erreur de connexion.");
-                btnStartOllama.disabled = false;
-                btnStartOllama.textContent = "⚡ Démarrer Ollama (déjà installé)";
+                    btnStartOllama.textContent = "🟢 2. J'ai installé / Lancer Ollama";
+                }, 4000);
             }
         });
     }
 
-    // Télécharger et installer Ollama automatiquement
-    if (btnInstallOllama) {
-        btnInstallOllama.addEventListener("click", async () => {
-            btnInstallOllama.disabled = true;
-            if (btnStartOllama) btnStartOllama.disabled = true;
-            ollamaProgressContainer.style.display = "block";
-            ollamaProgressStatus.textContent = "Démarrage du téléchargement d'Ollama...";
+    // Étape 1 : Passer en mode hors-ligne autonomne
+    if (btnSkipOllama) {
+        btnSkipOllama.addEventListener("click", () => {
+            hideOllamaOnboardingModal();
+        });
+    }
+
+    // Étape 2 : Passer le téléchargement du modèle
+    if (btnSkipModel) {
+        btnSkipModel.addEventListener("click", () => {
+            hideOllamaOnboardingModal();
+        });
+    }
+
+    // Étape 2 : Télécharger le modèle Qwen (sans droit admin) via API Stream NDJSON
+    if (btnPullQwen) {
+        btnPullQwen.addEventListener("click", async () => {
+            btnPullQwen.disabled = true;
+            if (btnSkipModel) btnSkipModel.style.display = "none";
+            if (ollamaProgressContainer) ollamaProgressContainer.style.display = "block";
+            if (ollamaProgressStatus) ollamaProgressStatus.textContent = "Connexion au serveur Ollama...";
+            if (ollamaProgressBar) ollamaProgressBar.style.width = "0%";
 
             try {
-                const response = await fetch("/api/install-ollama", { method: "POST" });
-                if (!response.ok) {
-                    throw new Error("Impossible d'initier le téléchargement d'Ollama.");
-                }
+                const response = await fetch("/api/pull", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ model_name: "qwen2.5:3b" })
+                });
+
+                if (!response.ok) throw new Error("Impossible d'initier le téléchargement du modèle Qwen.");
 
                 const reader = response.body.getReader();
                 const decoder = new TextDecoder();
@@ -498,90 +589,35 @@ document.addEventListener("DOMContentLoaded", () => {
                     buffer = lines.pop();
 
                     for (const line of lines) {
-                        if (line.trim() === "") continue;
+                        if (!line.trim()) continue;
                         try {
-                            const statusObj = JSON.parse(line);
-                            
-                            if (statusObj.status === "downloading" && statusObj.total) {
-                                const pct = Math.round((statusObj.completed / statusObj.total) * 100);
-                                ollamaProgressBar.style.width = `${pct}%`;
-                                ollamaProgressStatus.textContent = `Téléchargement d'Ollama : ${pct}%`;
-                            } else if (statusObj.status === "error") {
-                                throw new Error(statusObj.message);
-                            } else if (statusObj.status) {
-                                let statusMsg = statusObj.status;
-                                if (statusMsg === "extracting") statusMsg = "Extraction d'Ollama...";
-                                if (statusMsg === "moving") statusMsg = "Installation dans le dossier Applications...";
-                                if (statusMsg === "launching") statusMsg = "Démarrage d'Ollama...";
-                                if (statusMsg === "completed") statusMsg = "Installation terminée avec succès !";
-                                ollamaProgressStatus.textContent = statusMsg;
+                            const event = JSON.parse(line);
+                            if (event.total && event.completed) {
+                                const pct = Math.round((event.completed / event.total) * 100);
+                                const completedMb = (event.completed / 1024 / 1024).toFixed(0);
+                                const totalMb = (event.total / 1024 / 1024).toFixed(0);
+                                if (ollamaProgressBar) ollamaProgressBar.style.width = `${pct}%`;
+                                if (ollamaProgressStatus) ollamaProgressStatus.textContent = `Téléchargement Qwen : ${pct}% (${completedMb} Mo / ${totalMb} Mo)`;
+                            } else if (event.status) {
+                                if (ollamaProgressStatus) ollamaProgressStatus.textContent = `Statut : ${event.status}`;
                             }
-                        } catch (e) {
-                            // Ignorer les erreurs de parsing partielles
-                        }
+                        } catch (e) {}
                     }
                 }
 
-                // Démarrer le polling pour attendre qu'Ollama réponde
-                startOllamaPolling();
+                if (ollamaProgressStatus) ollamaProgressStatus.textContent = "Modèle Qwen installé avec succès !";
+                setTimeout(async () => {
+                    hideOllamaOnboardingModal();
+                    await loadModels();
+                }, 1500);
 
             } catch (error) {
-                console.error("Erreur d'installation :", error);
-                alert("L'installation automatique a échoué : " + error.message + "\n\nVeuillez télécharger Ollama manuellement sur ollama.com.");
-                btnInstallOllama.disabled = false;
-                if (btnStartOllama) btnStartOllama.disabled = false;
-                ollamaProgressContainer.style.display = "none";
+                console.error("Erreur de téléchargement Qwen :", error);
+                alert("Échec du téléchargement : " + error.message);
+                btnPullQwen.disabled = false;
+                if (btnSkipModel) btnSkipModel.style.display = "block";
             }
         });
-    }
-
-    // Polling pour vérifier si Ollama s'est lancé
-    function startOllamaPolling() {
-        if (isPollingOllama) return;
-        isPollingOllama = true;
-        
-        let attempts = 0;
-        const interval = setInterval(async () => {
-            attempts++;
-            try {
-                const response = await fetch("/api/models");
-                const data = await response.json();
-                
-                if (data.status === "success" && data.models.length > 0) {
-                    const isOllamaOffline = data.models.some(model => model.name === "no_model");
-                    if (!isOllamaOffline) {
-                        clearInterval(interval);
-                        isPollingOllama = false;
-                        hideOllamaOnboardingModal();
-                        
-                        btnInstallOllama.disabled = false;
-                        if (btnStartOllama) {
-                            btnStartOllama.disabled = false;
-                            btnStartOllama.textContent = "⚡ Démarrer Ollama (déjà installé)";
-                        }
-                        ollamaProgressContainer.style.display = "none";
-                        ollamaProgressBar.style.width = "0%";
-
-                        await loadModels();
-                        return;
-                    }
-                }
-            } catch (e) {
-                // Échec de la requête, Ollama démarre encore
-            }
-            
-            if (attempts > 30) {
-                clearInterval(interval);
-                isPollingOllama = false;
-                alert("Ollama met trop de temps à répondre. Veuillez vous assurer qu'il est bien démarré sur votre ordinateur.");
-                btnInstallOllama.disabled = false;
-                if (btnStartOllama) {
-                    btnStartOllama.disabled = false;
-                    btnStartOllama.textContent = "⚡ Démarrer Ollama (déjà installé)";
-                }
-                ollamaProgressContainer.style.display = "none";
-            }
-        }, 2000);
     }
 
     async function loadIndexedDocuments() {
@@ -790,6 +826,18 @@ document.addEventListener("DOMContentLoaded", () => {
     function renderResults(result) {
         placeholderView.style.display = "none";
         resultView.style.display = "block";
+
+        // Afficher la bannière d'avertissement RAG hors-ligne si fallback actif
+        const existingBanner = document.getElementById("fallback-warning-banner");
+        if (existingBanner) existingBanner.remove();
+
+        if (result.is_fallback && result.fallback_note) {
+            const banner = document.createElement("div");
+            banner.id = "fallback-warning-banner";
+            banner.style.cssText = "background: rgba(255, 171, 0, 0.15); border: 1px solid rgba(255, 171, 0, 0.4); color: #ffab00; padding: 12px 16px; border-radius: 8px; font-weight: 600; font-size: 0.9rem; margin-bottom: 1.5rem; display: flex; align-items: center; gap: 10px;";
+            banner.innerHTML = `<span>${result.fallback_note}</span>`;
+            resultView.insertBefore(banner, resultView.firstChild);
+        }
 
         scoreBadge.className = "score-badge-container";
         if (result.has_defects) {

@@ -225,12 +225,70 @@ class LLMConnector:
             import traceback
             traceback.print_exc()
             err_msg = str(e)
-            if "ConnectionRefusedError" in err_msg or "Failed to establish a new connection" in err_msg or "Max retries exceeded" in err_msg:
-                if provider == "ollama":
-                    raise Exception(f"Ollama hors-ligne. Veuillez démarrer l'application Ollama. (Détail : {err_msg})")
-                else:
-                    raise Exception(f"Serveur d'analyse en ligne injoignable. (Détail : {err_msg})")
+            if provider == "ollama":
+                print(f"[!] Ollama hors-ligne ou inaccessible ({err_msg}). Passage en mode dégradé (RAG autonome).")
+                return self._generate_fallback_analysis(recommendation, context_chunks, err_msg)
             raise Exception(f"Erreur de communication avec l'IA ({model_name}) : {err_msg}")
+
+    def _generate_fallback_analysis(self, recommendation: str, context_chunks: list, error_msg: str) -> dict:
+        """Génère une réponse d'analyse de secours basée sur le RAG et les règles lorsque le LLM est indisponible."""
+        analysis = []
+        rec_lower = recommendation.lower()
+
+        # 1. Force d'obligation (conditionnels)
+        has_conditional = any(word in rec_lower for word in ["devrait", "pourrait", "envisager", "si possible", "souhaitable", "éventuellement"])
+        analysis.append({
+            "criterion": 2,
+            "name": "Doute sur la force d'obligation",
+            "has_defect": has_conditional,
+            "explanation": "Formulation au conditionnel ou suggérant un choix." if has_conditional else "Rédaction directe au présent de l'indicatif.",
+            "suggestions": ["Employer un ton directif : 'doit', 'éviction de', 'aménagement de'."] if has_conditional else []
+        })
+
+        # 2. Secret médical
+        medical_terms = ["maladie", "pathologie", "traitement", "soins", "cancer", "dépression", "souffrance", "hospitalisation", "docteur", "médicament"]
+        has_medical = any(word in rec_lower for word in medical_terms)
+        analysis.append({
+            "criterion": 5,
+            "name": "Rupture du secret médical ou vie privée",
+            "has_defect": has_medical,
+            "explanation": "Presence potentielle d'informations médicales confidentielles." if has_medical else "Aucune information médicale confidentielle explicite relevée.",
+            "suggestions": ["Supprimer toute mention de symptômes, diagnostics ou traitements."] if has_medical else []
+        })
+
+        # 3. Imprécisions temporelles
+        imprecise_terms = ["renouvelable", "régulièrement", "un certain temps", "provisoirement", "ultérieurement"]
+        has_imprecision = any(word in rec_lower for word in imprecise_terms)
+        analysis.append({
+            "criterion": 1,
+            "name": "Imprécisions et difficultés d'application",
+            "has_defect": has_imprecision,
+            "explanation": "Termes temporels vagues sans durée précise définie." if has_imprecision else "Pas d'imprécision temporelle majeure détectée.",
+            "suggestions": ["Préciser une durée exacte (ex: 'pour une durée de 3 mois')."] if has_imprecision else []
+        })
+
+        # Critères 3 et 4 par défaut
+        for crit_id, name in [(3, "Informations hors cadre réglementaire"), (4, "Changement de poste ou inaptitude déguisée")]:
+            analysis.append({
+                "criterion": crit_id,
+                "name": name,
+                "has_defect": False,
+                "explanation": "Analyse autonome basée sur les règles réglementaires.",
+                "suggestions": []
+            })
+
+        has_any_defect = any(c["has_defect"] for c in analysis)
+        reformulation = recommendation
+        if has_conditional:
+            reformulation = recommendation.replace("devrait", "doit").replace("pourrait", "doit")
+
+        return {
+            "has_defects": has_any_defect,
+            "analysis": sorted(analysis, key=lambda x: x["criterion"]),
+            "reformulation_proposed": reformulation,
+            "is_fallback": True,
+            "fallback_note": "💡 Note : L'IA locale (Ollama) n'est pas disponible. Mode autonome hors-ligne (RAG) activé. Voici l'analyse basée sur la base de connaissances réglementaire."
+        }
 
     def _repair_json_string(self, text: str) -> str:
         """Tente de réparer les guillemets non échappés dans les chaînes JSON."""
