@@ -960,7 +960,246 @@ Réponds STRICTEMENT sous la forme d'un objet JSON contenant l'analyse détaill�
         return JSON.parse(jsonCandidate);
     }
 
+    // === DICTIONNAIRE MULTILINGUE I18N DE L'INTERFACE ===
+    const UI_TRANSLATIONS = {
+        ar: {
+            appSubtitle: "الجزائر - الدليل التنظيمي والمساعدة على اتخاذ القرار",
+            tabCopilot: "مساعد المراجعة",
+            tabForms: "نماذج الشهادات والطباعة",
+            tabDatabase: "قاعدة البيانات",
+            tabGuide: "دليل الاستخدام",
+            tabLogout: "تسجيل الخروج",
+            
+            titleInput: "إدخال التوصية الطبية",
+            labelInput: "حرر أو ألصق التوصية الطبية:",
+            placeholderInput: "مثال: مريض يعاني من مانع طبي نهائي للتعرض لأدخنة اللحام...",
+            labelModel: "نموذج الذكاء الاصطناعي:",
+            labelLang: "لغة التحليل والترجمة:",
+            labelRagToggle: "الاعتماد على النصوص التنظيمية والدلائل الرسمية",
+            btnAnalyze: "بدء التحليل النقدي",
+            labelDocsHeader: "النصوص المرجعية والدلائل الرسمية",
+            btnSyncDocs: "تحديث / مزامنة",
+
+            titleEval: "التقييم النقدي",
+            placeholderEval: "أدخل توصية طبية على اليسار ثم اضغط على بدء التحليل لإنشاء التقييم.",
+            defectsDetected: "تم اكتشاف عيوب صياغة",
+            noDefects: "توصية مطابقة للضوابط التنظيمية",
+            actionRequired: "إجراء مطلوب",
+            statusValid: "مطابقة وصالحة",
+            titleReformulation: "إعادة الصياغة المقترحة",
+            btnCopy: "نسخ",
+            titleDetailedAnalysis: "التحليل التفصيلي للعيوب",
+            titleSources: "النصوص المرجعية المرتبطة",
+            suggestionsBoxTitle: "مقترحات التصحيح",
+            badgeDefect: "عيب صياغة",
+            badgeOk: "مطابق",
+
+            crit_1: "عدم الدقة وصعوبات التطبيق",
+            crit_2: "الشك في القوة الإلزامية",
+            crit_3: "معلومات خارج نطاق التنظيم",
+            crit_4: "تغيير الوظيفة أو عدم القدرة المقنعة",
+            crit_5: "خرق السر الطبي أو الحياة الخاصة",
+
+            titleForms: "إدخال بيانات الاستشارة والشهادة",
+            btnFormRelecture: "مراجعة الذكاء الاصطناعي",
+            btnFormSave: "حفظ الملف",
+            btnFormNew: "جديد",
+            btnFormPrint: "طباعة A4"
+        },
+        fr: {
+            appSubtitle: "Algérie - Aide à la décision & fiches réglementaires",
+            tabCopilot: "Copilote de Relecture",
+            tabForms: "Modèles de Fiches & Impression",
+            tabDatabase: "Base de Données",
+            tabGuide: "Guide d'Utilisation",
+            tabLogout: "Déconnexion",
+            
+            titleInput: "Saisie de la Préconisation",
+            labelInput: "Rédiger ou coller la préconisation médicale :",
+            placeholderInput: "Exemple : Patient présentant une contre-indication définitive à l'exposition aux fumées de soudure...",
+            labelModel: "Modèle d'analyse :",
+            labelLang: "Langue d'analyse / Traduction :",
+            labelRagToggle: "Se baser sur les textes réglementaires et guides de référence",
+            btnAnalyze: "Lancer l'analyse critique",
+            labelDocsHeader: "Textes de référence et guides officiels",
+            btnSyncDocs: "Synchroniser",
+
+            titleEval: "Évaluation critique",
+            placeholderEval: "Saisissez une préconisation médicale à gauche et lancez l'analyse pour afficher l'évaluation.",
+            defectsDetected: "Défauts rédactionnels détectés",
+            noDefects: "Préconisation conforme",
+            actionRequired: "Action requise",
+            statusValid: "Valide",
+            titleReformulation: "Reformulation recommandée",
+            btnCopy: "Copier",
+            titleDetailedAnalysis: "Analyse détaillée",
+            titleSources: "Documents de référence associés",
+            suggestionsBoxTitle: "Suggestions de correction",
+            badgeDefect: "DÉFAUT",
+            badgeOk: "OK",
+
+            crit_1: "Imprécisions et difficultés d'application",
+            crit_2: "Doute sur la force d'obligation",
+            crit_3: "Informations hors cadre réglementaire",
+            crit_4: "Changement de poste ou inaptitude déguisée",
+            crit_5: "Rupture du secret médical ou vie privée",
+
+            titleForms: "Saisie réglementaire de la Fiche",
+            btnFormRelecture: "Relecture (IA)",
+            btnFormSave: "Sauvegarder",
+            btnFormNew: "Nouveau",
+            btnFormPrint: "Imprimer A4"
+        },
+        en: {
+            appSubtitle: "Algeria - Decision Support & Regulatory Records",
+            tabCopilot: "Review Copilot",
+            tabForms: "Forms & Printing",
+            tabDatabase: "Database",
+            tabGuide: "User Guide",
+            tabLogout: "Logout",
+            
+            titleInput: "Medical Recommendation Input",
+            labelInput: "Write or paste medical recommendation:",
+            placeholderInput: "Example: Patient presenting a permanent contraindication to welding fume exposure...",
+            labelModel: "Analysis Model:",
+            labelLang: "Analysis / Translation Language:",
+            labelRagToggle: "Base analysis on official regulatory guides",
+            btnAnalyze: "Run Critical Analysis",
+            labelDocsHeader: "Official Reference Texts & Guides",
+            btnSyncDocs: "Synchronize",
+
+            titleEval: "Critical Evaluation",
+            placeholderEval: "Enter a medical recommendation on the left and run analysis to view evaluation.",
+            defectsDetected: "Editorial Defects Detected",
+            noDefects: "Compliant Recommendation",
+            actionRequired: "Action Required",
+            statusValid: "Valid",
+            titleReformulation: "Recommended Reformulation",
+            btnCopy: "Copy",
+            titleDetailedAnalysis: "Detailed Analysis",
+            titleSources: "Associated Reference Documents",
+            suggestionsBoxTitle: "Correction Suggestions",
+            badgeDefect: "DEFECT",
+            badgeOk: "OK",
+
+            crit_1: "Imprecisions and application issues",
+            crit_2: "Doubt on binding force",
+            crit_3: "Information outside regulatory framework",
+            crit_4: "Job change or disguised unfitness",
+            crit_5: "Breach of medical confidentiality",
+
+            titleForms: "Regulatory Form Entry",
+            btnFormRelecture: "AI Review",
+            btnFormSave: "Save Record",
+            btnFormNew: "New",
+            btnFormPrint: "Print A4"
+        }
+    };
+
+    function applyUiTranslations(lang = "ar") {
+        const dict = UI_TRANSLATIONS[lang] || UI_TRANSLATIONS["ar"];
+
+        const workspace = document.getElementById("main-workspace");
+        if (workspace) {
+            if (lang === "ar") {
+                workspace.setAttribute("dir", "rtl");
+            } else {
+                workspace.removeAttribute("dir");
+            }
+        }
+
+        // Navigation
+        const btnCopilot = document.getElementById("btn-tab-copilot");
+        if (btnCopilot) btnCopilot.textContent = dict.tabCopilot;
+
+        const btnForms = document.getElementById("btn-tab-forms");
+        if (btnForms) btnForms.textContent = dict.tabForms;
+
+        const btnDatabase = document.getElementById("btn-tab-database");
+        if (btnDatabase) btnDatabase.textContent = dict.tabDatabase;
+
+        const btnGuide = document.getElementById("btn-show-guide");
+        if (btnGuide) btnGuide.textContent = dict.tabGuide;
+
+        const btnLogout = document.getElementById("btn-logout");
+        if (btnLogout) btnLogout.textContent = dict.tabLogout;
+
+        // Colonne Gauche
+        const cardTitleInput = document.querySelector("#card-title-input span");
+        if (cardTitleInput) cardTitleInput.textContent = dict.titleInput;
+
+        const labelRecInput = document.getElementById("label-rec-input");
+        if (labelRecInput) labelRecInput.textContent = dict.labelInput;
+
+        const recInput = document.getElementById("recommendation-input");
+        if (recInput) recInput.placeholder = dict.placeholderInput;
+
+        const labelModelSelect = document.getElementById("label-model-select");
+        if (labelModelSelect) labelModelSelect.textContent = dict.labelModel;
+
+        const labelLangSelect = document.getElementById("label-lang-select");
+        if (labelLangSelect) labelLangSelect.textContent = dict.labelLang;
+
+        const labelRagToggle = document.getElementById("label-rag-toggle");
+        if (labelRagToggle) labelRagToggle.textContent = dict.labelRagToggle;
+
+        const btnText = document.getElementById("btn-text");
+        if (btnText) btnText.textContent = dict.btnAnalyze;
+
+        const labelDocsHeader = document.getElementById("label-docs-header");
+        if (labelDocsHeader) labelDocsHeader.textContent = dict.labelDocsHeader;
+
+        const syncDocsBtnText = document.getElementById("sync-docs-btn-text");
+        if (syncDocsBtnText) syncDocsBtnText.textContent = dict.btnSyncDocs;
+
+        // Colonne Droite
+        const cardTitleEval = document.querySelector("#card-title-eval span");
+        if (cardTitleEval) cardTitleEval.textContent = dict.titleEval;
+
+        const placeholderText = document.getElementById("placeholder-text");
+        if (placeholderText) placeholderText.textContent = dict.placeholderEval;
+
+        const reformulationTitleText = document.getElementById("reformulation-title-text");
+        if (reformulationTitleText) reformulationTitleText.textContent = dict.titleReformulation;
+
+        const btnCopyRef = document.getElementById("btn-copy-reformulation");
+        if (btnCopyRef) btnCopyRef.textContent = dict.btnCopy;
+
+        const detailedAnalysisTitle = document.getElementById("detailed-analysis-title");
+        if (detailedAnalysisTitle) detailedAnalysisTitle.textContent = dict.titleDetailedAnalysis;
+
+        const sourcesTitleText = document.getElementById("sources-title-text");
+        if (sourcesTitleText) sourcesTitleText.textContent = dict.titleSources;
+
+        // Vue Modèles
+        const cardTitleForms = document.querySelector("#card-title-forms span");
+        if (cardTitleForms) cardTitleForms.textContent = dict.titleForms;
+
+        const btnFormRelecture = document.getElementById("btn-form-relecture");
+        if (btnFormRelecture) btnFormRelecture.textContent = dict.btnFormRelecture;
+
+        const btnFormSave = document.getElementById("btn-form-save");
+        if (btnFormSave) btnFormSave.textContent = dict.btnFormSave;
+
+        const btnFormNew = document.getElementById("btn-form-new");
+        if (btnFormNew) btnFormNew.textContent = dict.btnFormNew;
+
+        const btnFormPrint = document.getElementById("btn-form-print");
+        if (btnFormPrint) btnFormPrint.textContent = dict.btnFormPrint;
+    }
+
+    // Écouteur de changement de langue dynamique
+    const languageSelectElement = document.getElementById("language-select");
+    if (languageSelectElement) {
+        languageSelectElement.addEventListener("change", () => {
+            applyUiTranslations(languageSelectElement.value);
+        });
+        // Initialiser avec la langue sélectionnée
+        applyUiTranslations(languageSelectElement.value);
+    }
+
     function renderResults(result, lang = "ar") {
+        const dict = UI_TRANSLATIONS[lang] || UI_TRANSLATIONS["ar"];
         placeholderView.style.display = "none";
         resultView.style.display = "block";
 
@@ -987,14 +1226,14 @@ Réponds STRICTEMENT sous la forme d'un objet JSON contenant l'analyse détaill�
         scoreBadge.className = "score-badge-container";
         if (result.has_defects) {
             scoreBadge.classList.add("has-defects");
-            scoreStatusText.textContent = "Défauts rédactionnels détectés";
+            scoreStatusText.textContent = dict.defectsDetected;
             scoreSubtext.className = "status-indicator defect";
-            scoreSubtext.textContent = "Action requise";
+            scoreSubtext.textContent = dict.actionRequired;
         } else {
             scoreBadge.classList.add("no-defects");
-            scoreStatusText.textContent = "Préconisation conforme";
+            scoreStatusText.textContent = dict.noDefects;
             scoreSubtext.className = "status-indicator ok";
-            scoreSubtext.textContent = "Valide";
+            scoreSubtext.textContent = dict.statusValid;
         }
 
         reformulationTextContent.textContent = result.reformulation_proposed || "Aucune reformulation nécessaire.";
@@ -1007,28 +1246,31 @@ Réponds STRICTEMENT sous la forme d'un objet JSON contenant l'analyse détaill�
 
             const suggestionsHtml = (item.suggestions && item.suggestions.length > 0) 
                 ? `<div class="suggestions-box">
-                    <h5>Suggestions de correction</h5>
+                    <h5>${dict.suggestionsBoxTitle}</h5>
                     <ul class="suggestions-list">
                         ${item.suggestions.map(sug => `<li>${sug}</li>`).join("")}
                     </ul>
                    </div>`
                 : "";
 
+            const critKey = `crit_${item.criterion}`;
+            const translatedCritName = dict[critKey] || item.name;
+
             card.innerHTML = `
                 <div class="criterion-header">
                     <div class="criterion-title-group">
                         <span class="criterion-number">${item.criterion}</span>
-                        <span class="criterion-name">${item.name}</span>
+                        <span class="criterion-name">${translatedCritName}</span>
                     </div>
                     <div style="display: flex; align-items: center; gap: 0.75rem;">
                         <span class="status-indicator ${item.has_defect ? 'defect' : 'ok'}">
-                            ${item.has_defect ? 'DÉFAUT' : 'OK'}
+                            ${item.has_defect ? dict.badgeDefect : dict.badgeOk}
                         </span>
                         <i class="arrow"></i>
                     </div>
                 </div>
                 <div class="criterion-body">
-                    <div class="criterion-explanation">${item.explanation || "Aucun commentaire."}</div>
+                    <div class="criterion-explanation">${item.explanation || ""}</div>
                     ${suggestionsHtml}
                 </div>
             `;
