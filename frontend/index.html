@@ -364,33 +364,33 @@
         <main class="main-grid" id="view-forms" style="display: none;">
             <!-- Colonne Gauche : Formulaire de Saisie -->
             <section class="glass-card">
-                <h2 class="card-title">
+                <h2 class="card-title" id="card-title-forms">
                     <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color: var(--primary);">
                         <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
                         <polyline points="14 2 14 8 20 8"></polyline>
                         <line x1="16" y1="13" x2="8" y2="13"></line>
                         <line x1="16" y1="17" x2="8" y2="17"></line>
                     </svg>
-                    Saisie réglementaire de la Fiche
+                    <span>Saisie réglementaire de la Fiche</span>
                 </h2>
 
                 <input type="hidden" id="form-fiche-id" value="">
 
                 <div class="control-row" style="grid-template-columns: 1fr;">
                     <div class="input-group">
-                        <label for="form-type-select">Type de fiche d'aptitude :</label>
+                        <label for="form-type-select" id="label-form-type">Type de fiche d'aptitude :</label>
                         <select id="form-type-select">
-                            <option value="embauche">1. Fiche de visite médicale d'embauchage</option>
-                            <option value="periodique">2. Fiche de visite médicale périodique</option>
-                            <option value="reprise">3. Fiche de visite médicale de reprise</option>
-                            <option value="inaptitude">4. Avis d'inaptitude médicale / préconisations</option>
+                            <option value="embauche" id="opt-type-embauche">1. Fiche de visite médicale d'embauchage</option>
+                            <option value="periodique" id="opt-type-periodique">2. Fiche de visite médicale périodique</option>
+                            <option value="reprise" id="opt-type-reprise">3. Fiche de visite médicale de reprise</option>
+                            <option value="inaptitude" id="opt-type-inaptitude">4. Avis d'inaptitude médicale / préconisations</option>
                         </select>
                     </div>
                 </div>
 
                 <div class="control-row">
                     <div class="input-group">
-                        <label for="form-doctor">Nom & Prénom du médecin :</label>
+                        <label for="form-doctor" id="label-form-doctor">Nom & Prénom du médecin :</label>
                         <div style="display: flex; gap: 0.5rem;">
                             <select id="form-doctor-title" class="form-text-input" style="width: 80px; flex-shrink: 0; cursor: pointer;">
                                 <option value="Dr.">Dr.</option>
@@ -400,65 +400,65 @@
                         </div>
                     </div>
                     <div class="input-group">
-                        <label for="form-structure">Structure de médecine du travail :</label>
+                        <label for="form-structure" id="label-form-structure">Structure de médecine du travail :</label>
                         <input type="text" id="form-structure" placeholder="Ex: SPST Rouiba..." class="form-text-input">
                     </div>
                 </div>
 
                 <div class="control-row">
                     <div class="input-group">
-                        <label for="form-employeur">Organisme Employeur :</label>
+                        <label for="form-employeur" id="label-form-employeur">Organisme Employeur :</label>
                         <input type="text" id="form-employeur" placeholder="Ex: Sonatrach, Cévital..." class="form-text-input">
                     </div>
                     <div class="input-group">
-                        <label for="form-worker">Nom & Prénom du travailleur :</label>
+                        <label for="form-worker" id="label-form-worker">Nom & Prénom du travailleur :</label>
                         <input type="text" id="form-worker" placeholder="Ex: Mustapha..." class="form-text-input">
                     </div>
                 </div>
 
                 <div class="control-row">
                     <div class="input-group">
-                        <label for="form-post">Profession / Poste de travail :</label>
+                        <label for="form-post" id="label-form-post">Profession / Poste de travail :</label>
                         <input type="text" id="form-post" placeholder="Ex: Soudeur, Chauffeur..." class="form-text-input">
                     </div>
                 </div>
 
                 <div class="control-row">
                     <div class="input-group">
-                        <label for="form-date">Date de l'examen :</label>
+                        <label for="form-date" id="label-form-date">Date de l'examen :</label>
                         <input type="date" id="form-date" class="form-text-input">
                     </div>
                     <div class="input-group">
-                        <label for="form-city">Fait à (Lieu) :</label>
+                        <label for="form-city" id="label-form-city">Fait à (Lieu) :</label>
                         <input type="text" id="form-city" placeholder="Ex: Annaba, Alger..." class="form-text-input">
                     </div>
                 </div>
 
                 <div class="input-group">
-                    <label for="form-conclusion">Conclusion médicale d'aptitude :</label>
+                    <label for="form-conclusion" id="label-form-conclusion">Conclusion médicale d'aptitude :</label>
                     <select id="form-conclusion">
-                        <option value="APTE">APTE (sans restriction)</option>
-                        <option value="APTE_RESERVES">APTE AVEC RÉSERVES (Aménagements requis)</option>
-                        <option value="INAPTE_TEMPORAIRE">INAPTE TEMPORAIRE (Inaptitude momentanée)</option>
-                        <option value="INAPTE_DEFINITIF">INAPTE DÉFINITIF (Contre-indication permanente)</option>
+                        <option value="APTE" id="opt-c-apte">APTE (sans restriction)</option>
+                        <option value="APTE_RESERVES" id="opt-c-reserves">APTE AVEC RÉSERVES (Aménagements requis)</option>
+                        <option value="INAPTE_TEMPORAIRE" id="opt-c-inapte-temp">INAPTE TEMPORAIRE (Inaptitude momentanée)</option>
+                        <option value="INAPTE_DEFINITIF" id="opt-c-inapte-def">INAPTE DÉFINITIF (Contre-indication permanente)</option>
                     </select>
                 </div>
 
                 <div class="input-group">
-                    <label for="form-recommendation">Préconisations / Restrictions de poste :</label>
+                    <label for="form-recommendation" id="label-form-recommendation">Préconisations / Restrictions de poste :</label>
                     <textarea id="form-recommendation" placeholder="Rédiger ici les restrictions médicales (ex: éviter de porter des charges...)" style="height: 120px;"></textarea>
                 </div>
 
                 <div class="control-row" style="margin-top: 1.25rem; display: flex; flex-wrap: wrap; gap: 0.5rem;">
                     <button id="btn-form-analyze" class="btn" style="flex: 1.2; min-width: 140px; background: rgba(0, 242, 254, 0.1); color: var(--primary); border: 1px solid rgba(0, 242, 254, 0.3); box-shadow: none;">
                         <span class="spinner" id="form-spinner"></span>
-                        Relecture (IA)
+                        <span id="btn-form-analyze-text">Relecture (IA)</span>
                     </button>
                     <button id="btn-form-save" class="btn" style="flex: 1.2; min-width: 140px; background: rgba(0, 230, 118, 0.1); color: var(--success); border: 1px solid rgba(0, 230, 118, 0.3); box-shadow: none;">
-                        Sauvegarder
+                        <span id="btn-form-save-text">Sauvegarder</span>
                     </button>
                     <button id="btn-form-clear" class="btn" style="flex: 1; min-width: 100px; background: rgba(255, 255, 255, 0.05); color: var(--text-secondary); border: 1px solid var(--border-color); box-shadow: none;">
-                        Nouveau
+                        <span id="btn-form-clear-text">Nouveau</span>
                     </button>
                     <button id="btn-form-print" class="btn" style="flex: 2; min-width: 180px;">
                         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-right: 0.3rem;">
@@ -466,25 +466,25 @@
                             <path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"></path>
                             <rect x="6" y="14" width="12" height="8"></rect>
                         </svg>
-                        Imprimer A4
+                        <span id="btn-form-print-text">Imprimer A4</span>
                     </button>
                 </div>
             </section>
 
             <!-- Colonne Droite : Relecture et feedback IA -->
             <section class="glass-card">
-                <h2 class="card-title">
+                <h2 class="card-title" id="card-title-forms-eval">
                     <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color: var(--secondary);">
                         <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
                     </svg>
-                    Aide à la validation (Copilote)
+                    <span>Aide à la validation (Copilote)</span>
                 </h2>
 
                 <div class="result-placeholder" id="form-placeholder-view">
                     <svg fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12c0 1.268-.63 2.39-1.593 3.068a3.745 3.745 0 01-1.043 3.296 3.745 3.745 0 01-3.296 1.043A3.745 3.745 0 0112 21c-1.268 0-2.39-.63-3.068-1.593a3.746 3.746 0 01-3.296-1.043 3.745 3.745 0 01-1.043-3.296A3.745 3.745 0 013 12c0-1.268.63-2.39 1.593-3.068a3.745 3.745 0 011.043-3.296 3.746 3.746 0 013.296-1.043A3.746 3.746 0 0112 3c1.268 0 2.39.63 3.068 1.593a3.746 3.746 0 013.296 1.043 3.746 3.746 0 011.043 3.296A3.745 3.745 0 0121 12z"></path>
                     </svg>
-                    <p>Remplissez la zone "Préconisations" à gauche et cliquez sur "Relecture critique" pour valider juridiquement le texte avant l'impression.</p>
+                    <p id="form-placeholder-text">Remplissez la zone "Préconisations" à gauche et cliquez sur "Relecture critique" pour valider juridiquement le texte avant l'impression.</p>
                 </div>
 
                 <div class="result-content" id="form-result-view">
@@ -495,13 +495,13 @@
 
                     <div class="reformulation-card">
                         <div class="reformulation-header">
-                            <span class="reformulation-title">Reformulation automatique appliquée</span>
+                            <span class="reformulation-title" id="form-reformulation-title">Reformulation automatique appliquée</span>
                             <button id="btn-form-use-reformulation" class="btn-copy">Utiliser cette version</button>
                         </div>
                         <div class="reformulation-text" id="form-reformulation-content"></div>
                     </div>
 
-                    <h3 class="switch-label" style="font-weight: 600; margin-bottom: 1rem;">Analyse des critères de qualité</h3>
+                    <h3 class="switch-label" id="form-criteria-title" style="font-weight: 600; margin-bottom: 1rem;">Analyse des critères de qualité</h3>
                     <div class="criteria-list" id="form-criteria-list"></div>
                 </div>
             </section>

@@ -1245,21 +1245,111 @@ JSON Format:
         const sourcesTitleText = document.getElementById("sources-title-text");
         if (sourcesTitleText) sourcesTitleText.textContent = dict.titleSources;
 
-        // Vue Modèles
+        // Vue 2 : Formulaires & Impression
         const cardTitleForms = document.querySelector("#card-title-forms span");
         if (cardTitleForms) cardTitleForms.textContent = dict.titleForms;
 
-        const btnFormRelecture = document.getElementById("btn-form-relecture");
-        if (btnFormRelecture) btnFormRelecture.textContent = dict.btnFormRelecture;
+        const labelFormType = document.getElementById("label-form-type");
+        if (labelFormType) labelFormType.textContent = dict.labelFormType;
 
-        const btnFormSave = document.getElementById("btn-form-save");
-        if (btnFormSave) btnFormSave.textContent = dict.btnFormSave;
+        const optTypeEmbauche = document.getElementById("opt-type-embauche");
+        if (optTypeEmbauche) optTypeEmbauche.textContent = dict.optTypeEmbauche;
 
-        const btnFormNew = document.getElementById("btn-form-new");
-        if (btnFormNew) btnFormNew.textContent = dict.btnFormNew;
+        const optTypePeriodique = document.getElementById("opt-type-periodique");
+        if (optTypePeriodique) optTypePeriodique.textContent = dict.optTypePeriodique;
 
-        const btnFormPrint = document.getElementById("btn-form-print");
-        if (btnFormPrint) btnFormPrint.textContent = dict.btnFormPrint;
+        const optTypeReprise = document.getElementById("opt-type-reprise");
+        if (optTypeReprise) optTypeReprise.textContent = dict.optTypeReprise;
+
+        const optTypeInaptitude = document.getElementById("opt-type-inaptitude");
+        if (optTypeInaptitude) optTypeInaptitude.textContent = dict.optTypeInaptitude;
+
+        const labelFormDoctor = document.getElementById("label-form-doctor");
+        if (labelFormDoctor) labelFormDoctor.textContent = dict.labelFormDoctor;
+
+        const formDoctor = document.getElementById("form-doctor");
+        if (formDoctor && dict.placeholderDoctor) formDoctor.placeholder = dict.placeholderDoctor;
+
+        const labelFormStructure = document.getElementById("label-form-structure");
+        if (labelFormStructure) labelFormStructure.textContent = dict.labelFormStructure;
+
+        const formStructure = document.getElementById("form-structure");
+        if (formStructure && dict.placeholderStructure) formStructure.placeholder = dict.placeholderStructure;
+
+        const labelFormEmployeur = document.getElementById("label-form-employeur");
+        if (labelFormEmployeur) labelFormEmployeur.textContent = dict.labelFormEmployer || dict.labelFormEmployeur;
+
+        const formEmployeur = document.getElementById("form-employeur");
+        if (formEmployeur && dict.placeholderEmployeur) formEmployeur.placeholder = dict.placeholderEmployeur;
+
+        const labelFormWorker = document.getElementById("label-form-worker");
+        if (labelFormWorker) labelFormWorker.textContent = dict.labelFormWorker;
+
+        const formWorker = document.getElementById("form-worker");
+        if (formWorker && dict.placeholderWorker) formWorker.placeholder = dict.placeholderWorker;
+
+        const labelFormPost = document.getElementById("label-form-post");
+        if (labelFormPost) labelFormPost.textContent = dict.labelFormPost;
+
+        const formPost = document.getElementById("form-post");
+        if (formPost && dict.placeholderPost) formPost.placeholder = dict.placeholderPost;
+
+        const labelFormDate = document.getElementById("label-form-date");
+        if (labelFormDate) labelFormDate.textContent = dict.labelFormDate;
+
+        const labelFormCity = document.getElementById("label-form-city");
+        if (labelFormCity) labelFormCity.textContent = dict.labelFormCity;
+
+        const formCity = document.getElementById("form-city");
+        if (formCity && dict.placeholderCity) formCity.placeholder = dict.placeholderCity;
+
+        const labelFormConclusion = document.getElementById("label-form-conclusion");
+        if (labelFormConclusion) labelFormConclusion.textContent = dict.labelFormConclusion;
+
+        const optCApte = document.getElementById("opt-c-apte");
+        if (optCApte) optCApte.textContent = dict.optCApte;
+
+        const optCReserves = document.getElementById("opt-c-reserves");
+        if (optCReserves) optCReserves.textContent = dict.optCReserves;
+
+        const optCInapteTemp = document.getElementById("opt-c-inapte-temp");
+        if (optCInapteTemp) optCInapteTemp.textContent = dict.optCInapteTemp;
+
+        const optCInapteDef = document.getElementById("opt-c-inapte-def");
+        if (optCInapteDef) optCInapteDef.textContent = dict.optCInapteDef;
+
+        const labelFormRecommendation = document.getElementById("label-form-recommendation");
+        if (labelFormRecommendation) labelFormRecommendation.textContent = dict.labelFormRec;
+
+        const formRecommendation = document.getElementById("form-recommendation");
+        if (formRecommendation && dict.placeholderFormRec) formRecommendation.placeholder = dict.placeholderFormRec;
+
+        const btnFormAnalyzeText = document.getElementById("btn-form-analyze-text");
+        if (btnFormAnalyzeText) btnFormAnalyzeText.textContent = dict.btnFormAnalyzeText;
+
+        const btnFormSaveText = document.getElementById("btn-form-save-text");
+        if (btnFormSaveText) btnFormSaveText.textContent = dict.btnFormSaveText;
+
+        const btnFormClearText = document.getElementById("btn-form-clear-text");
+        if (btnFormClearText) btnFormClearText.textContent = dict.btnFormClearText;
+
+        const btnFormPrintText = document.getElementById("btn-form-print-text");
+        if (btnFormPrintText) btnFormPrintText.textContent = dict.btnFormPrintText;
+
+        const cardTitleFormsEval = document.querySelector("#card-title-forms-eval span");
+        if (cardTitleFormsEval) cardTitleFormsEval.textContent = dict.titleFormsEval;
+
+        const formPlaceholderText = document.getElementById("form-placeholder-text");
+        if (formPlaceholderText) formPlaceholderText.textContent = dict.formPlaceholderText;
+
+        const formReformulationTitle = document.getElementById("form-reformulation-title");
+        if (formReformulationTitle) formReformulationTitle.textContent = dict.formReformulationTitle;
+
+        const btnFormUseReformulation = document.getElementById("btn-form-use-reformulation");
+        if (btnFormUseReformulation) btnFormUseReformulation.textContent = dict.btnFormUseRef;
+
+        const formCriteriaTitle = document.getElementById("form-criteria-title");
+        if (formCriteriaTitle) formCriteriaTitle.textContent = dict.formCriteriaTitle;
 
         // Re-vérifier l'état du bouton d'analyse
         checkReadyToAnalyze();
