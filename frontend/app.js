@@ -709,12 +709,12 @@ document.addEventListener("DOMContentLoaded", () => {
         
         if (isNotInstalled) {
             btnAnalyze.disabled = false;
-            btnText.textContent = "Télécharger et installer le modèle";
+            btnText.textContent = getTranslation("btnDownloadModel");
         } else {
             const hasText = recommendationInput.value.trim().length > 5;
             const hasModel = modelSelect.value !== "" && modelSelect.value !== "no_model";
             btnAnalyze.disabled = !(hasText && hasModel);
-            btnText.textContent = "Lancer l'analyse critique";
+            btnText.textContent = getTranslation("btnAnalyze");
         }
     }
 
@@ -837,7 +837,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 btnAnalyze.disabled = false;
                 recommendationInput.disabled = false;
                 analyzeSpinner.style.display = "none";
-                btnText.textContent = "Lancer l'analyse critique";
+                btnText.textContent = getTranslation("btnAnalyze");
                 return;
             }
         }
@@ -845,7 +845,7 @@ document.addEventListener("DOMContentLoaded", () => {
         btnAnalyze.disabled = true;
         recommendationInput.disabled = true;
         analyzeSpinner.style.display = "inline-block";
-        btnText.textContent = "Analyse...";
+        btnText.textContent = getTranslation("btnAnalyzeRunning");
 
         const languageSelect = document.getElementById("language-select");
         const selectedLanguage = languageSelect ? languageSelect.value : "ar";
@@ -893,7 +893,7 @@ document.addEventListener("DOMContentLoaded", () => {
             btnAnalyze.disabled = false;
             recommendationInput.disabled = false;
             analyzeSpinner.style.display = "none";
-            btnText.textContent = "Lancer l'analyse critique";
+            btnText.textContent = getTranslation("btnAnalyze");
         }
     });
 
@@ -960,10 +960,18 @@ Réponds STRICTEMENT sous la forme d'un objet JSON contenant l'analyse détaill�
         return JSON.parse(jsonCandidate);
     }
 
+    function getTranslation(key) {
+        const langSelect = document.getElementById("language-select");
+        const lang = langSelect ? langSelect.value : "ar";
+        const dict = UI_TRANSLATIONS[lang] || UI_TRANSLATIONS["ar"];
+        return dict[key] || "";
+    }
+
     // === DICTIONNAIRE MULTILINGUE I18N DE L'INTERFACE ===
     const UI_TRANSLATIONS = {
         ar: {
-            appSubtitle: "الجزائر - الدليل التنظيمي والمساعدة على اتخاذ القرار",
+            appHeaderTitle: "مساعد اللياقة الطبية للعمل",
+            appHeaderSubtitle: "الجزائر - المساعدة على اتخاذ القرار والشهادات التنظيمية",
             tabCopilot: "مساعد المراجعة",
             tabForms: "نماذج الشهادات والطباعة",
             tabDatabase: "قاعدة البيانات",
@@ -977,6 +985,8 @@ Réponds STRICTEMENT sous la forme d'un objet JSON contenant l'analyse détaill�
             labelLang: "لغة التحليل والترجمة:",
             labelRagToggle: "الاعتماد على النصوص التنظيمية والدلائل الرسمية",
             btnAnalyze: "بدء التحليل النقدي",
+            btnAnalyzeRunning: "جاري التحليل...",
+            btnDownloadModel: "تنزيل وتثبيت النموذج",
             labelDocsHeader: "النصوص المرجعية والدلائل الرسمية",
             btnSyncDocs: "تحديث / مزامنة",
 
@@ -1007,7 +1017,8 @@ Réponds STRICTEMENT sous la forme d'un objet JSON contenant l'analyse détaill�
             btnFormPrint: "طباعة A4"
         },
         fr: {
-            appSubtitle: "Algérie - Aide à la décision & fiches réglementaires",
+            appHeaderTitle: "Assistant d'Aptitude Médicale",
+            appHeaderSubtitle: "Algérie - Aide à la décision & fiches réglementaires",
             tabCopilot: "Copilote de Relecture",
             tabForms: "Modèles de Fiches & Impression",
             tabDatabase: "Base de Données",
@@ -1021,6 +1032,8 @@ Réponds STRICTEMENT sous la forme d'un objet JSON contenant l'analyse détaill�
             labelLang: "Langue d'analyse / Traduction :",
             labelRagToggle: "Se baser sur les textes réglementaires et guides de référence",
             btnAnalyze: "Lancer l'analyse critique",
+            btnAnalyzeRunning: "Analyse...",
+            btnDownloadModel: "Télécharger et installer le modèle",
             labelDocsHeader: "Textes de référence et guides officiels",
             btnSyncDocs: "Synchroniser",
 
@@ -1051,7 +1064,8 @@ Réponds STRICTEMENT sous la forme d'un objet JSON contenant l'analyse détaill�
             btnFormPrint: "Imprimer A4"
         },
         en: {
-            appSubtitle: "Algeria - Decision Support & Regulatory Records",
+            appHeaderTitle: "Medical Fitness Assistant",
+            appHeaderSubtitle: "Algeria - Decision Support & Regulatory Records",
             tabCopilot: "Review Copilot",
             tabForms: "Forms & Printing",
             tabDatabase: "Database",
@@ -1065,6 +1079,8 @@ Réponds STRICTEMENT sous la forme d'un objet JSON contenant l'analyse détaill�
             labelLang: "Analysis / Translation Language:",
             labelRagToggle: "Base analysis on official regulatory guides",
             btnAnalyze: "Run Critical Analysis",
+            btnAnalyzeRunning: "Analyzing...",
+            btnDownloadModel: "Download & Install Model",
             labelDocsHeader: "Official Reference Texts & Guides",
             btnSyncDocs: "Synchronize",
 
@@ -1108,6 +1124,13 @@ Réponds STRICTEMENT sous la forme d'un objet JSON contenant l'analyse détaill�
             }
         }
 
+        // En-tête de marque
+        const appHeaderTitle = document.getElementById("app-header-title");
+        if (appHeaderTitle) appHeaderTitle.textContent = dict.appHeaderTitle;
+
+        const appHeaderSubtitle = document.getElementById("app-header-subtitle");
+        if (appHeaderSubtitle) appHeaderSubtitle.textContent = dict.appHeaderSubtitle;
+
         // Navigation
         const btnCopilot = document.getElementById("btn-tab-copilot");
         if (btnCopilot) btnCopilot.textContent = dict.tabCopilot;
@@ -1144,7 +1167,9 @@ Réponds STRICTEMENT sous la forme d'un objet JSON contenant l'analyse détaill�
         if (labelRagToggle) labelRagToggle.textContent = dict.labelRagToggle;
 
         const btnText = document.getElementById("btn-text");
-        if (btnText) btnText.textContent = dict.btnAnalyze;
+        if (btnText && btnText.textContent !== dict.btnAnalyzeRunning) {
+            btnText.textContent = dict.btnAnalyze;
+        }
 
         const labelDocsHeader = document.getElementById("label-docs-header");
         if (labelDocsHeader) labelDocsHeader.textContent = dict.labelDocsHeader;
@@ -1186,6 +1211,9 @@ Réponds STRICTEMENT sous la forme d'un objet JSON contenant l'analyse détaill�
 
         const btnFormPrint = document.getElementById("btn-form-print");
         if (btnFormPrint) btnFormPrint.textContent = dict.btnFormPrint;
+
+        // Re-vérifier l'état du bouton d'analyse
+        checkReadyToAnalyze();
     }
 
     // Écouteur de changement de langue dynamique
