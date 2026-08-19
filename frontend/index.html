@@ -262,19 +262,25 @@
                     <textarea id="recommendation-input" placeholder="Exemple : Patient présentant une contre-indication définitive à l'exposition aux fumées de soudure..."></textarea>
                 </div>
 
-                <div class="control-row">
+                <div class="control-row" style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1.5rem;">
                     <div>
                         <label for="model-select">Modèle d'analyse :</label>
                         <select id="model-select">
                             <option value="">Chargement des modèles...</option>
                         </select>
                     </div>
-                    <div style="display: flex; flex-direction: column; justify-content: flex-end;">
-                        <div class="switch-container">
-                            <span class="switch-label">Se baser sur les textes réglementaires et guides de référence</span>
-                            <input type="checkbox" id="rag-toggle" checked style="width: auto; cursor: pointer;">
-                        </div>
+                    <div>
+                        <label for="language-select">Langue d'analyse / Traduction :</label>
+                        <select id="language-select" style="width: 100%; padding: 0.75rem; border-radius: 8px; background: rgba(5, 8, 16, 0.6); border: 1px solid var(--border-color); color: var(--text-primary); font-weight: 500;">
+                            <option value="ar" selected>🇸🇦 العربية (Arabe)</option>
+                            <option value="fr">🇫🇷 Français</option>
+                            <option value="en">🇬🇧 English (Anglais)</option>
+                        </select>
                     </div>
+                </div>
+                <div class="switch-container" style="margin-bottom: 1.5rem;">
+                    <span class="switch-label">Se baser sur les textes réglementaires et guides de référence</span>
+                    <input type="checkbox" id="rag-toggle" checked style="width: auto; cursor: pointer;">
                 </div>
 
                 <button id="btn-analyze" class="btn" disabled>

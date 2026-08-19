@@ -792,6 +792,9 @@ document.addEventListener("DOMContentLoaded", () => {
         analyzeSpinner.style.display = "inline-block";
         btnText.textContent = "Analyse...";
 
+        const languageSelect = document.getElementById("language-select");
+        const selectedLanguage = languageSelect ? languageSelect.value : "ar";
+
         try {
             const response = await fetch("/api/analyze", {
                 method: "POST",
@@ -800,7 +803,8 @@ document.addEventListener("DOMContentLoaded", () => {
                     recommendation: text,
                     model_name: modelName,
                     provider: provider,
-                    use_rag: useRag
+                    use_rag: useRag,
+                    language: selectedLanguage
                 })
             });
 
@@ -810,7 +814,7 @@ document.addEventListener("DOMContentLoaded", () => {
             }
 
             const result = await response.json();
-            renderResults(result);
+            renderResults(result, selectedLanguage);
             
         } catch (error) {
             console.error("Erreur d'analyse :", error);
@@ -823,9 +827,17 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     });
 
-    function renderResults(result) {
+    function renderResults(result, lang = "ar") {
         placeholderView.style.display = "none";
         resultView.style.display = "block";
+
+        if (lang === "ar") {
+            resultView.setAttribute("dir", "rtl");
+            resultView.style.textAlign = "right";
+        } else {
+            resultView.removeAttribute("dir");
+            resultView.style.textAlign = "left";
+        }
 
         // Afficher la bannière d'avertissement RAG hors-ligne si fallback actif
         const existingBanner = document.getElementById("fallback-warning-banner");

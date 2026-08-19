@@ -74,6 +74,7 @@ class AnalyzeRequest(BaseModel):
     model_name: str
     provider: str
     use_rag: bool = True
+    language: str = "ar"
 
 from fastapi.responses import StreamingResponse
 import requests
@@ -236,7 +237,8 @@ async def analyze_recommendation(request: AnalyzeRequest):
             model_name=request.model_name,
             provider=request.provider,
             recommendation=request.recommendation,
-            context_chunks=context_chunks
+            context_chunks=context_chunks,
+            language=request.language
         )
         
         # Ajouter le contexte RAG dans la réponse pour transparence de l'interface
