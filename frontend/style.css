@@ -211,6 +211,11 @@ select {
     transition: var(--transition-smooth);
 }
 
+select option {
+    background-color: #0d1527;
+    color: #ffffff;
+}
+
 select:focus {
     border-color: var(--primary);
 }

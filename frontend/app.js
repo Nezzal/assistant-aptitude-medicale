@@ -1059,11 +1059,41 @@ JSON Format:
             crit_4: "تغيير الوظيفة أو عدم القدرة المقنعة",
             crit_5: "خرق السر الطبي أو الحياة الخاصة",
 
-            titleForms: "إدخال بيانات الاستشارة والشهادة",
-            btnFormRelecture: "مراجعة الذكاء الاصطناعي",
-            btnFormSave: "حفظ الملف",
-            btnFormNew: "جديد",
-            btnFormPrint: "طباعة A4"
+            titleForms: "إدخال بيانات الشهادة التنظيمية",
+            labelFormType: "نوع شهادة اللياقة الطبية:",
+            optTypeEmbauche: "1. شهادة الفحص الطبي عند التوظيف",
+            optTypePeriodique: "2. شهادة الفحص الطبي الدوري",
+            optTypeReprise: "3. شهادة الفحص الطبي لاستئناف العمل",
+            optTypeInaptitude: "4. إشعار عدم القدرة الطبية / التوصيات",
+            labelFormDoctor: "اسم ولقب الطبيب:",
+            placeholderDoctor: "مثال: عبد المالك نزال...",
+            labelFormStructure: "مصلحة طب العمل / الهيئة:",
+            placeholderStructure: "مثال: مصلحة طب العمل الرويبة...",
+            labelFormEmployer: "الهيئة المستخدمة / المؤسسة:",
+            placeholderEmployeur: "مثال: سوناطراك، سيفيتال...",
+            labelFormWorker: "اسم ولقب العامل:",
+            placeholderWorker: "مثال: مصطفى...",
+            labelFormPost: "المهنة / منصب العمل:",
+            placeholderPost: "مثال: لحام، سائق...",
+            labelFormDate: "تاريخ الفحص الطبي:",
+            labelFormCity: "حرر بـ (المكان):",
+            placeholderCity: "مثال: عنابة، الجزائر...",
+            labelFormConclusion: "النتيجة الطبية للياقة البدنية والمهنية:",
+            optCApte: "قادر (بدون قيود)",
+            optCReserves: "قادر مع تحفظات (تكييف منصب العمل مطلوب)",
+            optCInapteTemp: "غير قادر مؤقتاً (عدم قدرة مؤقتة)",
+            optCInapteDef: "غير قادر نهائياً (مانع دائم من المنصب)",
+            labelFormRec: "التوصيات والاحتياطات المهنية في المنصب:",
+            placeholderFormRec: "أكتب هنا القيود الطبية (مثال: تجنب حمل الأثقال، عدم التعرض للغبار...)",
+            btnFormAnalyzeText: "مراجعة (الذكاء الاصطناعي)",
+            btnFormSaveText: "حفظ الملف",
+            btnFormClearText: "جديد",
+            btnFormPrintText: "طباعة A4",
+            titleFormsEval: "المساعدة على المصادقة (المساعد)",
+            formPlaceholderText: "أدخل التوصيات على اليسار ثم اضغط على مراجعة (الذكاء الاصطناعي) للمصادقة القانونية قبل الطباعة.",
+            formReformulationTitle: "إعادة الصياغة التلقائية المطبقة",
+            btnFormUseRef: "اعتماد هذه الصياغة",
+            formCriteriaTitle: "تحليل معايير جودة الصياغة"
         },
         fr: {
             appHeaderTitle: "Assistant d'Aptitude Médicale",
@@ -1107,10 +1137,40 @@ JSON Format:
             crit_5: "Rupture du secret médical ou vie privée",
 
             titleForms: "Saisie réglementaire de la Fiche",
-            btnFormRelecture: "Relecture (IA)",
-            btnFormSave: "Sauvegarder",
-            btnFormNew: "Nouveau",
-            btnFormPrint: "Imprimer A4"
+            labelFormType: "Type de fiche d'aptitude :",
+            optTypeEmbauche: "1. Fiche de visite médicale d'embauchage",
+            optTypePeriodique: "2. Fiche de visite médicale périodique",
+            optTypeReprise: "3. Fiche de visite médicale de reprise",
+            optTypeInaptitude: "4. Avis d'inaptitude médicale / préconisations",
+            labelFormDoctor: "Nom & Prénom du médecin :",
+            placeholderDoctor: "Ex: Nezzal Abdelmalek...",
+            labelFormStructure: "Structure de médecine du travail :",
+            placeholderStructure: "Ex: SPST Rouiba...",
+            labelFormEmployer: "Organisme Employeur :",
+            placeholderEmployeur: "Ex: Sonatrach, Cévital...",
+            labelFormWorker: "Nom & Prénom du travailleur :",
+            placeholderWorker: "Ex: Mustapha...",
+            labelFormPost: "Profession / Poste de travail :",
+            placeholderPost: "Ex: Soudeur, Chauffeur...",
+            labelFormDate: "Date de l'examen :",
+            labelFormCity: "Fait à (Lieu) :",
+            placeholderCity: "Ex: Annaba, Alger...",
+            labelFormConclusion: "Conclusion médicale d'aptitude :",
+            optCApte: "APTE (sans restriction)",
+            optCReserves: "APTE AVEC RÉSERVES (Aménagements requis)",
+            optCInapteTemp: "INAPTE TEMPORAIRE (Inaptitude momentanée)",
+            optCInapteDef: "INAPTE DÉFINITIF (Contre-indication permanente)",
+            labelFormRec: "Préconisations / Restrictions de poste :",
+            placeholderFormRec: "Rédiger ici les restrictions médicales (ex: éviter de porter des charges...)",
+            btnFormAnalyzeText: "Relecture (IA)",
+            btnFormSaveText: "Sauvegarder",
+            btnFormClearText: "Nouveau",
+            btnFormPrintText: "Imprimer A4",
+            titleFormsEval: "Aide à la validation (Copilote)",
+            formPlaceholderText: "Remplissez la zone \"Préconisations\" à gauche et cliquez sur \"Relecture critique\" pour valider juridiquement le texte avant l'impression.",
+            formReformulationTitle: "Reformulation automatique appliquée",
+            btnFormUseRef: "Utiliser cette version",
+            formCriteriaTitle: "Analyse des critères de qualité"
         },
         en: {
             appHeaderTitle: "Medical Fitness Assistant",
@@ -1154,10 +1214,40 @@ JSON Format:
             crit_5: "Breach of medical confidentiality",
 
             titleForms: "Regulatory Form Entry",
-            btnFormRelecture: "AI Review",
-            btnFormSave: "Save Record",
-            btnFormNew: "New",
-            btnFormPrint: "Print A4"
+            labelFormType: "Fitness Certificate Type:",
+            optTypeEmbauche: "1. Pre-employment Medical Visit",
+            optTypePeriodique: "2. Periodic Medical Visit",
+            optTypeReprise: "3. Return-to-Work Medical Visit",
+            optTypeInaptitude: "4. Unfitness Notice / Recommendations",
+            labelFormDoctor: "Doctor Name & Surname:",
+            placeholderDoctor: "Ex: Nezzal Abdelmalek...",
+            labelFormStructure: "Occupational Health Service:",
+            placeholderStructure: "Ex: Rouiba OH Service...",
+            labelFormEmployer: "Employer Organization:",
+            placeholderEmployeur: "Ex: Sonatrach, Cevital...",
+            labelFormWorker: "Worker Name & Surname:",
+            placeholderWorker: "Ex: Mustapha...",
+            labelFormPost: "Occupation / Job Position:",
+            placeholderPost: "Ex: Welder, Driver...",
+            labelFormDate: "Examination Date:",
+            labelFormCity: "Issued at (Location):",
+            placeholderCity: "Ex: Annaba, Algiers...",
+            labelFormConclusion: "Medical Fitness Conclusion:",
+            optCApte: "FIT (unrestricted)",
+            optCReserves: "FIT WITH RESERVATIONS (Job adaptations required)",
+            optCInapteTemp: "TEMPORARILY UNFIT (Momentary unfitness)",
+            optCInapteDef: "PERMANENTLY UNFIT (Permanent contraindication)",
+            labelFormRec: "Recommendations / Job Restrictions:",
+            placeholderFormRec: "Write medical restrictions here (e.g. avoid heavy lifting...)",
+            btnFormAnalyzeText: "AI Review",
+            btnFormSaveText: "Save Record",
+            btnFormClearText: "New",
+            btnFormPrintText: "Print A4",
+            titleFormsEval: "Validation Support (Copilot)",
+            formPlaceholderText: "Fill in Recommendations on the left and click AI Review for legal validation before printing.",
+            formReformulationTitle: "Applied Automatic Reformulation",
+            btnFormUseRef: "Use this version",
+            formCriteriaTitle: "Quality Criteria Analysis"
         }
     };
 
@@ -1175,142 +1265,144 @@ JSON Format:
 
         // En-tête de marque
         const appHeaderTitle = document.getElementById("app-header-title");
-        if (appHeaderTitle) appHeaderTitle.textContent = dict.appHeaderTitle;
+        if (appHeaderTitle && dict.appHeaderTitle) appHeaderTitle.textContent = dict.appHeaderTitle;
 
         const appHeaderSubtitle = document.getElementById("app-header-subtitle");
-        if (appHeaderSubtitle) appHeaderSubtitle.textContent = dict.appHeaderSubtitle;
+        if (appHeaderSubtitle && dict.appHeaderSubtitle) appHeaderSubtitle.textContent = dict.appHeaderSubtitle;
 
         // Navigation
         const btnCopilot = document.getElementById("btn-tab-copilot");
-        if (btnCopilot) btnCopilot.textContent = dict.tabCopilot;
+        if (btnCopilot && dict.tabCopilot) btnCopilot.textContent = dict.tabCopilot;
 
         const btnForms = document.getElementById("btn-tab-forms");
-        if (btnForms) btnForms.textContent = dict.tabForms;
+        if (btnForms && dict.tabForms) btnForms.textContent = dict.tabForms;
 
         const btnDatabase = document.getElementById("btn-tab-database");
-        if (btnDatabase) btnDatabase.textContent = dict.tabDatabase;
+        if (btnDatabase && dict.tabDatabase) btnDatabase.textContent = dict.tabDatabase;
 
         const btnGuide = document.getElementById("btn-show-guide");
-        if (btnGuide) btnGuide.textContent = dict.tabGuide;
+        if (btnGuide && dict.tabGuide) btnGuide.textContent = dict.tabGuide;
 
         const btnLogout = document.getElementById("btn-logout");
-        if (btnLogout) btnLogout.textContent = dict.tabLogout;
+        if (btnLogout && dict.tabLogout) btnLogout.textContent = dict.tabLogout;
 
         // Colonne Gauche
         const cardTitleInput = document.querySelector("#card-title-input span");
-        if (cardTitleInput) cardTitleInput.textContent = dict.titleInput;
+        if (cardTitleInput && dict.titleInput) cardTitleInput.textContent = dict.titleInput;
 
         const labelRecInput = document.getElementById("label-rec-input");
-        if (labelRecInput) labelRecInput.textContent = dict.labelInput;
+        if (labelRecInput && dict.labelInput) labelRecInput.textContent = dict.labelInput;
 
         const recInput = document.getElementById("recommendation-input");
-        if (recInput) recInput.placeholder = dict.placeholderInput;
+        if (recInput && dict.placeholderInput) recInput.placeholder = dict.placeholderInput;
 
         const labelModelSelect = document.getElementById("label-model-select");
-        if (labelModelSelect) labelModelSelect.textContent = dict.labelModel;
+        if (labelModelSelect && dict.labelModel) labelModelSelect.textContent = dict.labelModel;
 
         const labelLangSelect = document.getElementById("label-lang-select");
-        if (labelLangSelect) labelLangSelect.textContent = dict.labelLang;
+        if (labelLangSelect && dict.labelLang) labelLangSelect.textContent = dict.labelLang;
 
         const labelRagToggle = document.getElementById("label-rag-toggle");
-        if (labelRagToggle) labelRagToggle.textContent = dict.labelRagToggle;
+        if (labelRagToggle && dict.labelRagToggle) labelRagToggle.textContent = dict.labelRagToggle;
 
         const btnText = document.getElementById("btn-text");
-        if (btnText && btnText.textContent !== dict.btnAnalyzeRunning) {
+        if (btnText && dict.btnAnalyze && btnText.textContent !== dict.btnAnalyzeRunning) {
             btnText.textContent = dict.btnAnalyze;
         }
 
         const labelDocsHeader = document.getElementById("label-docs-header");
-        if (labelDocsHeader) labelDocsHeader.textContent = dict.labelDocsHeader;
+        if (labelDocsHeader && dict.labelDocsHeader) labelDocsHeader.textContent = dict.labelDocsHeader;
 
         const syncDocsBtnText = document.getElementById("sync-docs-btn-text");
-        if (syncDocsBtnText) syncDocsBtnText.textContent = dict.btnSyncDocs;
+        if (syncDocsBtnText && dict.btnSyncDocs) syncDocsBtnText.textContent = dict.btnSyncDocs;
 
         // Colonne Droite
         const cardTitleEval = document.querySelector("#card-title-eval span");
-        if (cardTitleEval) cardTitleEval.textContent = dict.titleEval;
+        if (cardTitleEval && dict.titleEval) cardTitleEval.textContent = dict.titleEval;
 
         const placeholderText = document.getElementById("placeholder-text");
-        if (placeholderText) placeholderText.textContent = dict.placeholderEval;
+        if (placeholderText && dict.placeholderEval) placeholderText.textContent = dict.placeholderEval;
 
         const reformulationTitleText = document.getElementById("reformulation-title-text");
-        if (reformulationTitleText) reformulationTitleText.textContent = dict.titleReformulation;
+        if (reformulationTitleText && dict.titleReformulation) reformulationTitleText.textContent = dict.titleReformulation;
 
         const btnCopyRef = document.getElementById("btn-copy-reformulation");
-        if (btnCopyRef) btnCopyRef.textContent = dict.btnCopy;
+        if (btnCopyRef && dict.btnCopy) btnCopyRef.textContent = dict.btnCopy;
 
         const detailedAnalysisTitle = document.getElementById("detailed-analysis-title");
-        if (detailedAnalysisTitle) detailedAnalysisTitle.textContent = dict.titleDetailedAnalysis;
+        if (detailedAnalysisTitle && dict.titleDetailedAnalysis) detailedAnalysisTitle.textContent = dict.titleDetailedAnalysis;
 
         const sourcesTitleText = document.getElementById("sources-title-text");
-        if (sourcesTitleText) sourcesTitleText.textContent = dict.titleSources;
+        if (sourcesTitleText && dict.titleSources) sourcesTitleText.textContent = dict.titleSources;
 
         // Vue 2 : Formulaires & Impression
         const cardTitleForms = document.querySelector("#card-title-forms span");
-        if (cardTitleForms) cardTitleForms.textContent = dict.titleForms;
+        if (cardTitleForms && dict.titleForms) cardTitleForms.textContent = dict.titleForms;
 
         const labelFormType = document.getElementById("label-form-type");
-        if (labelFormType) labelFormType.textContent = dict.labelFormType;
+        if (labelFormType && dict.labelFormType) labelFormType.textContent = dict.labelFormType;
 
         const optTypeEmbauche = document.getElementById("opt-type-embauche");
-        if (optTypeEmbauche) optTypeEmbauche.textContent = dict.optTypeEmbauche;
+        if (optTypeEmbauche && dict.optTypeEmbauche) optTypeEmbauche.textContent = dict.optTypeEmbauche;
 
         const optTypePeriodique = document.getElementById("opt-type-periodique");
-        if (optTypePeriodique) optTypePeriodique.textContent = dict.optTypePeriodique;
+        if (optTypePeriodique && dict.optTypePeriodique) optTypePeriodique.textContent = dict.optTypePeriodique;
 
         const optTypeReprise = document.getElementById("opt-type-reprise");
-        if (optTypeReprise) optTypeReprise.textContent = dict.optTypeReprise;
+        if (optTypeReprise && dict.optTypeReprise) optTypeReprise.textContent = dict.optTypeReprise;
 
         const optTypeInaptitude = document.getElementById("opt-type-inaptitude");
-        if (optTypeInaptitude) optTypeInaptitude.textContent = dict.optTypeInaptitude;
+        if (optTypeInaptitude && dict.optTypeInaptitude) optTypeInaptitude.textContent = dict.optTypeInaptitude;
 
         const labelFormDoctor = document.getElementById("label-form-doctor");
-        if (labelFormDoctor) labelFormDoctor.textContent = dict.labelFormDoctor;
+        if (labelFormDoctor && dict.labelFormDoctor) labelFormDoctor.textContent = dict.labelFormDoctor;
 
         const formDoctor = document.getElementById("form-doctor");
         if (formDoctor && dict.placeholderDoctor) formDoctor.placeholder = dict.placeholderDoctor;
 
         const labelFormStructure = document.getElementById("label-form-structure");
-        if (labelFormStructure) labelFormStructure.textContent = dict.labelFormStructure;
+        if (labelFormStructure && dict.labelFormStructure) labelFormStructure.textContent = dict.labelFormStructure;
 
         const formStructure = document.getElementById("form-structure");
         if (formStructure && dict.placeholderStructure) formStructure.placeholder = dict.placeholderStructure;
 
         const labelFormEmployeur = document.getElementById("label-form-employeur");
-        if (labelFormEmployeur) labelFormEmployeur.textContent = dict.labelFormEmployer || dict.labelFormEmployeur;
+        if (labelFormEmployeur && (dict.labelFormEmployer || dict.labelFormEmployeur)) {
+            labelFormEmployeur.textContent = dict.labelFormEmployer || dict.labelFormEmployeur;
+        }
 
         const formEmployeur = document.getElementById("form-employeur");
         if (formEmployeur && dict.placeholderEmployeur) formEmployeur.placeholder = dict.placeholderEmployeur;
 
         const labelFormWorker = document.getElementById("label-form-worker");
-        if (labelFormWorker) labelFormWorker.textContent = dict.labelFormWorker;
+        if (labelFormWorker && dict.labelFormWorker) labelFormWorker.textContent = dict.labelFormWorker;
 
         const formWorker = document.getElementById("form-worker");
         if (formWorker && dict.placeholderWorker) formWorker.placeholder = dict.placeholderWorker;
 
         const labelFormPost = document.getElementById("label-form-post");
-        if (labelFormPost) labelFormPost.textContent = dict.labelFormPost;
+        if (labelFormPost && dict.labelFormPost) labelFormPost.textContent = dict.labelFormPost;
 
         const formPost = document.getElementById("form-post");
         if (formPost && dict.placeholderPost) formPost.placeholder = dict.placeholderPost;
 
         const labelFormDate = document.getElementById("label-form-date");
-        if (labelFormDate) labelFormDate.textContent = dict.labelFormDate;
+        if (labelFormDate && dict.labelFormDate) labelFormDate.textContent = dict.labelFormDate;
 
         const labelFormCity = document.getElementById("label-form-city");
-        if (labelFormCity) labelFormCity.textContent = dict.labelFormCity;
+        if (labelFormCity && dict.labelFormCity) labelFormCity.textContent = dict.labelFormCity;
 
         const formCity = document.getElementById("form-city");
         if (formCity && dict.placeholderCity) formCity.placeholder = dict.placeholderCity;
 
         const labelFormConclusion = document.getElementById("label-form-conclusion");
-        if (labelFormConclusion) labelFormConclusion.textContent = dict.labelFormConclusion;
+        if (labelFormConclusion && dict.labelFormConclusion) labelFormConclusion.textContent = dict.labelFormConclusion;
 
         const optCApte = document.getElementById("opt-c-apte");
-        if (optCApte) optCApte.textContent = dict.optCApte;
+        if (optCApte && dict.optCApte) optCApte.textContent = dict.optCApte;
 
         const optCReserves = document.getElementById("opt-c-reserves");
-        if (optCReserves) optCReserves.textContent = dict.optCReserves;
+        if (optCReserves && dict.optCReserves) optCReserves.textContent = dict.optCReserves;
 
         const optCInapteTemp = document.getElementById("opt-c-inapte-temp");
         if (optCInapteTemp) optCInapteTemp.textContent = dict.optCInapteTemp;
