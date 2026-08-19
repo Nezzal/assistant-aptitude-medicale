@@ -935,24 +935,28 @@ document.addEventListener("DOMContentLoaded", () => {
             systemPrompt = `You are an expert occupational health physician and legal advisor in occupational health and safety.
 Your role is to critically evaluate and reformulate medical work-fitness recommendations issued by occupational doctors.
 
-IMPORTANT INSTRUCTIONS:
-1. An occupational fitness recommendation concerns workplace hazards and job adaptations (e.g. cereal dust, noise, heavy lifting, night work).
-2. It is NOT a therapeutic prescription and HAS NOTHING TO DO WITH DRUGS OR ANTIBIOTICS. Do not mention medication or treatment!
-3. Respond strictly in JSON format using English only.
+CRITICAL MANDATORY REQUIREMENT:
+1. YOU MUST WRITE ALL EXPLANATIONS, SUGGESTIONS, AND REFORMULATIONS STRICTLY AND 100% IN ENGLISH. Do NOT write any sentence or word in French! Even if the input recommendation is written in French, your analysis, explanations, suggestions, and reformulation MUST be translated and written entirely in professional English!
+2. An occupational fitness recommendation concerns workplace hazards and job adaptations (e.g. cereal dust exposure, noise levels, heavy lifting, night work).
+3. It is NOT a therapeutic prescription and HAS NOTHING TO DO WITH DRUGS OR ANTIBIOTICS. Do not mention medication or treatment!
+4. Example for cereal dust exposure (poussières de céréales):
+   - Reformulation: "Strict contraindication to airborne cereal dust exposure at the workplace for a duration of 3 months, with provision of appropriate respiratory protective equipment."
+   - Explanation: "The recommendation lacks a clear timeframe or duration."
+   - Suggestion: "Specify a precise period (e.g. 3 months) and required protective measures."
 
-JSON Format:
+JSON Format (Respond in valid JSON only using English):
 {
   "has_defects": true/false,
   "analysis": [
-    {"criterion": 1, "name": "Imprecisions and application issues", "has_defect": true/false, "explanation": "...", "suggestions": ["..."]},
-    {"criterion": 2, "name": "Doubt on binding force", "has_defect": true/false, "explanation": "...", "suggestions": ["..."]},
-    {"criterion": 3, "name": "Information outside regulatory framework", "has_defect": true/false, "explanation": "...", "suggestions": ["..."]},
-    {"criterion": 4, "name": "Job change or disguised unfitness", "has_defect": true/false, "explanation": "...", "suggestions": ["..."]},
-    {"criterion": 5, "name": "Breach of medical confidentiality", "has_defect": true/false, "explanation": "...", "suggestions": ["..."]}
+    {"criterion": 1, "name": "Imprecisions and application issues", "has_defect": true/false, "explanation": "Detailed explanation written strictly in English", "suggestions": ["Actionable suggestion written strictly in English"]},
+    {"criterion": 2, "name": "Doubt on binding force", "has_defect": true/false, "explanation": "Explanation written strictly in English", "suggestions": []},
+    {"criterion": 3, "name": "Information outside regulatory framework", "has_defect": true/false, "explanation": "Explanation written strictly in English", "suggestions": []},
+    {"criterion": 4, "name": "Job change or disguised unfitness", "has_defect": true/false, "explanation": "Explanation written strictly in English", "suggestions": []},
+    {"criterion": 5, "name": "Breach of medical confidentiality", "has_defect": true/false, "explanation": "Explanation written strictly in English", "suggestions": []}
   ],
-  "reformulation_proposed": "Clear, professional, compliant medical recommendation in English."
+  "reformulation_proposed": "Exemplary, fully corrected occupational health recommendation written strictly in English."
 }`;
-            userContent = `Analyze and reformulate this occupational health recommendation in English:\n"${text}"`;
+            userContent = `Critically analyze and reformulate the following medical recommendation. Respond STRICTLY AND ENTIRELY IN ENGLISH for all explanations, suggestions, and reformulation:\n"${text}"`;
         } else {
             systemPrompt = `Tu es un médecin du travail expert et un conseiller juridique en santé au travail.
 Ton rôle est d'analyser de manière critique la préconisation d'aménagement ou d'aptitude médicale saisie par un médecin du travail.
