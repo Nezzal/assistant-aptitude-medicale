@@ -409,36 +409,81 @@ document.addEventListener("DOMContentLoaded", () => {
         loadSavedFiches(); // Recharger et calculer les stats
     });
 
-    // === CHARGEMENT DES MODÈLES & DOCUMENTS (HYBRIDE) ===
+    // === CHARGEMENT DES MODÈLES & DOCUMENTS (HYBRIDE CLIENT/SERVER) ===
     let autoPollingTimer = null;
+
+    async function checkLocalOllamaFromBrowser() {
+        try {
+            const res = await fetch("http://127.0.0.1:11434/api/tags", {
+                method: "GET",
+                headers: { "Accept": "application/json" }
+            });
+            if (res.ok) {
+                const data = await res.json();
+                const models = data.models || [];
+                return models
+                    .filter(m => !m.name.toLowerCase().includes("embed"))
+                    .map(m => ({
+                        name: m.name,
+                        provider: "ollama",
+                        display_name: `Ollama Local - ${m.name}`,
+                        installed: true
+                    }));
+            }
+        } catch (e) {
+            // Ollama local non accessible directement ou non démarré
+        }
+        return [];
+    }
 
     async function loadModels() {
         try {
-            const response = await fetch("/api/models");
-            const data = await response.json();
+            // 1. Détection directe par le navigateur du client (Ollama local sur son ordinateur)
+            const localModels = await checkLocalOllamaFromBrowser();
             
-            if (data.status === "success" && data.models.length > 0) {
-                availableModels = data.models;
+            // 2. Détection par le serveur backend
+            let backendModels = [];
+            try {
+                const response = await fetch("/api/models");
+                const data = await response.json();
+                if (data.status === "success" && data.models) {
+                    backendModels = data.models;
+                }
+            } catch (e) {}
+
+            // Fusion des modèles détectés
+            let allModels = [];
+            if (localModels.length > 0) {
+                allModels = [...localModels];
+                backendModels.forEach(bm => {
+                    if (bm.name !== "no_model" && !allModels.some(lm => lm.name === bm.name)) {
+                        allModels.push(bm);
+                    }
+                });
+            } else {
+                allModels = backendModels;
+            }
+
+            if (allModels.length > 0) {
+                availableModels = allModels;
                 modelSelect.innerHTML = "";
-                
-                const isOllamaOffline = availableModels.some(model => model.name === "no_model");
+
+                const isOllamaOffline = availableModels.some(model => model.name === "no_model") && localModels.length === 0;
                 const hasInstalledModel = availableModels.some(model => model.provider === "ollama" && model.installed === true);
 
                 if (isOllamaOffline) {
-                    // ÉTAPE 1 : Moteur Ollama absent / éteint
                     showOllamaStep1();
                     startAutoPolling();
                 } else if (!hasInstalledModel) {
-                    // ÉTAPE 2 : Ollama actif, mais aucun modèle installé (ex: qwen2.5:3b)
                     stopAutoPolling();
                     showOllamaStep2();
                 } else {
-                    // PRÊT : Tout est configuré
                     stopAutoPolling();
-                    hideOllamaOnboardingModal();
+                    hideOboardingModalIfReady();
                 }
 
                 availableModels.forEach((model, index) => {
+                    if (model.name === "no_model" && localModels.length > 0) return;
                     const option = document.createElement("option");
                     option.value = model.name;
                     option.textContent = model.display_name;
@@ -447,7 +492,7 @@ document.addEventListener("DOMContentLoaded", () => {
                     if (index === 0) option.selected = true;
                     modelSelect.appendChild(option);
                 });
-                
+
                 checkReadyToAnalyze();
             } else {
                 showOllamaStep1();
@@ -458,6 +503,10 @@ document.addEventListener("DOMContentLoaded", () => {
             showOllamaStep1();
             startAutoPolling();
         }
+    }
+
+    function hideOboardingModalIfReady() {
+        hideOllamaOnboardingModal();
     }
 
     // === GESTION DU WIZARD HYBRIDE OLLAMA & QWEN (2 ÉTAPES) ===
@@ -505,6 +554,12 @@ document.addEventListener("DOMContentLoaded", () => {
         if (autoPollingTimer) return;
         autoPollingTimer = setInterval(async () => {
             try {
+                const local = await checkLocalOllamaFromBrowser();
+                if (local.length > 0) {
+                    stopAutoPolling();
+                    await loadModels();
+                    return;
+                }
                 const res = await fetch("/api/models");
                 const d = await res.json();
                 if (d.status === "success" && d.models.length > 0) {
@@ -796,24 +851,39 @@ document.addEventListener("DOMContentLoaded", () => {
         const selectedLanguage = languageSelect ? languageSelect.value : "ar";
 
         try {
-            const response = await fetch("/api/analyze", {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({
-                    recommendation: text,
-                    model_name: modelName,
-                    provider: provider,
-                    use_rag: useRag,
-                    language: selectedLanguage
-                })
-            });
+            let result = null;
 
-            if (!response.ok) {
-                const errorData = await response.json();
-                throw new Error(errorData.detail || "Une erreur est survenue lors de l'analyse.");
+            // Si le modèle sélectionné est Ollama local, tenter l'analyse directe depuis le navigateur du client
+            if (provider === "ollama") {
+                try {
+                    result = await analyzeWithLocalOllama(modelName, text, [], selectedLanguage);
+                } catch (localErr) {
+                    console.warn("Analyse directe par le navigateur vers Ollama local a échoué. Bascule vers l'API backend...", localErr);
+                }
             }
 
-            const result = await response.json();
+            // Si l'analyse directe n'a pas été réalisée (ex: modèle cloud ou échec local), interroger le backend
+            if (!result) {
+                const response = await fetch("/api/analyze", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({
+                        recommendation: text,
+                        model_name: modelName,
+                        provider: provider,
+                        use_rag: useRag,
+                        language: selectedLanguage
+                    })
+                });
+
+                if (!response.ok) {
+                    const errorData = await response.json();
+                    throw new Error(errorData.detail || "Une erreur est survenue lors de l'analyse.");
+                }
+
+                result = await response.json();
+            }
+
             renderResults(result, selectedLanguage);
             
         } catch (error) {
@@ -826,6 +896,69 @@ document.addEventListener("DOMContentLoaded", () => {
             btnText.textContent = "Lancer l'analyse critique";
         }
     });
+
+    async function analyzeWithLocalOllama(modelName, text, contextChunks, language) {
+        let langPrompt = "";
+        if (language === "ar") {
+            langPrompt = "\n\nIMPORTANT CONSTRUCT: Réponds STRICTEMENT et INTÉGRALEMENT EN ARABE (اللغة العربية). Toutes les explications, les suggestions et la reformulation doivent être rédigées en arabe littéraire et médical de haute qualité.";
+        } else if (language === "en") {
+            langPrompt = "\n\nIMPORTANT CONSTRUCT: Respond STRICTLY and ENTIRELY IN ENGLISH. All explanations, suggestions, and the proposed reformulation MUST be written in professional medical English.";
+        } else {
+            langPrompt = "\n\nIMPORTANT CONSTRUCT: Réponds STRICTEMENT en FRANÇAIS. Toutes les explications, les suggestions et la reformulation doivent être rédigées en français.";
+        }
+
+        const systemPrompt = `Tu es un médecin du travail expert et un conseiller juridique en santé au travail.
+Ton rôle est d'analyser de manière critique la préconisation d'aménagement ou d'aptitude médicale saisie par un médecin, afin de vérifier sa clarté, sa légalité et son applicabilité par l'employeur.
+
+Tu dois impérativement analyser l'écrit selon les 5 critères de mauvaise qualité suivants :
+1. Imprécisions et difficultés d'application
+2. Doute sur la force d'obligation
+3. Informations hors cadre réglementaire
+4. Changement de poste ou inaptitude déguisée
+5. Rupture du secret médical ou vie privée
+
+Réponds STRICTEMENT sous la forme d'un objet JSON contenant l'analyse détaillée. Format :
+{
+  "has_defects": true/false,
+  "analysis": [
+    {"criterion": 1, "name": "Imprécisions et difficultés d'application", "has_defect": true/false, "explanation": "...", "suggestions": ["..."]},
+    {"criterion": 2, "name": "Doute sur la force d'obligation", "has_defect": true/false, "explanation": "...", "suggestions": ["..."]},
+    {"criterion": 3, "name": "Informations hors cadre réglementaire", "has_defect": true/false, "explanation": "...", "suggestions": ["..."]},
+    {"criterion": 4, "name": "Changement de poste ou inaptitude déguisée", "has_defect": true/false, "explanation": "...", "suggestions": ["..."]},
+    {"criterion": 5, "name": "Rupture du secret médical ou vie privée", "has_defect": true/false, "explanation": "...", "suggestions": ["..."]}
+  ],
+  "reformulation_proposed": "..."
+}` + langPrompt;
+
+        const userContent = `Voici la préconisation médicale à analyser :\n"${text}"${langPrompt}`;
+
+        const res = await fetch("http://127.0.0.1:11434/api/chat", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+                model: modelName,
+                messages: [
+                    { role: "system", content: systemPrompt },
+                    { role: "user", content: userContent }
+                ],
+                stream: false,
+                format: "json",
+                options: { temperature: 0.1, num_ctx: 8192 }
+            })
+        });
+
+        if (!res.ok) throw new Error(`Ollama HTTP ${res.status}`);
+        const data = await res.json();
+        const rawText = data.message?.content || "";
+        
+        let jsonCandidate = rawText.trim();
+        const firstBrace = jsonCandidate.indexOf('{');
+        const lastBrace = jsonCandidate.lastIndexOf('}');
+        if (firstBrace !== -1 && lastBrace !== -1 && lastBrace > firstBrace) {
+            jsonCandidate = jsonCandidate.substring(firstBrace, lastBrace + 1);
+        }
+        return JSON.parse(jsonCandidate);
+    }
 
     function renderResults(result, lang = "ar") {
         placeholderView.style.display = "none";
