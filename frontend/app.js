@@ -898,26 +898,71 @@ document.addEventListener("DOMContentLoaded", () => {
     });
 
     async function analyzeWithLocalOllama(modelName, text, contextChunks, language) {
-        let langPrompt = "";
+        let systemPrompt = "";
+        let userContent = "";
+
         if (language === "ar") {
-            langPrompt = "\n\nIMPORTANT CONSTRUCT: Réponds STRICTEMENT et INTÉGRALEMENT EN ARABE (اللغة العربية). Toutes les explications, les suggestions et la reformulation doivent être rédigées en arabe littéraire et médical de haute qualité.";
+            systemPrompt = `أنت طبيب عمل خبير ومستشار قانوني في الصحة والسلامة المهنية وطب العمل في الجزائر (وفق القانون 88-07 والمرسوم 93-120).
+دورك هو التقييم النقدي وتصحيح التوصيات والاحتياطات المهنية (قيود واحتياطات منصب العمل) المدخلة من طرف طبيب العمل، للتأكد من وضوحها وتحديدها الزمني وسلامتها القانونية.
+
+تنبيه جوهري ومحوري:
+1. التوصية الطبية في طب العمل (Préconisation d'aptitude / Aménagement de poste) تتعلق حصراً بحماية صحة العامل وتكييف ظروف عمله وحمايته من الأخطار والملوثات المهنية في بيئة العمل (مثل: الغبار، غبار الحبوب poussières de céréales، الأتربة، الضوضاء، الحرارة، حمل الأثقال، الوضعيات الإجهادية، العمل الليلي).
+2. التوصية في طب العمل ليست وصفة علاجات ولا علاقة لها مطلقاً بالأدوية أو العقاقير أو المضادات الحيوية! يمنع منعاً باتاً ذكر الأدوية أو العلاجات!
+3. عند تقديم إعادة الصياغة المقترحة (reformulation_proposed)، يجب أن تكون صياغة مهنية دقيقة ومباشرة في طب العمل لحماية العامل. مثال لغبار الحبوب (poussières de céréales):
+"المنع التام من التعرض للغبار الجوي للحبوب في منصب العمل لمدة 3 أشهر مع توفير وسائل الحماية التنفسية المناسبة."
+
+قم بتحليل التوصية بناءً على العيوب الـ 5 التالية:
+1. عدم الدقة وصعوبات التطبيق (غياب المدة الزمنية أو التحديد الدقيق)
+2. الشك في القوة الإلزامية (استعمال صيغ التردد مثل "ينبغي" بدل "يمنع" أو "يلزم")
+3. معلومات خارج نطاق التنظيم (ذكر مناقشات أو تفاصيل غير متعلقة باللياقة)
+4. تغيير الوظيفة أو عدم القدرة المقنعة (فرض قيود تعجيزية بدلاً من تقرير عدم القدرة)
+5. خرق السر الطبي أو الحياة الخاصة (ذكر التشخيص أو أسماء الأمراض)
+
+أجب حتماً وبشكل صارم بصيغة JSON التالية وباللغة العربية فقط:
+{
+  "has_defects": true/false,
+  "analysis": [
+    {"criterion": 1, "name": "عدم الدقة وصعوبات التطبيق", "has_defect": true/false, "explanation": "شرح الدليل بصيغة مهنية دقيقة في طب العمل", "suggestions": ["مقترح تصحيح دقيق"]},
+    {"criterion": 2, "name": "الشك في القوة الإلزامية", "has_defect": true/false, "explanation": "شرح الدليل", "suggestions": []},
+    {"criterion": 3, "name": "معلومات خارج نطاق التنظيم", "has_defect": true/false, "explanation": "شرح الدليل", "suggestions": []},
+    {"criterion": 4, "name": "تغيير الوظيفة أو عدم القدرة المقنعة", "has_defect": true/false, "explanation": "شرح الدليل", "suggestions": []},
+    {"criterion": 5, "name": "خرق السر الطبي أو الحياة الخاصة", "has_defect": true/false, "explanation": "شرح الدليل", "suggestions": []}
+  ],
+  "reformulation_proposed": "صياغة التوصية المهنية النموذجية والمصححة تماماً باللغة العربية"
+}`;
+            userContent = `حلل نقديّاً هذه التوصية الطبية في طب العمل وحرّر صياغتها باللغة العربية:\n"${text}"`;
         } else if (language === "en") {
-            langPrompt = "\n\nIMPORTANT CONSTRUCT: Respond STRICTLY and ENTIRELY IN ENGLISH. All explanations, suggestions, and the proposed reformulation MUST be written in professional medical English.";
+            systemPrompt = `You are an expert occupational health physician and legal advisor in occupational health and safety.
+Your role is to critically evaluate and reformulate medical work-fitness recommendations issued by occupational doctors.
+
+IMPORTANT INSTRUCTIONS:
+1. An occupational fitness recommendation concerns workplace hazards and job adaptations (e.g. cereal dust, noise, heavy lifting, night work).
+2. It is NOT a therapeutic prescription and HAS NOTHING TO DO WITH DRUGS OR ANTIBIOTICS. Do not mention medication or treatment!
+3. Respond strictly in JSON format using English only.
+
+JSON Format:
+{
+  "has_defects": true/false,
+  "analysis": [
+    {"criterion": 1, "name": "Imprecisions and application issues", "has_defect": true/false, "explanation": "...", "suggestions": ["..."]},
+    {"criterion": 2, "name": "Doubt on binding force", "has_defect": true/false, "explanation": "...", "suggestions": ["..."]},
+    {"criterion": 3, "name": "Information outside regulatory framework", "has_defect": true/false, "explanation": "...", "suggestions": ["..."]},
+    {"criterion": 4, "name": "Job change or disguised unfitness", "has_defect": true/false, "explanation": "...", "suggestions": ["..."]},
+    {"criterion": 5, "name": "Breach of medical confidentiality", "has_defect": true/false, "explanation": "...", "suggestions": ["..."]}
+  ],
+  "reformulation_proposed": "Clear, professional, compliant medical recommendation in English."
+}`;
+            userContent = `Analyze and reformulate this occupational health recommendation in English:\n"${text}"`;
         } else {
-            langPrompt = "\n\nIMPORTANT CONSTRUCT: Réponds STRICTEMENT en FRANÇAIS. Toutes les explications, les suggestions et la reformulation doivent être rédigées en français.";
-        }
+            systemPrompt = `Tu es un médecin du travail expert et un conseiller juridique en santé au travail.
+Ton rôle est d'analyser de manière critique la préconisation d'aménagement ou d'aptitude médicale saisie par un médecin du travail.
 
-        const systemPrompt = `Tu es un médecin du travail expert et un conseiller juridique en santé au travail.
-Ton rôle est d'analyser de manière critique la préconisation d'aménagement ou d'aptitude médicale saisie par un médecin, afin de vérifier sa clarté, sa légalité et son applicabilité par l'employeur.
+RÈGLE ESSENTIELLE :
+1. Une préconisation en médecine du travail concerne la protection du salarié face aux risques professionnels (poussières, bruit, charges, travail de nuit, etc.).
+2. Ce n'est PAS une prescription médicamenteuse (aucun médicament, traitement ou antibiotique ne doit être mentionné) !
+3. Réponds STRICTEMENT au format JSON en français uniquement.
 
-Tu dois impérativement analyser l'écrit selon les 5 critères de mauvaise qualité suivants :
-1. Imprécisions et difficultés d'application
-2. Doute sur la force d'obligation
-3. Informations hors cadre réglementaire
-4. Changement de poste ou inaptitude déguisée
-5. Rupture du secret médical ou vie privée
-
-Réponds STRICTEMENT sous la forme d'un objet JSON contenant l'analyse détaillée. Format :
+JSON Format:
 {
   "has_defects": true/false,
   "analysis": [
@@ -927,10 +972,10 @@ Réponds STRICTEMENT sous la forme d'un objet JSON contenant l'analyse détaill�
     {"criterion": 4, "name": "Changement de poste ou inaptitude déguisée", "has_defect": true/false, "explanation": "...", "suggestions": ["..."]},
     {"criterion": 5, "name": "Rupture du secret médical ou vie privée", "has_defect": true/false, "explanation": "...", "suggestions": ["..."]}
   ],
-  "reformulation_proposed": "..."
-}` + langPrompt;
-
-        const userContent = `Voici la préconisation médicale à analyser :\n"${text}"${langPrompt}`;
+  "reformulation_proposed": "Préconisation médicale exemplaire reformulée et exempte de tout défaut."
+}`;
+            userContent = `Voici la préconisation médicale à analyser :\n"${text}"`;
+        }
 
         const res = await fetch("http://127.0.0.1:11434/api/chat", {
             method: "POST",
