@@ -1067,10 +1067,28 @@ select:focus {
     font-size: 1.05rem;
 }
 
+/* Guide Grid (5 critères avec disposition 2-2-1 équilibrée) */
 .guide-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+    grid-template-columns: repeat(2, 1fr);
     gap: 1.5rem;
+}
+
+.guide-item:last-child:nth-child(odd) {
+    grid-column: 1 / -1;
+    max-width: 680px;
+    justify-self: center;
+    width: 100%;
+}
+
+@media (max-width: 768px) {
+    .guide-grid {
+        grid-template-columns: 1fr;
+    }
+    .guide-item:last-child:nth-child(odd) {
+        grid-column: auto;
+        max-width: 100%;
+    }
 }
 
 .guide-item {
