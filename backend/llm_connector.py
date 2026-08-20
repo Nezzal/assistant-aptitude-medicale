@@ -192,7 +192,12 @@ JSON Format (Respond in valid JSON using English only):
                 context_str += f"Source [{chunk['filename']}] :\n{chunk['text']}\n\n"
             context_str += "-------------------------------------\n"
 
-        user_content = f"{context_str}Préconisation médicale à analyser :\n\"{recommendation}\""
+        if language == "ar":
+            user_content = f"{context_str}التوصية الطبية المراد تحليلها وإعادة صياغتها باللغة العربية :\n\"{recommendation}\"\n\nملاحظة حاسمة: يجب حتماً أن تكون إعادة الصياغة المقترحة (reformulation_proposed) مترجمة ومكتوبة 100% باللغة العربية الفصحى الطبية، ولا تترك أي كلمة بالفرنسية!"
+        elif language == "en":
+            user_content = f"{context_str}Medical recommendation to analyze and reformulate strictly in English:\n\"{recommendation}\"\n\nCRITICAL MANDATORY REQUIREMENT: The proposed reformulation (reformulation_proposed) MUST be translated and written 100% in professional English. Do NOT leave any word in French!"
+        else:
+            user_content = f"{context_str}Préconisation médicale à analyser et reformuler en français :\n\"{recommendation}\""
 
         try:
             if provider == "ollama":
@@ -338,6 +343,8 @@ JSON Format (Respond in valid JSON using English only):
                 reformulation = "المنع التام من حمل الأثقال التي تتجاوز 15 كغ في ورشة البناء لمدة 6 أشهر."
             elif "nuit" in rec_lower or "hypertension" in rec_lower or "ليلي" in rec_lower or "ضغط" in rec_lower:
                 reformulation = "عدم القدرة الطبية المؤقتة على العمل الليلي لمدة 3 أشهر."
+            elif "penché" in rec_lower or "lombalgie" in rec_lower or "dos" in rec_lower or "انحناء" in rec_lower or "ظهر" in rec_lower:
+                reformulation = "المنع التام من الوضعية المنحنية إلى الأمام في منصب العمل لمدة 3 أشهر، قابلة للتجديد بعد إعادة التقييم الطبي."
             elif "assise" in rec_lower or "جلسة" in rec_lower:
                 reformulation = "المنع التام من الوضعية الجالسة الممتدة في منصب العمل لمدة 3 أشهر مع تهيئة أرغونومية للمنصب."
             elif has_any_defect:
@@ -349,6 +356,8 @@ JSON Format (Respond in valid JSON using English only):
                 reformulation = "Strict contraindication to heavy lifting exceeding 15 kg for a duration of 6 months."
             elif "nuit" in rec_lower or "hypertension" in rec_lower or "night" in rec_lower:
                 reformulation = "Temporary unfitness for night work for a duration of 3 months."
+            elif "penché" in rec_lower or "lombalgie" in rec_lower or "dos" in rec_lower or "bending" in rec_lower or "back" in rec_lower:
+                reformulation = "Strict contraindication to forward bending posture at the workplace for a duration of 3 months, renewable after medical reassessment."
             elif "assise" in rec_lower or "sitting" in rec_lower:
                 reformulation = "Strict contraindication to prolonged sitting posture for a duration of 3 months, with ergonomic workstation adaptation."
             elif has_any_defect:
@@ -360,6 +369,8 @@ JSON Format (Respond in valid JSON using English only):
                 reformulation = "Contre-indication stricte au port de charges lourdes de plus de 15 kg pour une durée de 6 mois."
             elif "nuit" in rec_lower or "hypertension" in rec_lower:
                 reformulation = "Inaptitude temporaire au travail de nuit pour une durée de 3 mois."
+            elif "penché" in rec_lower or "lombalgie" in rec_lower or "dos" in rec_lower:
+                reformulation = "Contre-indication stricte au travail penché en avant pour une durée de 3 mois, renouvelable après réévaluation médicale."
             elif "assise" in rec_lower:
                 reformulation = "Contre-indication stricte à la posture assise prolongée pour une durée de 3 mois, avec aménagement ergonomique du poste."
             elif has_any_defect:
