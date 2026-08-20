@@ -1,7 +1,7 @@
 import json
 import re
 import requests
-from config import OLLAMA_BASE_URL
+from config import OLLAMA_BASE_URL, OPENROUTER_API_KEY
 
 SYSTEM_PROMPT = """Tu es un médecin du travail expert et un conseiller juridique en santé au travail.
 Ton rôle est d'analyser de manière critique la préconisation d'aménagement ou d'aptitude médicale saisie par un médecin, afin de vérifier sa clarté, sa légalité et son applicabilité par l'employeur.
@@ -173,9 +173,9 @@ class LLMConnector:
                         raise Exception(f"Le modèle '{model_name}' n'est pas encore téléchargé. Veuillez exécuter la commande 'ollama pull {model_name}' dans votre terminal pour l'installer.")
                     raise Exception(f"Erreur du serveur Ollama : {err_body}")
 
-            elif provider == "openrouter" or (provider == "demo" and OPENROUTER_API_KEY):
+            elif provider in ["openrouter", "demo"]:
                 if not OPENROUTER_API_KEY:
-                    return self._generate_fallback_analysis(recommendation, context_chunks, "Démo Web sans API", language)
+                    return self._generate_fallback_analysis(recommendation, context_chunks, "Démo Web RAG Autonome", language)
                 
                 url = "https://openrouter.ai/api/v1/chat/completions"
                 headers = {
