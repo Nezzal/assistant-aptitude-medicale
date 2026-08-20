@@ -1940,6 +1940,24 @@ JSON Format:
             return;
         }
 
+        // Vérification de la limite de 3 certificats pour le mode Démo Web
+        const storedKey = localStorage.getItem("med_license_key");
+        const isActivated = (storedKey === generateActivationKey(machineId));
+        const demoCounterBadge = document.getElementById("demo-counter-badge");
+
+        if (!isActivated) {
+            let demoCount = parseInt(localStorage.getItem("med_demo_cert_count") || "0", 10);
+            if (demoCount >= 3) {
+                if (demoCounterBadge) demoCounterBadge.textContent = "🔒 Essais Démo Web : 3 / 3 (Limite atteinte)";
+                alert("🔒 Limite du Mode Démonstration Web atteinte (3/3 analyses démo effectuées).\n\nConformément à la réglementation algérienne (interdiction d'hébergement externe des données de santé) et au RGPD international, l'utilisation complète et illimitée nécessite l'application de bureau.\n\nVeuillez télécharger l'Application Bureau et obtenir votre licence définitive à 5 000 DA (à vie).");
+                return;
+            }
+            demoCount += 1;
+            localStorage.setItem("med_demo_cert_count", demoCount.toString());
+            if (demoCounterBadge) demoCounterBadge.textContent = `🧪 Essais Démo Web : ${demoCount} / 3`;
+            console.log(`[Démo Web] Form analysis ${demoCount}/3 used.`);
+        }
+
         const selectedOption = modelSelect.options[modelSelect.selectedIndex];
         const modelName = selectedOption.value;
         const provider = selectedOption.dataset.provider;
@@ -2477,6 +2495,16 @@ JSON Format:
 
     // Lancer l'impression A4
     btnFormPrint.addEventListener("click", () => {
+        const storedKey = localStorage.getItem("med_license_key");
+        const isActivated = (storedKey === generateActivationKey(machineId));
+        if (!isActivated) {
+            let demoCount = parseInt(localStorage.getItem("med_demo_cert_count") || "0", 10);
+            if (demoCount >= 3) {
+                alert("🔒 Limite du Mode Démonstration Web atteinte.\n\nVous avez imprimé ou analysé 3 certificats. Pour continuer à imprimer, veuillez utiliser l'Application Bureau avec une licence.");
+                return;
+            }
+        }
+        
         // S'assurer de la fraîcheur des données
         updatePrintPreview();
         // Lancer le module d'impression du navigateur
