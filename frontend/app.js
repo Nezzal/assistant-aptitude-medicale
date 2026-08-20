@@ -490,33 +490,39 @@ document.addEventListener("DOMContentLoaded", () => {
                 allModels = backendModels;
             }
 
-            if (allModels.length > 0) {
-                availableModels = allModels;
-                modelSelect.innerHTML = "";
-
-                const isOllamaOffline = availableModels.some(model => model.name === "no_model") && localModels.length === 0;
-                const hasInstalledModel = availableModels.some(model => model.provider === "ollama" && model.installed === true);
-
-                // Ne pas ouvrir le modal automatiquement au chargement pour laisser le prospect tester immédiatement
-                hideOboardingModalIfReady();
-
-                availableModels.forEach((model, index) => {
-                    if (model.name === "no_model" && localModels.length > 0) return;
-                    const option = document.createElement("option");
-                    option.value = model.name;
-                    option.textContent = model.display_name;
-                    option.dataset.provider = model.provider;
-                    option.dataset.installed = model.installed;
-                    if (index === 0) option.selected = true;
-                    modelSelect.appendChild(option);
-                });
-
-                checkReadyToAnalyze();
-            } else {
-                hideOboardingModalIfReady();
+            // Si aucun modèle n'est détecté (ex: Démo Web en ligne sur Vercel sans Ollama), injecter le modèle de démo
+            if (allModels.length === 0 || (allModels.length === 1 && allModels[0].name === "no_model")) {
+                allModels = [
+                    {
+                        name: "qwen2.5-demo",
+                        provider: "demo",
+                        display_name: "🌐 Modèle Démo Web Anonyme",
+                        installed: true
+                    }
+                ];
             }
+
+            availableModels = allModels;
+            modelSelect.innerHTML = "";
+
+            hideOboardingModalIfReady();
+
+            availableModels.forEach((model, index) => {
+                if (model.name === "no_model" && localModels.length > 0) return;
+                const option = document.createElement("option");
+                option.value = model.name;
+                option.textContent = model.display_name;
+                option.dataset.provider = model.provider;
+                option.dataset.installed = model.installed ? "true" : "false";
+                if (index === 0) option.selected = true;
+                modelSelect.appendChild(option);
+            });
+
+            checkReadyToAnalyze();
         } catch (error) {
             console.error("Erreur de chargement des modèles :", error);
+            modelSelect.innerHTML = `<option value="qwen2.5-demo" data-provider="demo" data-installed="true" selected>🌐 Modèle Démo Web Anonyme</option>`;
+            checkReadyToAnalyze();
             hideOboardingModalIfReady();
         }
     }
