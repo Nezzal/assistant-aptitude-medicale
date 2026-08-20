@@ -11,5 +11,35 @@
   "devDependencies": {
     "electron": "^28.0.0",
     "electron-builder": "^24.9.0"
+  },
+  "build": {
+    "appId": "com.pedagogiafrica.assistant-aptitude-medicale",
+    "productName": "Assistant Aptitude Medicale",
+    "directories": {
+      "output": "dist"
+    },
+    "extraResources": [
+      {
+        "from": "backend/dist/app",
+        "to": "backend",
+        "filter": ["**/*"]
+      }
+    ],
+    "mac": {
+      "icon": "frontend/logo.png",
+      "target": ["dmg", "zip"]
+    },
+    "win": {
+      "icon": "frontend/logo.png",
+      "target": ["nsis", "portable"]
+    },
+    "linux": {
+      "icon": "frontend/logo.png",
+      "target": ["AppImage", "deb"]
+    },
+    "nsis": {
+      "oneClick": false,
+      "allowToChangeInstallationDirectory": true
+    }
   }
 }

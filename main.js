@@ -8,20 +8,33 @@ let pythonProcess = null;
 const BACKEND_PORT = 8000;
 
 function startPythonBackend() {
-    // Déterminer le chemin du python de l'environnement virtuel
     const isWindows = process.platform === "win32";
-    const pythonPath = isWindows 
-        ? path.join(__dirname, 'backend', 'venv', 'Scripts', 'python.exe')
-        : path.join(__dirname, 'backend', 'venv', 'bin', 'python');
     
-    const scriptPath = path.join(__dirname, 'backend', 'app.py');
+    let backendExecutable;
+    let backendArgs = [];
 
-    console.log(`[*] Démarrage du backend Python via: ${pythonPath}`);
-    
-    pythonProcess = spawn(pythonPath, [scriptPath], {
-        cwd: __dirname,
-        env: { ...process.env, PORT: BACKEND_PORT }
-    });
+    if (app.isPackaged) {
+        // Mode Production : utiliser l'exécutable généré par PyInstaller
+        const exeName = isWindows ? 'app.exe' : 'app';
+        backendExecutable = path.join(process.resourcesPath, 'backend', exeName);
+        console.log(`[*] Mode Production: Démarrage du backend compilé via: ${backendExecutable}`);
+        pythonProcess = spawn(backendExecutable, backendArgs, {
+            cwd: path.join(process.resourcesPath, 'backend'),
+            env: { ...process.env, PORT: BACKEND_PORT }
+        });
+    } else {
+        // Mode Développement : utiliser le venv local
+        backendExecutable = isWindows 
+            ? path.join(__dirname, 'backend', 'venv', 'Scripts', 'python.exe')
+            : path.join(__dirname, 'backend', 'venv', 'bin', 'python');
+        const scriptPath = path.join(__dirname, 'backend', 'app.py');
+        backendArgs = [scriptPath];
+        console.log(`[*] Mode Développement: Démarrage du backend Python via: ${backendExecutable}`);
+        pythonProcess = spawn(backendExecutable, backendArgs, {
+            cwd: __dirname,
+            env: { ...process.env, PORT: BACKEND_PORT }
+        });
+    }
 
     pythonProcess.stdout.on('data', (data) => {
         console.log(`[Python stdout]: ${data}`);
