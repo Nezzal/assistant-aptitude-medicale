@@ -144,6 +144,21 @@
                     </div>
                     <button id="btn-activate-license" class="btn" style="width: 100%; margin-top: 1rem;">Activer l'accès</button>
                     <div id="license-error-msg" class="error-msg" style="display: none; color: var(--danger); margin-top: 0.8rem; font-size: 0.9rem;"></div>
+                    
+                    <!-- Section de téléchargement de l'application de Bureau permanente -->
+                    <div id="desktop-download-section" style="display: block; margin-top: 2rem; padding: 1rem; border: 1px dashed rgba(14, 165, 233, 0.4); border-radius: 8px; background: rgba(14, 165, 233, 0.05); text-align: center;">
+                        <h4 style="color: var(--primary); margin: 0 0 0.5rem 0; font-family: var(--font-heading); font-size: 0.95rem;">
+                            📥 Télécharger l'Application Bureau
+                        </h4>
+                        <p style="font-size: 0.8rem; color: var(--text-secondary); margin-bottom: 1rem;">
+                            L'application Bureau est requise pour une utilisation illimitée 100% hors-ligne.
+                        </p>
+                        <div style="display: flex; gap: 0.5rem; justify-content: center; flex-wrap: wrap;">
+                            <a href="#" class="btn" onclick="alert('Le téléchargement pour Windows va commencer. (Lien à configurer)')" style="padding: 0.5rem 0.8rem; font-size: 0.85rem; background: #0078D7; border: none; flex: 1; min-width: 90px;">Windows</a>
+                            <a href="#" class="btn" onclick="alert('Le téléchargement pour Mac va commencer. (Lien à configurer)')" style="padding: 0.5rem 0.8rem; font-size: 0.85rem; background: #555555; border: none; flex: 1; min-width: 90px;">Mac</a>
+                            <a href="#" class="btn" onclick="alert('Le téléchargement pour Linux va commencer. (Lien à configurer)')" style="padding: 0.5rem 0.8rem; font-size: 0.85rem; background: #E95420; border: none; flex: 1; min-width: 90px;">Linux</a>
+                        </div>
+                    </div>
                 </div>
 
                 <!-- Demande de licence -->
@@ -213,21 +228,6 @@
                     <p style="font-size: 0.75rem; color: var(--text-muted); text-align: center; margin-top: 0.6rem;">
                         * N'oubliez pas de joindre votre reçu de paiement/virement dans le mail ouvert.
                     </p>
-                    
-                    <!-- Section de téléchargement de l'application de Bureau (affichée après la demande mail) -->
-                    <div id="desktop-download-section" style="display: none; margin-top: 1.5rem; padding: 1rem; border: 1px dashed rgba(14, 165, 233, 0.4); border-radius: 8px; background: rgba(14, 165, 233, 0.05); text-align: center;">
-                        <h4 style="color: var(--primary); margin: 0 0 0.5rem 0; font-family: var(--font-heading); font-size: 0.95rem;">
-                            📥 Télécharger l'Application Bureau
-                        </h4>
-                        <p style="font-size: 0.8rem; color: var(--text-secondary); margin-bottom: 1rem;">
-                            Votre mail a été préparé. Vous pouvez dès maintenant télécharger l'application pour votre système (la clé vous sera envoyée par retour de mail).
-                        </p>
-                        <div style="display: flex; gap: 0.5rem; justify-content: center; flex-wrap: wrap;">
-                            <a href="#" class="btn" onclick="alert('Le téléchargement pour Windows va commencer. (Lien à configurer)')" style="padding: 0.5rem 0.8rem; font-size: 0.85rem; background: #0078D7; border: none; flex: 1; min-width: 90px;">Windows</a>
-                            <a href="#" class="btn" onclick="alert('Le téléchargement pour Mac va commencer. (Lien à configurer)')" style="padding: 0.5rem 0.8rem; font-size: 0.85rem; background: #555555; border: none; flex: 1; min-width: 90px;">Mac</a>
-                            <a href="#" class="btn" onclick="alert('Le téléchargement pour Linux va commencer. (Lien à configurer)')" style="padding: 0.5rem 0.8rem; font-size: 0.85rem; background: #E95420; border: none; flex: 1; min-width: 90px;">Linux</a>
-                        </div>
-                    </div>
                 </div>
             </div>
         </section>

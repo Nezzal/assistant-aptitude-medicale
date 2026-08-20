@@ -160,12 +160,6 @@ document.addEventListener("DOMContentLoaded", () => {
             const body = encodeURIComponent(bodyText);
 
             window.location.href = `mailto:pedagogiafrica@gmail.com?subject=${subject}&body=${body}`;
-            
-            // Afficher la section de téléchargement de l'application de bureau
-            const downloadSection = document.getElementById("desktop-download-section");
-            if (downloadSection) {
-                downloadSection.style.display = "block";
-            }
         });
     }
 
