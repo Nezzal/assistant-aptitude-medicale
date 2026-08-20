@@ -252,24 +252,32 @@ class LLMConnector:
             "suggestions": sug_5 if has_medical else []
         })
 
-        # 3. Imprécisions temporelles
+        # 3. Imprécisions temporelles (Absence de durée ou termes vagues)
         imprecise_terms = ["renouvelable", "régulièrement", "un certain temps", "provisoirement", "ultérieurement", "si besoin", "à revoir", "bientôt", "عند الحاجة", "للمراجعة"]
-        has_imprecision = any(word in rec_lower for word in imprecise_terms)
+        duration_terms = ["mois", "an", "semaine", "jour", "permanent", "définif", "définitive", "durée", "période", "temporaire", "مؤقت", "نهائي", "شهر", "أشهر", "سنة", "month", "year", "week", "permanent", "temporary"]
+        
+        has_vague_term = any(word in rec_lower for word in imprecise_terms)
+        has_no_duration = not any(word in rec_lower for word in duration_terms)
+        has_imprecision = has_vague_term or has_no_duration
+
         name_1 = "عدم الدقة وصعوبات التطبيق" if is_ar else ("Imprecisions and application issues" if is_en else "Imprécisions et difficultés d'application")
-        exp_1 = "استعمال عبارات زمنية غامضة (مثل 'عند الحاجة' أو 'للمراجعة'). الهيئة المستخدمة تتطلب تحديد مدة دقيقة." if is_ar else ("Vague timeframes (e.g. 'à revoir si besoin') without exact duration." if is_en else "Presence de formules vagues sans durée précise définie (ex: 'à revoir si besoin'). L'employeur exige une périodicité claire.")
+        exp_1 = "غياب تحديد مدة زمنيّة دقيقة لسريان التوصية الطبية (عدم تحديد عدد الأشهر أو النطاق الزمني)." if is_ar else (
+            "Lack of an explicit timeframe or duration (e.g. number of months or permanent restriction)." if is_en else 
+            "Absence de durée temporelle précise d'application (aucun nombre de mois ni échéance définie). L'employeur exige une durée claire."
+        )
         sug_1 = ["تحديد مدة دقيقة وصريحة (مثال: 'لمدة 3 أشهر')."] if is_ar else (["Specify an exact duration (e.g. 'for a period of 3 months')."] if is_en else ["Préciser une durée temporelle fixe (ex: 'pour une durée de 3 mois')."])
 
         analysis.append({
             "criterion": 1,
             "name": name_1,
             "has_defect": has_imprecision,
-            "explanation": exp_1 if has_imprecision else ("لم يتم اكتشاف عدم دقة زمنية." if is_ar else ("No major time imprecision detected." if is_en else "Pas d'imprécision temporelle majeure détectée.")),
+            "explanation": exp_1 if has_imprecision else ("تم تحديد مدة زمنية صريحة." if is_ar else ("Explicit duration specified." if is_en else "Durée temporelle d'application précisée.")),
             "suggestions": sug_1 if has_imprecision else []
         })
 
         has_any_defect = any(c["has_defect"] for c in analysis)
         
-        # Reformulation exemplaire selon le contexte et la langue
+        # Reformulation exemplaire selon le contexte et la langue sélectionnée
         reformulation = recommendation
         if is_ar:
             if "céréales" in rec_lower or "poussières" in rec_lower or "حبوب" in rec_lower or "غبار" in rec_lower:
@@ -278,8 +286,10 @@ class LLMConnector:
                 reformulation = "المنع التام من حمل الأثقال التي تتجاوز 15 كغ في ورشة البناء لمدة 6 أشهر."
             elif "nuit" in rec_lower or "hypertension" in rec_lower or "ليلي" in rec_lower or "ضغط" in rec_lower:
                 reformulation = "عدم القدرة الطبية المؤقتة على العمل الليلي لمدة 3 أشهر."
+            elif "assise" in rec_lower or "جلسة" in rec_lower:
+                reformulation = "المنع التام من الوضعية الجالسة الممتدة في منصب العمل لمدة 3 أشهر مع تهيئة أرغونومية للمنصب."
             elif has_any_defect:
-                reformulation = "المنع من التعرض للمخاطر المهنية المذكورة في منصب العمل لمدة 3 أشهر."
+                reformulation = "المنع والتكييف المهني لمنصب العمل بالنسبة للمخاطر المذكورة لمدة 3 أشهر."
         elif is_en:
             if "céréales" in rec_lower or "poussières" in rec_lower or "cereal" in rec_lower or "dust" in rec_lower:
                 reformulation = "Strict contraindication to airborne cereal dust exposure at the storage position for a duration of 3 months."
@@ -287,8 +297,10 @@ class LLMConnector:
                 reformulation = "Strict contraindication to heavy lifting exceeding 15 kg for a duration of 6 months."
             elif "nuit" in rec_lower or "hypertension" in rec_lower or "night" in rec_lower:
                 reformulation = "Temporary unfitness for night work for a duration of 3 months."
+            elif "assise" in rec_lower or "sitting" in rec_lower:
+                reformulation = "Strict contraindication to prolonged sitting posture for a duration of 3 months, with ergonomic workstation adaptation."
             elif has_any_defect:
-                reformulation = "Strict workplace restriction regarding mentioned hazards for a duration of 3 months."
+                reformulation = f"Strict workplace restriction regarding: '{recommendation}' for a duration of 3 months."
         else:
             if "céréales" in rec_lower or "poussières" in rec_lower:
                 reformulation = "Éviction stricte de l'exposition aux poussières de céréales au poste de stockage pour une durée de 3 mois."
@@ -296,8 +308,10 @@ class LLMConnector:
                 reformulation = "Contre-indication stricte au port de charges lourdes de plus de 15 kg pour une durée de 6 mois."
             elif "nuit" in rec_lower or "hypertension" in rec_lower:
                 reformulation = "Inaptitude temporaire au travail de nuit pour une durée de 3 mois."
+            elif "assise" in rec_lower:
+                reformulation = "Contre-indication stricte à la posture assise prolongée pour une durée de 3 mois, avec aménagement ergonomique du poste."
             elif has_any_defect:
-                reformulation = recommendation.replace("devrait", "doit").replace("pourrait", "doit").replace("à revoir si besoin", "pour une durée de 3 mois")
+                reformulation = recommendation + " pour une durée de 3 mois."
 
         fallback_note = "💡 ملاحظة: تحليل تنظيم الصحة والسلامة والمهنية (RAG)." if is_ar else (
             "💡 Note: Analysis based on occupational health regulatory standards (RAG)." if is_en else
