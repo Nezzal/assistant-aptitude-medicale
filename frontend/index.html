@@ -722,7 +722,7 @@
     <div id="print-area">
         <div class="print-header">
             <div class="print-subheader-box">
-                <span class="print-subheader-label">SERVICE DE MÉDECINE DU TRAVAIL :</span>
+                <span class="print-subheader-label" id="print-lbl-service">SERVICE DE MÉDECINE DU TRAVAIL :</span>
                 <span class="print-subheader-val" id="print-val-structure">......................................................................</span>
             </div>
         </div>
@@ -730,30 +730,30 @@
         <h2 class="print-title" id="print-doc-title">FICHE DE VISITE MÉDICALE INDIVIDUELLE</h2>
 
         <div class="print-body">
-            <p>Je soussigné, <strong><span id="print-val-doctor">Dr. ...................................</span></strong>, Médecin du Travail du service susvisé,</p>
-            <p>Certifie avoir examiné ce jour, conformément à la réglementation en vigueur (Décret exécutif n° 93-120 du 15 mai 1993) :</p>
+            <p id="print-p-doctor">Je soussigné, <strong><span id="print-val-doctor">Dr. ...................................</span></strong>, Médecin du Travail du service susvisé,</p>
+            <p id="print-p-certify">Certifie avoir examiné ce jour, conformément à la réglementation en vigueur (Décret exécutif n° 93-120 du 15 mai 1993) :</p>
             
             <table class="print-table">
                 <tr>
-                    <td class="td-label">Nom et Prénom du travailleur :</td>
+                    <td class="td-label" id="print-lbl-worker">Nom et Prénom du travailleur :</td>
                     <td class="td-val" id="print-val-worker">......................................................................</td>
                 </tr>
                 <tr>
-                    <td class="td-label">Organisme Employeur :</td>
+                    <td class="td-label" id="print-lbl-employeur">Organisme Employeur :</td>
                     <td class="td-val" id="print-val-employeur">......................................................................</td>
                 </tr>
                 <tr>
-                    <td class="td-label">Profession / Poste de travail :</td>
+                    <td class="td-label" id="print-lbl-post">Profession / Poste de travail :</td>
                     <td class="td-val" id="print-val-post">......................................................................</td>
                 </tr>
                 <tr>
-                    <td class="td-label">Nature de la visite médicale :</td>
+                    <td class="td-label" id="print-lbl-type">Nature de la visite médicale :</td>
                     <td class="td-val" id="print-val-type">......................................................................</td>
                 </tr>
             </table>
 
             <div class="print-conclusions">
-                <h4>CONCLUSIONS MÉDICALES D'APTITUDE :</h4>
+                <h4 id="print-lbl-conclusions">CONCLUSIONS MÉDICALES D'APTITUDE :</h4>
                 <div class="checkbox-row">
                     <span class="check-box" id="check-apte">[ ] APTE</span>
                     <span class="check-box" id="check-apte-reserves">[ ] APTE AVEC RÉSERVES (Aménagements requis)</span>
@@ -765,7 +765,7 @@
             </div>
 
             <div class="print-recommendations-section">
-                <h4>PRÉCONISATIONS ET RECOMMANDATIONS PARTICULIÈRES :</h4>
+                <h4 id="print-lbl-recs">PRÉCONISATIONS ET RECOMMANDATIONS PARTICULIÈRES :</h4>
                 <div class="print-recommendations-box" id="print-val-recommendations">
                     (Aucune préconisation formulée)
                 </div>
@@ -773,13 +773,13 @@
         </div>
 
         <div class="print-footer">
-            <div class="print-date-place">
+            <div class="print-date-place" id="print-date-line">
                 Fait à <span id="print-val-city">...................................</span>, le <span id="print-val-date">........................</span>
             </div>
             <div class="print-signatures">
-                <strong>Cachet et Signature du Médecin du Travail</strong>
+                <strong id="print-lbl-signature">Cachet et Signature du Médecin du Travail</strong>
                 <br><br><br>
-                <div class="stamp-box">Cachet professionnel</div>
+                <div class="stamp-box" id="print-lbl-stamp">Cachet professionnel</div>
             </div>
         </div>
     </div>

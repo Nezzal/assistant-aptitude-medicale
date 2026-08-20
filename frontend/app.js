@@ -1596,9 +1596,15 @@ JSON Format:
     if (languageSelectElement) {
         languageSelectElement.addEventListener("change", () => {
             applyUiTranslations(languageSelectElement.value);
+            if (typeof updatePrintPreview === "function") {
+                updatePrintPreview();
+            }
         });
         // Initialiser avec la langue sélectionnée
         applyUiTranslations(languageSelectElement.value);
+        if (typeof updatePrintPreview === "function") {
+            updatePrintPreview();
+        }
     }
 
     function renderResults(result, lang = "ar") {
@@ -1743,58 +1749,180 @@ JSON Format:
     // === LOGIQUE DE LA VUE 2 : FORMULAIRES & IMPRESSION ===
 
     // Mettre à jour la prévisualisation imprimable (print-area)
+    // Mettre à jour la prévisualisation imprimable (print-area)
     function updatePrintPreview() {
-        // 1. Mettre à jour les textes simples
+        const lang = languageSelectElement ? (languageSelectElement.value || "fr") : "fr";
+        const printArea = document.getElementById("print-area");
+        
+        if (printArea) {
+            if (lang === "ar") {
+                printArea.setAttribute("dir", "rtl");
+                printArea.style.textAlign = "right";
+            } else {
+                printArea.removeAttribute("dir");
+                printArea.style.textAlign = "left";
+            }
+        }
+
+        // 1. Mettre à jour les textes dynamiques
         const docName = formDoctor.value.trim();
         const docTitle = formDoctorTitle.value;
-        printValDoctor.textContent = docName ? `${docTitle} ${docName}` : `${docTitle} ...................................`;
+        
+        const lblService = document.getElementById("print-lbl-service");
+        const pDoctor = document.getElementById("print-p-doctor");
+        const pCertify = document.getElementById("print-p-certify");
+        const lblWorker = document.getElementById("print-lbl-worker");
+        const lblEmployeur = document.getElementById("print-lbl-employeur");
+        const lblPost = document.getElementById("print-lbl-post");
+        const lblType = document.getElementById("print-lbl-type");
+        const lblConclusions = document.getElementById("print-lbl-conclusions");
+        const lblRecs = document.getElementById("print-lbl-recs");
+        const dateLine = document.getElementById("print-date-line");
+        const lblSignature = document.getElementById("print-lbl-signature");
+        const lblStamp = document.getElementById("print-lbl-stamp");
+
+        if (lang === "ar") {
+            if (lblService) lblService.textContent = "مصلحة طب العمل :";
+            if (pDoctor) pDoctor.innerHTML = `أنا الموقع أدناه، <strong><span id="print-val-doctor">${docName ? `${docTitle} ${docName}` : `${docTitle} ...................................`}</span></strong>، طبيب العمل بالمصلحة المذكورة أعلاه،`;
+            if (pCertify) pCertify.textContent = "أشهد أنني فحصت هذا اليوم، وفقاً للتنظيم المعمول به (المرسوم التنفيذي رقم 93-120 المؤرخ في 15 مايو 1993):";
+            if (lblWorker) lblWorker.textContent = "اسم ولقب العامل :";
+            if (lblEmployeur) lblEmployeur.textContent = "الهيئة المستخدمة / المؤسسة :";
+            if (lblPost) lblPost.textContent = "المهنة / منصب العمل :";
+            if (lblType) lblType.textContent = "نوع الفحص الطبي :";
+            if (lblConclusions) lblConclusions.textContent = "النتائج الطبية للياقة البدنية والمهنية :";
+            if (lblRecs) lblRecs.textContent = "التوصيات والاحتياطات المهنية الخاصة :";
+            if (lblSignature) lblSignature.textContent = "خاتم وتوقيع طبيب العمل";
+            if (lblStamp) lblStamp.textContent = "الختم المهني";
+        } else if (lang === "en") {
+            if (lblService) lblService.textContent = "OCCUPATIONAL HEALTH SERVICE:";
+            if (pDoctor) pDoctor.innerHTML = `I, the undersigned, <strong><span id="print-val-doctor">${docName ? `${docTitle} ${docName}` : `${docTitle} ...................................`}</span></strong>, Occupational Health Physician of the above service,`;
+            if (pCertify) pCertify.textContent = "Certify having examined today, in accordance with regulations in force (Executive Decree No. 93-120 of May 15, 1993):";
+            if (lblWorker) lblWorker.textContent = "Worker Name & Surname:";
+            if (lblEmployeur) lblEmployeur.textContent = "Employer Organization:";
+            if (lblPost) lblPost.textContent = "Profession / Job Position:";
+            if (lblType) lblType.textContent = "Nature of Medical Examination:";
+            if (lblConclusions) lblConclusions.textContent = "MEDICAL FITNESS CONCLUSIONS:";
+            if (lblRecs) lblRecs.textContent = "SPECIAL RECOMMENDATIONS AND JOB RESTRICTIONS:";
+            if (lblSignature) lblSignature.textContent = "Stamp & Signature of Occupational Physician";
+            if (lblStamp) lblStamp.textContent = "Professional Stamp";
+        } else {
+            if (lblService) lblService.textContent = "SERVICE DE MÉDECINE DU TRAVAIL :";
+            if (pDoctor) pDoctor.innerHTML = `Je soussigné, <strong><span id="print-val-doctor">${docName ? `${docTitle} ${docName}` : `${docTitle} ...................................`}</span></strong>, Médecin du Travail du service susvisé,`;
+            if (pCertify) pCertify.textContent = "Certifie avoir examiné ce jour, conformément à la réglementation en vigueur (Décret exécutif n° 93-120 du 15 mai 1993) :";
+            if (lblWorker) lblWorker.textContent = "Nom et Prénom du travailleur :";
+            if (lblEmployeur) lblEmployeur.textContent = "Organisme Employeur :";
+            if (lblPost) lblPost.textContent = "Profession / Poste de travail :";
+            if (lblType) lblType.textContent = "Nature de la visite médicale :";
+            if (lblConclusions) lblConclusions.textContent = "CONCLUSIONS MÉDICALES D'APTITUDE :";
+            if (lblRecs) lblRecs.textContent = "PRÉCONISATIONS ET RECOMMANDATIONS PARTICULIÈRES :";
+            if (lblSignature) lblSignature.textContent = "Cachet et Signature du Médecin du Travail";
+            if (lblStamp) lblStamp.textContent = "Cachet professionnel";
+        }
+
         printValStructure.textContent = formStructure.value.trim() || "......................................................................";
-        printValCity.textContent = formCity.value.trim() || "...................................";
         printValWorker.textContent = formWorker.value.trim() || "......................................................................";
         printValEmployeur.textContent = formEmployeur.value.trim() || "......................................................................";
         printValPost.textContent = formPost.value.trim() || "......................................................................";
-        printValRecommendations.textContent = formRecommendation.value.trim() || "(Aucune préconisation formulée)";
+        printValRecommendations.textContent = formRecommendation.value.trim() || (lang === "ar" ? "(لم يتم إدخال أي توصيات)" : (lang === "en" ? "(No recommendation specified)" : "(Aucune préconisation formulée)"));
         
-        // Formater la date en français
+        const cityVal = formCity.value.trim() || "...................................";
         const rawDate = formDate.value;
+        let dateVal = "........................";
         if (rawDate) {
             const parts = rawDate.split('-');
-            printValDate.textContent = `${parts[2]}/${parts[1]}/${parts[0]}`;
-        } else {
-            printValDate.textContent = "........................";
+            dateVal = `${parts[2]}/${parts[1]}/${parts[0]}`;
+        }
+        printValCity.textContent = cityVal;
+        printValDate.textContent = dateVal;
+
+        if (dateLine) {
+            if (lang === "ar") {
+                dateLine.innerHTML = `حرر بـ <span>${cityVal}</span>، في <span>${dateVal}</span>`;
+            } else if (lang === "en") {
+                dateLine.innerHTML = `Issued at <span>${cityVal}</span>, on <span>${dateVal}</span>`;
+            } else {
+                dateLine.innerHTML = `Fait à <span>${cityVal}</span>, le <span>${dateVal}</span>`;
+            }
         }
 
-        // 2. Adapter le titre du document selon le type sélectionné
+        // 2. Adapter le titre du document selon le type sélectionné et la langue
         const formType = formTypeSelect.value;
-        if (formType === "embauche") {
-            printDocTitle.textContent = "FICHE DE VISITE MÉDICALE D'EMBAUCHAGE";
-            printValType.textContent = "Examen médical d'embauchage (Loi 88-07)";
-        } else if (formType === "periodique") {
-            printDocTitle.textContent = "FICHE DE VISITE MÉDICALE PÉRIODIQUE";
-            printValType.textContent = "Examen médical périodique de suivi";
-        } else if (formType === "reprise") {
-            printDocTitle.textContent = "FICHE DE VISITE MÉDICALE DE REPRISE";
-            printValType.textContent = "Examen de reprise après arrêt de travail";
-        } else if (formType === "inaptitude") {
-            printDocTitle.textContent = "AVIS D'INAPTITUDE MÉDICALE DU TRAVAIL";
-            printValType.textContent = "Examen d'aptitude spéciale d'inaptitude";
+        if (lang === "ar") {
+            if (formType === "embauche") {
+                printDocTitle.textContent = "شهادة الفحص الطبي عند التوظيف";
+                printValType.textContent = "الفحص الطبي عند التوظيف (القانون 88-07)";
+            } else if (formType === "periodique") {
+                printDocTitle.textContent = "شهادة الفحص الطبي الدوري";
+                printValType.textContent = "الفحص الطبي الدوري للمتابعة";
+            } else if (formType === "reprise") {
+                printDocTitle.textContent = "شهادة الفحص الطبي لاستئناف العمل";
+                printValType.textContent = "فحص استئناف العمل بعد العطلة المرضية";
+            } else if (formType === "inaptitude") {
+                printDocTitle.textContent = "إشعار عدم القدرة الطبية للعمل";
+                printValType.textContent = "فحص اللياقة الخاص بعدم القدرة";
+            }
+        } else if (lang === "en") {
+            if (formType === "embauche") {
+                printDocTitle.textContent = "PRE-EMPLOYMENT MEDICAL VISIT RECORD";
+                printValType.textContent = "Pre-employment medical examination (Law 88-07)";
+            } else if (formType === "periodique") {
+                printDocTitle.textContent = "PERIODIC MEDICAL VISIT RECORD";
+                printValType.textContent = "Periodic medical follow-up visit";
+            } else if (formType === "reprise") {
+                printDocTitle.textContent = "RETURN-TO-WORK MEDICAL VISIT RECORD";
+                printValType.textContent = "Return-to-work examination after medical leave";
+            } else if (formType === "inaptitude") {
+                printDocTitle.textContent = "OCCUPATIONAL UNFITNESS NOTICE";
+                printValType.textContent = "Special fitness evaluation for unfitness";
+            }
+        } else {
+            if (formType === "embauche") {
+                printDocTitle.textContent = "FICHE DE VISITE MÉDICALE D'EMBAUCHAGE";
+                printValType.textContent = "Examen médical d'embauchage (Loi 88-07)";
+            } else if (formType === "periodique") {
+                printDocTitle.textContent = "FICHE DE VISITE MÉDICALE PÉRIODIQUE";
+                printValType.textContent = "Examen médical périodique de suivi";
+            } else if (formType === "reprise") {
+                printDocTitle.textContent = "FICHE DE VISITE MÉDICALE DE REPRISE";
+                printValType.textContent = "Examen de reprise après arrêt de travail";
+            } else if (formType === "inaptitude") {
+                printDocTitle.textContent = "AVIS D'INAPTITUDE MÉDICALE DU TRAVAIL";
+                printValType.textContent = "Examen d'aptitude spéciale d'inaptitude";
+            }
         }
 
         // 3. Adapter les conclusions (cochage visuel des cases de la fiche)
         const conclusion = formConclusion.value;
-        checkApte.textContent = "[ ] APTE";
-        checkApteReserves.textContent = "[ ] APTE AVEC RÉSERVES (Aménagements requis)";
-        checkInapteTemp.textContent = "[ ] INAPTE TEMPORAIRE (Inaptitude momentanée)";
-        checkInapteDef.textContent = "[ ] INAPTE DÉFINITIF (Contre-indication permanente)";
+        if (lang === "ar") {
+            checkApte.textContent = "[ ] قادر (بدون قيود)";
+            checkApteReserves.textContent = "[ ] قادر مع تحفظات (تكييف منصب العمل مطلوب)";
+            checkInapteTemp.textContent = "[ ] غير قادر مؤقتاً (عدم قدرة مؤقتة)";
+            checkInapteDef.textContent = "[ ] غير قادر نهائياً (مانع دائم من المنصب)";
 
-        if (conclusion === "APTE") {
-            checkApte.textContent = "[X] APTE";
-        } else if (conclusion === "APTE_RESERVES") {
-            checkApteReserves.textContent = "[X] APTE AVEC RÉSERVES (Aménagements requis)";
-        } else if (conclusion === "INAPTE_TEMPORAIRE") {
-            checkInapteTemp.textContent = "[X] INAPTE TEMPORAIRE (Inaptitude momentanée)";
-        } else if (conclusion === "INAPTE_DEFINITIF") {
-            checkInapteDef.textContent = "[X] INAPTE DÉFINITIF (Contre-indication permanente)";
+            if (conclusion === "APTE") checkApte.textContent = "[X] قادر (بدون قيود)";
+            else if (conclusion === "APTE_RESERVES") checkApteReserves.textContent = "[X] قادر مع تحفظات (تكييف منصب العمل مطلوب)";
+            else if (conclusion === "INAPTE_TEMPORAIRE") checkInapteTemp.textContent = "[X] غير قادر مؤقتاً (عدم قدرة مؤقتة)";
+            else if (conclusion === "INAPTE_DEFINITIF") checkInapteDef.textContent = "[X] غير قادر نهائياً (مانع دائم من المنصب)";
+        } else if (lang === "en") {
+            checkApte.textContent = "[ ] FIT (unrestricted)";
+            checkApteReserves.textContent = "[ ] FIT WITH RESERVATIONS (Job adaptations required)";
+            checkInapteTemp.textContent = "[ ] TEMPORARILY UNFIT (Momentary unfitness)";
+            checkInapteDef.textContent = "[ ] PERMANENTLY UNFIT (Permanent contraindication)";
+
+            if (conclusion === "APTE") checkApte.textContent = "[X] FIT (unrestricted)";
+            else if (conclusion === "APTE_RESERVES") checkApteReserves.textContent = "[X] FIT WITH RESERVATIONS (Job adaptations required)";
+            else if (conclusion === "INAPTE_TEMPORAIRE") checkInapteTemp.textContent = "[X] TEMPORARILY UNFIT (Momentary unfitness)";
+            else if (conclusion === "INAPTE_DEFINITIF") checkInapteDef.textContent = "[X] PERMANENTLY UNFIT (Permanent contraindication)";
+        } else {
+            checkApte.textContent = "[ ] APTE";
+            checkApteReserves.textContent = "[ ] APTE AVEC RÉSERVES (Aménagements requis)";
+            checkInapteTemp.textContent = "[ ] INAPTE TEMPORAIRE (Inaptitude momentanée)";
+            checkInapteDef.textContent = "[ ] INAPTE DÉFINITIF (Contre-indication permanente)";
+
+            if (conclusion === "APTE") checkApte.textContent = "[X] APTE";
+            else if (conclusion === "APTE_RESERVES") checkApteReserves.textContent = "[X] APTE AVEC RÉSERVES (Aménagements requis)";
+            else if (conclusion === "INAPTE_TEMPORAIRE") checkInapteTemp.textContent = "[X] INAPTE TEMPORAIRE (Inaptitude momentanée)";
+            else if (conclusion === "INAPTE_DEFINITIF") checkInapteDef.textContent = "[X] INAPTE DÉFINITIF (Contre-indication permanente)";
         }
     }
 
@@ -1828,7 +1956,8 @@ JSON Format:
                     recommendation: text,
                     model_name: modelName,
                     provider: provider,
-                    use_rag: useRag
+                    use_rag: useRag,
+                    language: languageSelectElement ? languageSelectElement.value : "fr"
                 })
             });
 
