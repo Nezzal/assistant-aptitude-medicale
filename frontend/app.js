@@ -1078,8 +1078,8 @@ JSON Format:
 
     function getTranslation(key) {
         const langSelect = document.getElementById("language-select");
-        const lang = langSelect ? langSelect.value : "ar";
-        const dict = UI_TRANSLATIONS[lang] || UI_TRANSLATIONS["ar"];
+        const lang = langSelect ? langSelect.value : "fr";
+        const dict = UI_TRANSLATIONS[lang] || UI_TRANSLATIONS["fr"];
         return dict[key] || "";
     }
 
@@ -1360,8 +1360,8 @@ JSON Format:
         }
     };
 
-    function applyUiTranslations(lang = "ar") {
-        const dict = UI_TRANSLATIONS[lang] || UI_TRANSLATIONS["ar"];
+    function applyUiTranslations(lang = "fr") {
+        const dict = UI_TRANSLATIONS[lang] || UI_TRANSLATIONS["fr"];
 
         const workspace = document.getElementById("main-workspace");
         if (workspace) {
