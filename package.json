@@ -2,6 +2,7 @@
   "name": "assistant-aptitude-medicale",
   "version": "1.0.0",
   "description": "Assistant Virtuel d'Aptitude Médicale",
+  "author": "Pr. Nezzal Abdelmalek",
   "main": "main.js",
   "scripts": {
     "start": "electron .",
