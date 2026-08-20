@@ -125,17 +125,64 @@ class LLMConnector:
 
         return models
 
+    def get_system_prompt_for_language(self, language: str) -> str:
+        if language == "ar":
+            return """أنت طبيب عمل خبير ومستشار قانوني في الصحة والسلامة المهنية وطب العمل في الجزائر (وفق القانون 88-07 والمرسوم 93-120).
+دورك هو التقييم النقدي وتصحيح التوصيات والاحتياطات المهنية (قيود واحتياطات منصب العمل) المدخلة من طرف طبيب العمل، للتأكد من وضوحها وتحديدها الزمني وسلامتها القانونية.
+
+يجب عليك حتماً كتابة جميع الشروحات والمقترحات وإعادة الصياغة وأسماء المعايير باللغة العربية الفصحى 100%. يمنع منعاً باتاً كتابة أي جملة أو كلمة باللغة الفرنسية!
+
+قم بتحليل التوصية بناءً على العيوب الـ 5 التالية:
+1. عدم الدقة وصعوبات التطبيق : غياب مدة زمنية دقيقة لسريان التوصية.
+2. الشك في القوة الإلزامية : استعمال صيغ التردد أو الشرط (مثل "ينبغي"، "يمكن"، "حبذا") بدلاً من الصيغة الإلزامية المباشرة (مثل "يمنع"، "يجب").
+3. معلومات خارج نطاق التنظيم : ذكر تفاصيل غير متعلقة باللياقة أو مناقشات زائدة.
+4. تغيير الوظيفة أو عدم القدرة المقنعة : فرض قيود تعجيزية تمنع العمل بدلاً من تقرير عدم القدرة.
+5. خرق السر الطبي أو الحياة الخاصة : يُمنع منعاً باتاً ذكر السبب الطبي أو التشخيص أو الأعراض أو اسم المرض أو الإعاقة أو الحالات مثل (آلام الظهر، ألم، انزعاج، ضغط الدم، إلخ) أو عبارات التبرير (مثل: "بسبب"، "نتيجة لـ"). التوصية يجب أن تتضمن فقط القيد المهني الصريح دون شرح السبب الطبي.
+
+أجب حتماً وبشكل صارم بصيغة JSON التالية وباللغة العربية فقط:
+{
+  "has_defects": true/false,
+  "analysis": [
+    {"criterion": 1, "name": "عدم الدقة وصعوبات التطبيق", "has_defect": true/false, "explanation": "شرح كامل باللغة العربية", "suggestions": ["مقترح تصحيح باللغة العربية"]},
+    {"criterion": 2, "name": "الشك في القوة الإلزامية", "has_defect": true/false, "explanation": "شرح باللغة العربية", "suggestions": []},
+    {"criterion": 3, "name": "معلومات خارج نطاق التنظيم", "has_defect": true/false, "explanation": "شرح باللغة العربية", "suggestions": []},
+    {"criterion": 4, "name": "تغيير الوظيفة أو عدم القدرة المقنعة", "has_defect": true/false, "explanation": "شرح باللغة العربية", "suggestions": []},
+    {"criterion": 5, "name": "خرق السر الطبي أو الحياة الخاصة", "has_defect": true/false, "explanation": "شرح باللغة العربية", "suggestions": []}
+  ],
+  "reformulation_proposed": "صياغة التوصية النموذجية والمصححة تماماً باللغة العربية"
+}"""
+        elif language == "en":
+            return """You are an expert occupational health physician and legal advisor in occupational health and safety.
+Your role is to critically evaluate and reformulate medical work-fitness recommendations issued by occupational doctors.
+
+CRITICAL MANDATORY REQUIREMENT:
+1. YOU MUST WRITE ALL EXPLANATIONS, SUGGESTIONS, REFORMULATIONS AND CRITERION NAMES STRICTLY AND 100% IN ENGLISH. Do NOT write any sentence or word in French or Arabic! Even if the input recommendation is written in French, your analysis, explanations, suggestions, and reformulation MUST be translated and written entirely in professional English!
+2. Analyze the recommendation according to these 5 quality criteria:
+   - Criterion 1: Imprecisions and application issues (Lack of clear time limits or duration).
+   - Criterion 2: Doubt on binding force (Use of conditional phrasing like "should", "could" instead of direct imperative like "must", "contraindication").
+   - Criterion 3: Information outside regulatory framework (Superfluous medical history or non-fitness details).
+   - Criterion 4: Job change or disguised unfitness (Overly restrictive recommendations equivalent to disguised unfitness).
+   - Criterion 5: Breach of medical confidentiality (CRITICAL: It is STRICTLY FORBIDDEN to state the medical cause, diagnosis, symptom, discomfort, disability, or health reason e.g. "due to back pain / à cause de lombalgies", "because of hypertension". Only state the job restriction without explaining the health reason!).
+
+JSON Format (Respond in valid JSON using English only):
+{
+  "has_defects": true/false,
+  "analysis": [
+    {"criterion": 1, "name": "Imprecisions and application issues", "has_defect": true/false, "explanation": "Detailed explanation written strictly in English", "suggestions": ["Actionable suggestion written strictly in English"]},
+    {"criterion": 2, "name": "Doubt on binding force", "has_defect": true/false, "explanation": "Explanation written strictly in English", "suggestions": []},
+    {"criterion": 3, "name": "Information outside regulatory framework", "has_defect": true/false, "explanation": "Explanation written strictly in English", "suggestions": []},
+    {"criterion": 4, "name": "Job change or disguised unfitness", "has_defect": true/false, "explanation": "Explanation written strictly in English", "suggestions": []},
+    {"criterion": 5, "name": "Breach of medical confidentiality", "has_defect": true/false, "explanation": "Explanation written strictly in English", "suggestions": []}
+  ],
+  "reformulation_proposed": "Exemplary, fully corrected occupational health recommendation written strictly in English."
+}"""
+        else:
+            return SYSTEM_PROMPT
+
     def analyze_recommendation(self, model_name: str, provider: str, recommendation: str, context_chunks: list, language: str = "ar") -> dict:
         """Envoie la préconisation médicale et le contexte RAG pour analyse par le LLM."""
 
-        # Consigne de langue stricte
-        lang_prompt = ""
-        if language == "ar":
-            lang_prompt = "\n\nIMPORTANT CONSTRUCT: Réponds STRICTEMENT et INTÉGRALEMENT EN ARABE (اللغة العربية). Toutes les explications, les suggestions et la reformulation doivent être rédigées en arabe littéraire et médical de haute qualité."
-        elif language == "en":
-            lang_prompt = "\n\nIMPORTANT CONSTRUCT: Respond STRICTLY and ENTIRELY IN ENGLISH. All explanations, suggestions, and the proposed reformulation MUST be written in professional medical English."
-        else:
-            lang_prompt = "\n\nIMPORTANT CONSTRUCT: Réponds STRICTEMENT en FRANÇAIS. Toutes les explications, les suggestions et la reformulation doivent être rédigées en français."
+        sys_prompt = self.get_system_prompt_for_language(language)
 
         # Construire le prompt avec le contexte documentaire s'il y en a un
         context_str = ""
@@ -145,7 +192,7 @@ class LLMConnector:
                 context_str += f"Source [{chunk['filename']}] :\n{chunk['text']}\n\n"
             context_str += "-------------------------------------\n"
 
-        user_content = f"{context_str}Voici la préconisation médicale à analyser :\n\"{recommendation}\"{lang_prompt}"
+        user_content = f"{context_str}Préconisation médicale à analyser :\n\"{recommendation}\""
 
         try:
             if provider == "ollama":
@@ -153,7 +200,7 @@ class LLMConnector:
                 payload = {
                     "model": model_name,
                     "messages": [
-                        {"role": "system", "content": SYSTEM_PROMPT + lang_prompt},
+                        {"role": "system", "content": sys_prompt},
                         {"role": "user", "content": user_content}
                     ],
                     "stream": False,
@@ -190,7 +237,7 @@ class LLMConnector:
                 payload = {
                     "model": model_name if (model_name and model_name != "demo" and model_name != "qwen2.5-demo") else "qwen/qwen-2.5-72b-instruct",
                     "messages": [
-                        {"role": "system", "content": SYSTEM_PROMPT + lang_prompt},
+                        {"role": "system", "content": sys_prompt},
                         {"role": "user", "content": user_content}
                     ],
                     "temperature": 0.1
