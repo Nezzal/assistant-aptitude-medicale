@@ -379,6 +379,9 @@ document.addEventListener("DOMContentLoaded", () => {
     const today = new Date().toISOString().split('T')[0];
     formDate.value = today;
 
+    // Variable globale pour mémoriser la dernière reformulation générée par le Copilote
+    let lastProposedReformulation = "";
+
     // === GESTION DES ONGLETS ===
     btnTabCopilot.addEventListener("click", () => {
         btnTabCopilot.classList.add("active");
@@ -396,6 +399,11 @@ document.addEventListener("DOMContentLoaded", () => {
         viewForms.style.display = "grid";
         viewCopilot.style.display = "none";
         viewDatabase.style.display = "none";
+        
+        // Renseigner automatiquement la préconisation si une reformulation existe
+        if (lastProposedReformulation && formRecommendation) {
+            formRecommendation.value = lastProposedReformulation;
+        }
         updatePrintPreview(); // Mettre à jour les données à l'ouverture
     });
 
@@ -1632,6 +1640,16 @@ JSON Format:
         }
 
         reformulationTextContent.textContent = result.reformulation_proposed || "Aucune reformulation nécessaire.";
+
+        if (result.reformulation_proposed) {
+            lastProposedReformulation = result.reformulation_proposed;
+            if (formRecommendation) {
+                formRecommendation.value = lastProposedReformulation;
+                if (typeof updatePrintPreview === "function") {
+                    updatePrintPreview();
+                }
+            }
+        }
 
         criteriaAnalysisList.innerHTML = "";
         result.analysis.forEach(item => {
