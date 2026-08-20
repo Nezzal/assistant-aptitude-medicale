@@ -1031,7 +1031,8 @@ Ton rôle est d'analyser de manière critique la préconisation d'aménagement o
 RÈGLE ESSENTIELLE :
 1. Une préconisation en médecine du travail concerne la protection du salarié face aux risques professionnels (poussières, bruit, charges, travail de nuit, etc.).
 2. Ce n'est PAS une prescription médicamenteuse (aucun médicament, traitement ou antibiotique ne doit être mentionné) !
-3. Réponds STRICTEMENT au format JSON en français uniquement.
+3. RÈGLE N°5 (SECRET MÉDICAL ABSOLU) : Il est STRICTEMENT INTERDIT de mentionner la cause médicale, la justification de santé ou le motif physique (ex: "à cause de...", "suite à...", "en raison de..."). La mention de toute affection, gêne ou inconfort ou handicap (ex: lombalgie, hernie, sciatique, hypertension, dépression, etc.), symptôme ou diagnostic constitue IMPÉRATIVEMENT un DÉFAUT N°5 (Rupture du secret médical). L'avis doit comporter UNIQUEMENT la restriction de poste pure, SANS JAMAIS EXPLIQUER LE MOTIF DE SANTÉ.
+4. Réponds STRICTEMENT au format JSON en français uniquement.
 
 JSON Format:
 {

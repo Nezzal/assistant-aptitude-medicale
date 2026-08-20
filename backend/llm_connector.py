@@ -12,7 +12,7 @@ Tu dois impérativement analyser l'écrit selon les 5 critères de mauvaise qual
 2. Doute sur la force d'obligation : Utilisation du conditionnel (ex: "devrait", "pourrait") ou de formulations suggérant un choix pour l'employeur. L'avis doit être direct et directif (ex: "doit", "éviter de").
 3. Informations hors cadre réglementaire : Présence d'informations superflues qui ne relèvent pas de l'avis d'aptitude strict (historique des discussions avec l'employeur ou le salarié, commentaires descriptifs).
 4. Changement de poste ou inaptitude déguisée : Recommandation explicite d'un autre poste ou d'aménagements tellement lourds qu'ils équivalent à une inaptitude déguisée.
-5. Rupture du secret médical ou vie privée : Mention d'informations confidentielles (comme des pathologies, symptômes, traitements, l'invalidité ou des motifs de santé personnels), ou d'informations administratives confidentielles non destinées à l'employeur.
+5. Rupture du secret médical ou vie privée : Il est STRICTEMENT INTERDIT de mentionner la cause médicale ou le motif de santé (ex: "à cause de...", "suite à...", "en raison de..."). La mention de toute affection, gêne ou inconfort ou handicap (ex: lombalgie, hernie, sciatique, hypertension, dépression, etc.), symptôme, diagnostic ou traitement constitue IMPÉRATIVEMENT un défaut de rupture du secret médical vis-à-vis de l'employeur. L'avis doit comporter UNIQUEMENT la restriction de poste pure, SANS JAMAIS EXPLIQUER LE MOTIF DE SANTÉ.
 
 Si des documents de référence (RAG) sont fournis ci-dessous, utilise-les pour enrichir ton analyse réglementaire et t'assurer de la conformité des préconisations.
 
@@ -242,12 +242,12 @@ class LLMConnector:
             "suggestions": sug_2 if has_conditional else []
         })
 
-        # 2. Secret médical / Symptômes
-        medical_terms = ["maladie", "pathologie", "traitement", "soins", "cancer", "dépression", "souffrance", "hospitalisation", "docteur", "médicament", "hypertension", "gêne", "douleur", "symptôme", "diabète", "مرض", "علاج", "انزعاج", "ضغط الدم"]
+        # 2. Secret médical / Symptômes / Causes médicales
+        medical_terms = ["maladie", "pathologie", "traitement", "soins", "cancer", "dépression", "souffrance", "hospitalisation", "docteur", "médicament", "hypertension", "gêne", "douleur", "symptôme", "diabète", "lombalgie", "lombalgies", "dorsalgie", "sciatique", "hernie", "tendinite", "canal carpien", "affection", "inconfort", "handicap", "à cause de", "en raison de", "suite à", "مرض", "علاج", "انزعاج", "ضغط الدم", "إعاقة", "ألم"]
         has_medical = any(word in rec_lower for word in medical_terms)
         name_5 = "خرق السر الطبي أو الحياة الخاصة" if is_ar else ("Breach of medical confidentiality" if is_en else "Rupture du secret médical ou vie privée")
-        exp_5 = "ذكر أعراض طبية أو تشخيص (مثل انزعاج، مرض، ضغط الدم) يخرق السر الطبي أمام الهيئة المستخدمة." if is_ar else ("Presence of symptoms or diagnosis (e.g. 'gêne', 'hypertension') breaching confidentiality." if is_en else "Mention d'un symptôme ou d'une donnée médicale (ex: 'gêne', 'hypertension') pouvant porter atteinte au secret médical vis-à-vis de l'employeur.")
-        sug_5 = ["حذف أي إشارة إلى الأعراض أو التشخيص الطبي والاقتصار على القيود المهنية فقط."] if is_ar else (["Remove any reference to symptoms, diagnosis, or treatments."] if is_en else ["Supprimer toute mention de symptômes, diagnostics ou pathologies. Ne mentionner que la restriction poste."])
+        exp_5 = "ذكر أي مرض، أعراض، تشخيص أو سبب صحي (مثل آلام الظهر، الإعاقة، أو الإنزعاج) يخرق السر الطبي أمام الهيئة المستخدمة." if is_ar else ("Mention of any affection, symptom, diagnosis, discomfort or medical cause breaching confidentiality." if is_en else "La mention de toute affection, gêne, inconfort, handicap ou raison de santé (ex: 'lombalgies', 'à cause de...') porte atteinte au secret médical vis-à-vis de l'employeur.")
+        sug_5 = ["حذف أي إشارة إلى الأعراض أو التشخيص الطبي والاقتصار على القيود المهنية فقط."] if is_ar else (["Remove any reference to medical causes, symptoms, diagnosis, or treatments."] if is_en else ["Supprimer toute mention de la cause médicale, d'affection ou d'inconfort. Ne mentionner que la restriction de poste pure."])
 
         analysis.append({
             "criterion": 5,
