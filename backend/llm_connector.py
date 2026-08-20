@@ -1,7 +1,7 @@
 import json
 import re
 import requests
-from config import OLLAMA_BASE_URL, OPENROUTER_API_KEY, GEMINI_API_KEY, OPENAI_API_KEY
+from config import OLLAMA_BASE_URL
 
 SYSTEM_PROMPT = """Tu es un médecin du travail expert et un conseiller juridique en santé au travail.
 Ton rôle est d'analyser de manière critique la préconisation d'aménagement ou d'aptitude médicale saisie par un médecin, afin de vérifier sa clarté, sa légalité et son applicabilité par l'employeur.
@@ -96,9 +96,9 @@ class LLMConnector:
         if ollama_running:
             # Recommandations à proposer s'ils ne sont pas déjà installés
             recommendations = [
-                ("qwen2.5:3b", "Qwen 2.5 3B (Recommandé - non installé)"),
-                ("deepseek-r1:1.5b", "DeepSeek-R1 1.5B (Ultra-léger - non installé)"),
-                ("deepseek-r1:8b", "DeepSeek-R1 8B (Raisonnement - non installé)")
+                ("qwen2.5:3b", "Qwen 2.5 3B (Recommandé - Modèle local léger)"),
+                ("qwen2.5", "Qwen 2.5 (Recommandé - Modèle complet)"),
+                ("deepseek-r1:1.5b", "DeepSeek-R1 1.5B (Ultra-léger)")
             ]
             for rec_name, rec_display in recommendations:
                 already_installed = False
@@ -116,10 +116,10 @@ class LLMConnector:
                     })
         else:
             models.append({
-                "name": "no_model",
-                "provider": "ollama",
-                "display_name": "Aucun modèle détecté (Veuillez lancer Ollama)",
-                "installed": False
+                "name": "qwen2.5-demo",
+                "provider": "openrouter" if OPENROUTER_API_KEY else "demo",
+                "display_name": "🌐 Démo Web Anonyme (3 essais)",
+                "installed": True
             })
 
         return models
@@ -173,62 +173,36 @@ class LLMConnector:
                         raise Exception(f"Le modèle '{model_name}' n'est pas encore téléchargé. Veuillez exécuter la commande 'ollama pull {model_name}' dans votre terminal pour l'installer.")
                     raise Exception(f"Erreur du serveur Ollama : {err_body}")
 
-            elif provider == "openrouter":
+            elif provider == "openrouter" or (provider == "demo" and OPENROUTER_API_KEY):
                 if not OPENROUTER_API_KEY:
-                    raise Exception("OPENROUTER_API_KEY manquante dans le fichier .env")
+                    return self._generate_fallback_analysis(recommendation, context_chunks, "Démo Web sans API", language)
                 
                 url = "https://openrouter.ai/api/v1/chat/completions"
                 headers = {
                     "Authorization": f"Bearer {OPENROUTER_API_KEY}",
                     "Content-Type": "application/json",
                     "HTTP-Referer": "http://localhost:8000",
-                    "X-Title": "Assistant d'Aptitude Medicale"
+                    "X-Title": "Assistant d'Aptitude Medicale (Demo Web)"
                 }
                 payload = {
-                    "model": model_name,
+                    "model": model_name if model_name != "demo" else "qwen/qwen-2.5-72b-instruct",
                     "messages": [
                         {"role": "system", "content": SYSTEM_PROMPT + lang_prompt},
                         {"role": "user", "content": user_content}
                     ],
                     "temperature": 0.1
                 }
-                r = requests.post(url, json=payload, headers=headers, timeout=60)
-                if r.status_code == 200:
-                    res_data = r.json()
-                    if "error" in res_data:
-                        raise Exception(res_data["error"].get("message", "Erreur OpenRouter inconnue"))
-                    if "choices" not in res_data or not res_data["choices"]:
-                        raise Exception(f"Aucune réponse générée par l'API (choices vide). Réponse brute : {res_data}")
-                    content = res_data["choices"][0].get("message", {}).get("content", "")
-                    return self._parse_json_response(content)
-                raise Exception(f"Erreur API OpenRouter : {r.text}")
-
-            elif provider == "openai":
-                if not OPENAI_API_KEY:
-                    raise Exception("OPENAI_API_KEY manquante dans le fichier .env")
-                
-                url = "https://api.openai.com/v1/chat/completions"
-                headers = {
-                    "Authorization": f"Bearer {OPENAI_API_KEY}",
-                    "Content-Type": "application/json"
-                }
-                payload = {
-                    "model": model_name,
-                    "messages": [
-                        {"role": "system", "content": SYSTEM_PROMPT + lang_prompt},
-                        {"role": "user", "content": user_content}
-                    ],
-                    "response_format": {"type": "json_object"},
-                    "temperature": 0.1
-                }
-                r = requests.post(url, json=payload, headers=headers, timeout=60)
+                r = requests.post(url, json=payload, headers=headers, timeout=30)
                 if r.status_code == 200:
                     res_data = r.json()
                     content = res_data["choices"][0]["message"]["content"]
                     return self._parse_json_response(content)
-                raise Exception(f"Erreur API OpenAI : {r.text}")
+                else:
+                    return self._generate_fallback_analysis(recommendation, context_chunks, f"Erreur API Démo ({r.status_code})", language)
+
             else:
-                raise Exception(f"Provider inconnu : {provider}")
+                # Si Ollama n'est pas accessible, basculement automatique sur le mode autonome RAG
+                return self._generate_fallback_analysis(recommendation, context_chunks, "Moteur local non connecté", language)
 
         except Exception as e:
             import traceback

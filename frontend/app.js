@@ -133,10 +133,9 @@ document.addEventListener("DOMContentLoaded", () => {
             const subject = encodeURIComponent("Demande d'activation - Assistant d'Aptitude Médicale");
             
             let bodyText = `Bonjour PedagogiAfrica,\n\n` +
-                `Veuillez trouver ci-joint le reçu de mon virement BaridiMob pour l'activation de mon assistant d'aptitude médicale.\n\n` +
-                `OPTION CHOISIE (Cochez avec un X) :\n` +
-                `[ ] Abonnement annuel en ligne (3 000 DA / an)\n` +
-                `[ ] Application autonome de bureau à vie (5 000 DA - Licence définitive)\n\n` +
+                `Veuillez trouver ci-joint le reçu de mon virement BaridiMob de 5 000 DA pour l'activation permanente de mon Assistant d'Aptitude Médicale.\n\n` +
+                `FORMULE SOUSCRITE :\n` +
+                `[X] Application autonome de bureau (À vie - 5 000 DA - Licence définitive)\n\n` +
                 `--------------------------------------------------\n` +
                 `INFORMATIONS D'INSTALLATION OBLIGATOIRES :\n` +
                 `Identifiant unique de ma machine : ${machineId}\n` +
@@ -409,6 +408,33 @@ document.addEventListener("DOMContentLoaded", () => {
         loadSavedFiches(); // Recharger et calculer les stats
     });
 
+    // Bouton de téléchargement rapide de Qwen 2.5 dans la bannière Ollama
+    const btnQuickDownloadQwen = document.getElementById("btn-quick-download-qwen");
+    if (btnQuickDownloadQwen) {
+        btnQuickDownloadQwen.addEventListener("click", async () => {
+            btnQuickDownloadQwen.disabled = true;
+            btnQuickDownloadQwen.textContent = "⏳ Téléchargement de Qwen 2.5 en cours...";
+            try {
+                const response = await fetch("/api/pull", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ model_name: "qwen2.5:3b" })
+                });
+                if (response.ok) {
+                    alert("Le téléchargement du modèle médical Qwen 2.5 (3B) a été initié. Le modèle sera disponible dans quelques instants.");
+                    loadModels();
+                } else {
+                    alert("Impossible d'initier le téléchargement. Veuillez vous assurer qu'Ollama est démarré sur votre machine.");
+                }
+            } catch (e) {
+                alert("Erreur de connexion à Ollama : " + e.message);
+            } finally {
+                btnQuickDownloadQwen.disabled = false;
+                btnQuickDownloadQwen.textContent = "📥 Installer le modèle Qwen 2.5";
+            }
+        });
+    }
+
     // === CHARGEMENT DES MODÈLES & DOCUMENTS (HYBRIDE CLIENT/SERVER) ===
     let autoPollingTimer = null;
 
@@ -471,16 +497,8 @@ document.addEventListener("DOMContentLoaded", () => {
                 const isOllamaOffline = availableModels.some(model => model.name === "no_model") && localModels.length === 0;
                 const hasInstalledModel = availableModels.some(model => model.provider === "ollama" && model.installed === true);
 
-                if (isOllamaOffline) {
-                    showOllamaStep1();
-                    startAutoPolling();
-                } else if (!hasInstalledModel) {
-                    stopAutoPolling();
-                    showOllamaStep2();
-                } else {
-                    stopAutoPolling();
-                    hideOboardingModalIfReady();
-                }
+                // Ne pas ouvrir le modal automatiquement au chargement pour laisser le prospect tester immédiatement
+                hideOboardingModalIfReady();
 
                 availableModels.forEach((model, index) => {
                     if (model.name === "no_model" && localModels.length > 0) return;
@@ -495,13 +513,11 @@ document.addEventListener("DOMContentLoaded", () => {
 
                 checkReadyToAnalyze();
             } else {
-                showOllamaStep1();
-                startAutoPolling();
+                hideOboardingModalIfReady();
             }
         } catch (error) {
             console.error("Erreur de chargement des modèles :", error);
-            showOllamaStep1();
-            startAutoPolling();
+            hideOboardingModalIfReady();
         }
     }
 
@@ -747,7 +763,34 @@ document.addEventListener("DOMContentLoaded", () => {
     });
 
     // === LOGIQUE DE LA VUE 1 : ANALYSE DIRECTE (COPILOTE) ===
-    // === LOGIQUE DE LA VUE 1 : ANALYSE DIRECTE (COPILOTE) ===
+    const demoExampleBtns = document.querySelectorAll(".btn-demo-example");
+    demoExampleBtns.forEach(btn => {
+        btn.addEventListener("click", () => {
+            const text = btn.dataset.text;
+            if (text && recommendationInput) {
+                recommendationInput.value = text;
+                checkReadyToAnalyze();
+                setTimeout(() => {
+                    if (btnAnalyze && !btnAnalyze.disabled) {
+                        btnAnalyze.click();
+                    }
+                }, 200);
+            }
+        });
+    });
+
+    // Initialiser l'affichage du compteur de démo web au chargement
+    const demoCounterBadgeInit = document.getElementById("demo-counter-badge");
+    if (demoCounterBadgeInit) {
+        const storedKey = localStorage.getItem("med_license_key");
+        const isActivated = (storedKey === generateActivationKey(machineId));
+        if (isActivated) {
+            demoCounterBadgeInit.style.display = "none";
+        } else {
+            const demoCount = parseInt(localStorage.getItem("med_demo_cert_count") || "0", 10);
+            demoCounterBadgeInit.textContent = `🧪 Essais Démo Web : ${demoCount} / 3`;
+        }
+    }
     btnAnalyze.addEventListener("click", async () => {
         const text = recommendationInput.value.trim();
         const selectedOption = modelSelect.options[modelSelect.selectedIndex];
@@ -840,6 +883,24 @@ document.addEventListener("DOMContentLoaded", () => {
                 btnText.textContent = getTranslation("btnAnalyze");
                 return;
             }
+        }
+
+        // Vérification de la limite de 3 certificats pour le mode Démo Web
+        const storedKey = localStorage.getItem("med_license_key");
+        const isActivated = (storedKey === generateActivationKey(machineId));
+        const demoCounterBadge = document.getElementById("demo-counter-badge");
+
+        if (!isActivated) {
+            let demoCount = parseInt(localStorage.getItem("med_demo_cert_count") || "0", 10);
+            if (demoCount >= 3) {
+                if (demoCounterBadge) demoCounterBadge.textContent = "🔒 Essais Démo Web : 3 / 3 (Limite atteinte)";
+                alert("🔒 Limite du Mode Démonstration Web atteinte (3/3 analyses démo effectuées).\n\nConformément à la réglementation algérienne (interdiction d'hébergement externe des données de santé) et au RGPD international, l'utilisation complète et illimitée nécessite l'application de bureau.\n\nVeuillez télécharger l'Application Bureau et obtenir votre licence définitive à 5 000 DA (à vie).");
+                return;
+            }
+            demoCount += 1;
+            localStorage.setItem("med_demo_cert_count", demoCount.toString());
+            if (demoCounterBadge) demoCounterBadge.textContent = `🧪 Essais Démo Web : ${demoCount} / 3`;
+            console.log(`[Démo Web] Certificate analysis ${demoCount}/3 used.`);
         }
 
         btnAnalyze.disabled = true;
