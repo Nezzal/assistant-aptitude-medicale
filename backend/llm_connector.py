@@ -16,7 +16,7 @@ Tu dois impérativement analyser l'écrit selon les 5 critères de mauvaise qual
 
 Si des documents de référence (RAG) sont fournis ci-dessous, utilise-les pour enrichir ton analyse réglementaire et t'assurer de la conformité des préconisations.
 
-IMPORTANT : Tu dois impérativement échapper tous les guillemets doubles présents à l'intérieur de tes explications textuelles avec un antislash (par exemple, écris \\"devrait\\" et non "devrait"). Sinon, le JSON sera invalide.
+IMPORTANT : N'utilise JAMAIS de guillemets doubles (") à l'intérieur de tes explications ou suggestions textuelles ! Utilise UNIQUEMENT des guillemets simples (') (par exemple écris 'à cause de lombalgies' et JAMAIS "à cause de lombalgies"). Tout guillemet double interne cassera le JSON.
 
 Réponds STRICTEMENT sous la forme d'un objet JSON contenant l'analyse détaillée. Le format doit être :
 {
@@ -423,19 +423,16 @@ JSON Format (Respond in valid JSON using English only):
         except Exception as e:
             print(f"[!] Échec du premier parsing JSON : {e}")
             try:
-                repaired = self._repair_json_string(json_candidate)
-                return json.loads(repaired)
+                # Nettoyer les guillemets doubles internes non échappés dans les valeurs textuelles
+                cleaned_json = re.sub(r'(:\s*")([^"]*)(")', lambda m: m.group(1) + m.group(2).replace('"', "'") + m.group(3), json_candidate)
+                return json.loads(cleaned_json)
             except Exception as e2:
-                print(f"[!] Échec de la réparation du JSON : {e2}")
-                return {
-                    "has_defects": True,
-                    "analysis": [
-                        {"criterion": 1, "name": "Imprécisions et difficultés d'application", "has_defect": True, "explanation": f"Erreur de formatage du JSON retourné par le LLM. Erreur : {e2}", "suggestions": []},
-                        {"criterion": 2, "name": "Doute sur la force d'obligation", "has_defect": False, "explanation": "", "suggestions": []},
-                        {"criterion": 3, "name": "Informations hors cadre réglementaire", "has_defect": False, "explanation": "", "suggestions": []},
-                        {"criterion": 4, "name": "Changement de poste ou inaptitude déguisée", "has_defect": False, "explanation": "", "suggestions": []},
-                        {"criterion": 5, "name": "Rupture du secret médical ou vie privée", "has_defect": False, "explanation": "", "suggestions": []}
-                    ],
-                    "reformulation_proposed": "Une erreur s'est produite lors de l'analyse (format JSON invalide). Veuillez réessayer."
-                }
+                print(f"[!] Échec du nettoyage avancé JSON : {e2}")
+                try:
+                    repaired = self._repair_json_string(json_candidate)
+                    return json.loads(repaired)
+                except Exception as e3:
+                    print(f"[!] Échec de la réparation du JSON : {e3}")
+                    # En cas d'échec total du parser LLM, basculer de manière transparente sur le moteur RAG autonome
+                    return self._generate_fallback_analysis(text_clean, [], "Formatage JSON IA ajusté", "fr")
 
