@@ -250,6 +250,10 @@ JSON Format (Respond in valid JSON using English only):
                 r = requests.post(url, json=payload, headers=headers, timeout=30)
                 if r.status_code == 200:
                     res_data = r.json()
+                    if "choices" not in res_data:
+                        err_msg = f"Réponse OpenRouter inattendue : {r.text[:150]}"
+                        print(f"[!] OpenRouter API Error: {err_msg}")
+                        return self._generate_fallback_analysis(recommendation, context_chunks, err_msg, language)
                     content = res_data["choices"][0]["message"]["content"]
                     return self._parse_json_response(content)
                 else:
@@ -375,6 +379,15 @@ JSON Format (Respond in valid JSON using English only):
                 reformulation = "Contre-indication stricte à la posture assise prolongée pour une durée de 3 mois, avec aménagement ergonomique du poste."
             elif has_any_defect:
                 reformulation = recommendation + " pour une durée de 3 mois."
+
+        # Si la préconisation d'origine est renvoyée (pas de règle statique matchée et pas de défauts),
+        # On s'assure d'avertir l'utilisateur si la langue demandée est différente du français,
+        # car on ne peut pas traduire dynamiquement sans le LLM
+        if reformulation == recommendation:
+            if is_ar:
+                reformulation = f"[تعذر الترجمة التلقائية - يرجى النقر على زر 'Vérifier avec l'IA' أو إدخال النص بالعربية]\n\n{recommendation}"
+            elif is_en:
+                reformulation = f"[Automatic translation failed - please click 'Verify with AI' or type in English]\n\n{recommendation}"
 
         note_prefix = f" ({error_msg})" if error_msg else ""
         fallback_note = ("💡 ملاحظة: تحليل تنظيم الصحة والسلامة والمهنية (RAG)." + note_prefix) if is_ar else (

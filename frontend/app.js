@@ -991,7 +991,7 @@ document.addEventListener("DOMContentLoaded", () => {
 2. الشك في القوة الإلزامية (استعمال صيغ التردد مثل "ينبغي" بدل "يمنع" أو "يلزم")
 3. معلومات خارج نطاق التنظيم (ذكر مناقشات أو تفاصيل غير متعلقة باللياقة)
 4. تغيير الوظيفة أو عدم القدرة المقنعة (فرض قيود تعجيزية بدلاً من تقرير عدم القدرة)
-5. خرق السر الطبي أو الحياة الخاصة (ذكر التشخيص أو أسماء الأمراض)
+5. خرق السر الطبي أو الحياة الخاصة: يُمنع منعاً باتاً ذكر السبب الطبي أو أي عرض أو مرض (مثل: آلام الظهر، انزلاق غضروفي، ضغط الدم، ألم، انزعاج، إعاقة، إلخ). التوصية يجب أن تتضمن فقط القيد المهني دون شرح السبب الصحي!
 
 أجب حتماً وبشكل صارم بصيغة JSON التالية وباللغة العربية فقط:
 {
@@ -1996,6 +1996,18 @@ JSON Format:
         }
 
         formReformulationContent.textContent = result.reformulation_proposed || "Aucune reformulation nécessaire.";
+
+        // NOUVEAU : On remplace automatiquement le texte du formulaire par la reformulation de l'IA
+        // pour que l'utilisateur n'ait pas à cliquer manuellement sur le bouton, ce qui causait des oublis.
+        if (result.reformulation_proposed) {
+            const formRecommendation = document.getElementById("form-recommendation");
+            if (formRecommendation) {
+                formRecommendation.value = result.reformulation_proposed;
+                if (typeof updatePrintPreview === "function") {
+                    updatePrintPreview();
+                }
+            }
+        }
 
         formCriteriaList.innerHTML = "";
         result.analysis.forEach(item => {
