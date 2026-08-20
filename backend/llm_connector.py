@@ -222,27 +222,27 @@ class LLMConnector:
         is_en = language == "en"
 
         # 1. Force d'obligation (conditionnels)
-        conditional_terms = ["devrait", "pourrait", "envisager", "si possible", "souhaitable", "éventuellement", "à revoir si besoin"]
+        conditional_terms = ["devrait", "pourrait", "envisager", "si possible", "souhaitable", "éventuellement", "à revoir si besoin", "ينبغي", "يمكن", "عند الحاجة"]
         has_conditional = any(word in rec_lower for word in conditional_terms)
         
         name_2 = "الشك في القوة الإلزامية" if is_ar else ("Doubt on binding force" if is_en else "Doubt on binding force / Doute sur la force d'obligation")
-        exp_2 = "صياغة شرطية تشير إلى الخيار بدلاً من الأمر المباشر." if is_ar else ("Conditional phrasing suggesting a choice instead of a direct order." if is_en else "Formulation au conditionnel ou suggérant un choix (ex: 'devrait', 'si possible'). L'avis doit être direct et directif.")
-        sug_2 = ["استخدام صيغة المباشر الإلزامي: 'يجب'، 'تجنب'، 'الحد من'."] if is_ar else (["Use imperative phrasing: 'must', 'avoidance of', 'limitation to'."] if is_en else ["Employer un ton directif : 'doit', 'éviction de', 'contre-indication à'."])
+        exp_2 = "استخدام صياغة شرطية أو مترددة توحي بالخيار بدلاً من الأمر المباشر والإلزام." if is_ar else ("Conditional phrasing suggesting a choice instead of a direct order." if is_en else "Formulation au conditionnel ou suggérant un choix (ex: 'devrait', 'si possible'). L'avis doit être direct et directif.")
+        sug_2 = ["استخدام صيغة المباشر الإلزامي: 'يمنع'، 'يلزم'، 'تجنب'، 'الحد من'."] if is_ar else (["Use imperative phrasing: 'must', 'avoidance of', 'limitation to'."] if is_en else ["Employer un ton directif : 'doit', 'éviction de', 'contre-indication à'."])
 
         analysis.append({
             "criterion": 2,
             "name": name_2,
             "has_defect": has_conditional,
-            "explanation": exp_2 if has_conditional else ("الصياغة مباشرة." if is_ar else ("Direct phrasing used." if is_en else "Rédaction directe au présent de l'indicatif.")),
+            "explanation": exp_2 if has_conditional else ("الصياغة مباشرة وإلزامية." if is_ar else ("Direct phrasing used." if is_en else "Rédaction directe au présent de l'indicatif.")),
             "suggestions": sug_2 if has_conditional else []
         })
 
         # 2. Secret médical / Symptômes
-        medical_terms = ["maladie", "pathologie", "traitement", "soins", "cancer", "dépression", "souffrance", "hospitalisation", "docteur", "médicament", "hypertension", "gêne", "douleur", "symptôme", "diabète"]
+        medical_terms = ["maladie", "pathologie", "traitement", "soins", "cancer", "dépression", "souffrance", "hospitalisation", "docteur", "médicament", "hypertension", "gêne", "douleur", "symptôme", "diabète", "مرض", "علاج", "انزعاج", "ضغط الدم"]
         has_medical = any(word in rec_lower for word in medical_terms)
         name_5 = "خرق السر الطبي أو الحياة الخاصة" if is_ar else ("Breach of medical confidentiality" if is_en else "Rupture du secret médical ou vie privée")
-        exp_5 = "ذكر مصطلحات طبية أو أعراض (مثل 'gêne' أو 'hypertension') يخرق السر الطبي أمام Employeur." if is_ar else ("Presence of symptoms or diagnosis (e.g. 'gêne', 'hypertension') breaching confidentiality." if is_en else "Mention d'un symptôme ou d'une donnée médicale (ex: 'gêne', 'hypertension') pouvant porter atteinte au secret médical vis-à-vis de l'employeur.")
-        sug_5 = ["إزالة أي إشارة إلى الأعراض أو التشخيص أو العلاجات."] if is_ar else (["Remove any reference to symptoms, diagnosis, or treatments."] if is_en else ["Supprimer toute mention de symptômes, diagnostics ou pathologies. Ne mentionner que la restriction poste."])
+        exp_5 = "ذكر أعراض طبية أو تشخيص (مثل انزعاج، مرض، ضغط الدم) يخرق السر الطبي أمام الهيئة المستخدمة." if is_ar else ("Presence of symptoms or diagnosis (e.g. 'gêne', 'hypertension') breaching confidentiality." if is_en else "Mention d'un symptôme ou d'une donnée médicale (ex: 'gêne', 'hypertension') pouvant porter atteinte au secret médical vis-à-vis de l'employeur.")
+        sug_5 = ["حذف أي إشارة إلى الأعراض أو التشخيص الطبي والاقتصار على القيود المهنية فقط."] if is_ar else (["Remove any reference to symptoms, diagnosis, or treatments."] if is_en else ["Supprimer toute mention de symptômes, diagnostics ou pathologies. Ne mentionner que la restriction poste."])
 
         analysis.append({
             "criterion": 5,
@@ -253,11 +253,11 @@ class LLMConnector:
         })
 
         # 3. Imprécisions temporelles
-        imprecise_terms = ["renouvelable", "régulièrement", "un certain temps", "provisoirement", "ultérieurement", "si besoin", "à revoir", "bientôt"]
+        imprecise_terms = ["renouvelable", "régulièrement", "un certain temps", "provisoirement", "ultérieurement", "si besoin", "à revoir", "bientôt", "عند الحاجة", "للمراجعة"]
         has_imprecision = any(word in rec_lower for word in imprecise_terms)
         name_1 = "عدم الدقة وصعوبات التطبيق" if is_ar else ("Imprecisions and application issues" if is_en else "Imprécisions et difficultés d'application")
-        exp_1 = "عبارات زمنية غير محدودة (مثل 'à revoir si besoin'). l'Employeur a besoin d'une durée exacte." if is_ar else ("Vague timeframes (e.g. 'à revoir si besoin') without exact duration." if is_en else "Presence de formules vagues sans durée précise définie (ex: 'à revoir si besoin'). L'employeur exige une périodicité claire.")
-        sug_1 = ["تحديد مدة دقيقة (مثال: 'لمدة 3 أشهر')."] if is_ar else (["Specify an exact duration (e.g. 'for a period of 3 months')."] if is_en else ["Préciser une durée temporelle fixe (ex: 'pour une durée de 3 mois')."])
+        exp_1 = "استعمال عبارات زمنية غامضة (مثل 'عند الحاجة' أو 'للمراجعة'). الهيئة المستخدمة تتطلب تحديد مدة دقيقة." if is_ar else ("Vague timeframes (e.g. 'à revoir si besoin') without exact duration." if is_en else "Presence de formules vagues sans durée précise définie (ex: 'à revoir si besoin'). L'employeur exige une périodicité claire.")
+        sug_1 = ["تحديد مدة دقيقة وصريحة (مثال: 'لمدة 3 أشهر')."] if is_ar else (["Specify an exact duration (e.g. 'for a period of 3 months')."] if is_en else ["Préciser une durée temporelle fixe (ex: 'pour une durée de 3 mois')."])
 
         analysis.append({
             "criterion": 1,
@@ -269,16 +269,35 @@ class LLMConnector:
 
         has_any_defect = any(c["has_defect"] for c in analysis)
         
-        # Reformulation exemplaire selon le contexte
+        # Reformulation exemplaire selon le contexte et la langue
         reformulation = recommendation
-        if "céréales" in rec_lower or "poussières" in rec_lower:
-            reformulation = "Éviction stricte de l'exposition aux poussières de céréales au poste de stockage pour une durée de 3 mois."
-        elif "charge" in rec_lower or "15" in rec_lower or "kg" in rec_lower:
-            reformulation = "Contre-indication stricte au port de charges lourdes de plus de 15 kg pour une durée de 6 mois."
-        elif "nuit" in rec_lower or "hypertension" in rec_lower:
-            reformulation = "Inaptitude temporaire au travail de nuit pour une durée de 3 mois."
-        elif has_any_defect:
-            reformulation = recommendation.replace("devrait", "doit").replace("pourrait", "doit").replace("à revoir si besoin", "pour une durée de 3 mois")
+        if is_ar:
+            if "céréales" in rec_lower or "poussières" in rec_lower or "حبوب" in rec_lower or "غبار" in rec_lower:
+                reformulation = "المنع التام من التعرض للغبار الجوي للحبوب في منصب التخزين لمدة 3 أشهر مع توفير وسائل الحماية التنفسية المناسبة."
+            elif "charge" in rec_lower or "15" in rec_lower or "kg" in rec_lower or "أثقال" in rec_lower or "حمل" in rec_lower:
+                reformulation = "المنع التام من حمل الأثقال التي تتجاوز 15 كغ في ورشة البناء لمدة 6 أشهر."
+            elif "nuit" in rec_lower or "hypertension" in rec_lower or "ليلي" in rec_lower or "ضغط" in rec_lower:
+                reformulation = "عدم القدرة الطبية المؤقتة على العمل الليلي لمدة 3 أشهر."
+            elif has_any_defect:
+                reformulation = "المنع من التعرض للمخاطر المهنية المذكورة في منصب العمل لمدة 3 أشهر."
+        elif is_en:
+            if "céréales" in rec_lower or "poussières" in rec_lower or "cereal" in rec_lower or "dust" in rec_lower:
+                reformulation = "Strict contraindication to airborne cereal dust exposure at the storage position for a duration of 3 months."
+            elif "charge" in rec_lower or "15" in rec_lower or "kg" in rec_lower or "lifting" in rec_lower:
+                reformulation = "Strict contraindication to heavy lifting exceeding 15 kg for a duration of 6 months."
+            elif "nuit" in rec_lower or "hypertension" in rec_lower or "night" in rec_lower:
+                reformulation = "Temporary unfitness for night work for a duration of 3 months."
+            elif has_any_defect:
+                reformulation = "Strict workplace restriction regarding mentioned hazards for a duration of 3 months."
+        else:
+            if "céréales" in rec_lower or "poussières" in rec_lower:
+                reformulation = "Éviction stricte de l'exposition aux poussières de céréales au poste de stockage pour une durée de 3 mois."
+            elif "charge" in rec_lower or "15" in rec_lower or "kg" in rec_lower:
+                reformulation = "Contre-indication stricte au port de charges lourdes de plus de 15 kg pour une durée de 6 mois."
+            elif "nuit" in rec_lower or "hypertension" in rec_lower:
+                reformulation = "Inaptitude temporaire au travail de nuit pour une durée de 3 mois."
+            elif has_any_defect:
+                reformulation = recommendation.replace("devrait", "doit").replace("pourrait", "doit").replace("à revoir si besoin", "pour une durée de 3 mois")
 
         fallback_note = "💡 ملاحظة: تحليل تنظيم الصحة والسلامة والمهنية (RAG)." if is_ar else (
             "💡 Note: Analysis based on occupational health regulatory standards (RAG)." if is_en else

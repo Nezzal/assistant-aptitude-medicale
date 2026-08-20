@@ -1094,6 +1094,20 @@ JSON Format:
             tabGuide: "دليل الاستخدام",
             tabLogout: "تسجيل الخروج",
             
+            ollamaBannerTitle: "الذكاء الاصطناعي المحلي (Ollama) وسرية البيانات",
+            ollamaBannerText: "وفقاً للتشريع الجزائري وRGPD، تُنفّذ جميع التحليلات 100% بدون اتصال بالإنترنت على جهازك.",
+            ollamaStatusActive: "الاتصال نشط.",
+            btnInstallQwen: "📥 تثبيت نموذج Qwen 2.5",
+            btnSupportMail: "✉️ الدعم عبر البريد",
+            
+            demoExamplesLabel: "💡 أمثلة للتجربة بنقرة واحدة:",
+            ex1Btn: "🌾 غبار الحبوب",
+            ex1Text: "يعاني العامل من انزعاج مرتبط بغبار الحبوب في منصب التخزين، للمراجعة عند الحاجة.",
+            ex2Btn: "🏗️ حمل الأثقال",
+            ex2Text: "ينبغي على العامل تجنب حمل الأثقال التي تتجاوز 15 كغ في ورشة البناء.",
+            ex3Btn: "🌙 العمل الليلي والسر الطبي",
+            ex3Text: "عدم القدرة المؤقتة على العمل الليلي لأن العامل يعاني من مرض إرتفاع ضغط الدم الشديد تحت العلاج.",
+
             titleInput: "إدخال التوصية الطبية",
             labelInput: "حرر أو ألصق التوصية الطبية:",
             placeholderInput: "مثال: مريض يعاني من مانع طبي نهائي للتعرض لأدخنة اللحام...",
@@ -1336,6 +1350,32 @@ JSON Format:
 
         const appHeaderSubtitle = document.getElementById("app-header-subtitle");
         if (appHeaderSubtitle && dict.appHeaderSubtitle) appHeaderSubtitle.textContent = dict.appHeaderSubtitle;
+
+        // Bannière Ollama
+        const ollamaBannerTitle = document.querySelector("#ollama-info-banner strong");
+        if (ollamaBannerTitle && dict.ollamaBannerTitle) ollamaBannerTitle.textContent = dict.ollamaBannerTitle;
+
+        const ollamaBannerText = document.querySelector("#ollama-info-banner p");
+        if (ollamaBannerText && dict.ollamaBannerText) {
+            ollamaBannerText.innerHTML = `${dict.ollamaBannerText} <span id="ollama-status-details" style="color: var(--success); font-weight: 500;">${dict.ollamaStatusActive || ""}</span>`;
+        }
+
+        const btnQuickDownloadQwen = document.getElementById("btn-quick-download-qwen");
+        if (btnQuickDownloadQwen && dict.btnInstallQwen) btnQuickDownloadQwen.textContent = dict.btnInstallQwen;
+
+        const btnSupportMailLink = document.querySelector("#ollama-action-container a");
+        if (btnSupportMailLink && dict.btnSupportMail) btnSupportMailLink.textContent = dict.btnSupportMail;
+
+        // Barre d'exemples en 1-clic
+        const demoExamplesLabel = document.querySelector(".btn-demo-example")?.previousElementSibling;
+        if (demoExamplesLabel && dict.demoExamplesLabel) demoExamplesLabel.textContent = dict.demoExamplesLabel;
+
+        const demoBtns = document.querySelectorAll(".btn-demo-example");
+        if (demoBtns.length >= 3) {
+            if (dict.ex1Btn) { demoBtns[0].textContent = dict.ex1Btn; demoBtns[0].dataset.text = dict.ex1Text; }
+            if (dict.ex2Btn) { demoBtns[1].textContent = dict.ex2Btn; demoBtns[1].dataset.text = dict.ex2Text; }
+            if (dict.ex3Btn) { demoBtns[2].textContent = dict.ex3Btn; demoBtns[2].dataset.text = dict.ex3Text; }
+        }
 
         // Navigation
         const btnCopilot = document.getElementById("btn-tab-copilot");
