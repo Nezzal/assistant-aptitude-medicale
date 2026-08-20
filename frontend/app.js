@@ -1185,6 +1185,20 @@ JSON Format:
             tabGuide: "Guide d'Utilisation",
             tabLogout: "Déconnexion",
             
+            ollamaBannerTitle: "Intelligence Artificielle Locale (Ollama) & Souveraineté des Données",
+            ollamaBannerText: "Conformément à la législation algérienne et au RGPD, toutes les analyses sont exécutées 100% hors-ligne par le moteur Ollama sur votre ordinateur.",
+            ollamaStatusActive: "Connexion active.",
+            btnInstallQwen: "📥 Installer le modèle Qwen 2.5",
+            btnSupportMail: "✉️ Support Mail",
+            
+            demoExamplesLabel: "💡 Exemples en 1-clic :",
+            ex1Btn: "🌾 Poussières de céréales",
+            ex1Text: "Le salarié présente une gêne liée aux poussières de céréales au poste de stockage, à revoir si besoin.",
+            ex2Btn: "🏗️ Port de charges",
+            ex2Text: "Le salarié devrait éviter le port de charges lourdes de plus de 15 kg sur le chantier.",
+            ex3Btn: "🌙 Travail de nuit & secret",
+            ex3Text: "Inaptitude temporaire au travail de nuit car le salarié souffre d'hypertension artérielle sévère sous traitement.",
+            
             titleInput: "Saisie de la Préconisation",
             labelInput: "Rédiger ou coller la préconisation médicale :",
             placeholderInput: "Exemple : Patient présentant une contre-indication définitive à l'exposition aux fumées de soudure...",
@@ -1261,6 +1275,20 @@ JSON Format:
             tabDatabase: "Database",
             tabGuide: "User Guide",
             tabLogout: "Logout",
+            
+            ollamaBannerTitle: "Local Artificial Intelligence (Ollama) & Data Sovereignty",
+            ollamaBannerText: "In accordance with Algerian legislation and GDPR, all analyses are executed 100% offline by the Ollama engine on your computer.",
+            ollamaStatusActive: "Connection active.",
+            btnInstallQwen: "📥 Install Qwen 2.5 Model",
+            btnSupportMail: "✉️ Email Support",
+            
+            demoExamplesLabel: "💡 1-Click Examples:",
+            ex1Btn: "🌾 Cereal Dust",
+            ex1Text: "The worker experiences discomfort related to cereal dust at the storage position, to be re-evaluated if needed.",
+            ex2Btn: "🏗️ Heavy Lifting",
+            ex2Text: "The worker should avoid lifting heavy loads over 15 kg at the construction site.",
+            ex3Btn: "🌙 Night Work & Privacy",
+            ex3Text: "Temporary unfitness for night work because the worker suffers from severe hypertension under treatment.",
             
             titleInput: "Medical Recommendation Input",
             labelInput: "Write or paste medical recommendation:",
