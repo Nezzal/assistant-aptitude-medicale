@@ -1184,7 +1184,8 @@ JSON Format:
             formReformulationTitle: "إعادة الصياغة التلقائية المطبقة",
             btnFormUseRef: "اعتماد هذه الصياغة",
             formCriteriaTitle: "تحليل معايير جودة الصياغة",
-            translationHint: "💡 ملاحظة: عند تغيير اللغة، يجب عليك النقر على \"مراجعة (الذكاء الاصطناعي)\" لترجمة النص تلقائياً."
+            translationHint: "💡 ملاحظة: عند تغيير اللغة، يجب عليك النقر على \"مراجعة (الذكاء الاصطناعي)\" لترجمة النص تلقائياً.",
+            translationHintTab1: "💡 ملاحظة: عند تغيير اللغة، يجب عليك النقر على \"بدء التحليل النقدي\" لترجمة النص تلقائياً."
         },
         fr: {
             appHeaderTitle: "Assistant d'Aptitude Médicale",
@@ -1276,7 +1277,8 @@ JSON Format:
             formReformulationTitle: "Reformulation automatique appliquée",
             btnFormUseRef: "Utiliser cette version",
             formCriteriaTitle: "Analyse des critères de qualité",
-            translationHint: "💡 Note : Lors d'un changement de langue, cliquez obligatoirement sur \"Relecture (IA)\" pour traduire automatiquement votre texte."
+            translationHint: "💡 Note : Lors d'un changement de langue, cliquez obligatoirement sur \"Relecture (IA)\" pour traduire automatiquement votre texte.",
+            translationHintTab1: "💡 Note : Lors d'un changement de langue, cliquez obligatoirement sur \"Lancer l'analyse critique\" pour traduire le texte."
         },
         en: {
             appHeaderTitle: "Medical Fitness Assistant",
@@ -1368,7 +1370,8 @@ JSON Format:
             formReformulationTitle: "Applied Automatic Reformulation",
             btnFormUseRef: "Use this version",
             formCriteriaTitle: "Quality Criteria Analysis",
-            translationHint: "💡 Note: When changing language, you must click \"AI Review\" to automatically translate your text."
+            translationHint: "💡 Note: When changing language, you must click \"AI Review\" to automatically translate your text.",
+            translationHintTab1: "💡 Note: When changing language, you must click \"Run Critical Analysis\" to automatically translate your text."
         }
     };
 
