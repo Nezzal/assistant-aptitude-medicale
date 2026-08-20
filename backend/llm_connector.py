@@ -174,18 +174,20 @@ class LLMConnector:
                     raise Exception(f"Erreur du serveur Ollama : {err_body}")
 
             elif provider in ["openrouter", "demo"]:
-                if not OPENROUTER_API_KEY:
-                    return self._generate_fallback_analysis(recommendation, context_chunks, "Démo Web RAG Autonome", language)
+                openrouter_key = os.getenv("OPENROUTER_API_KEY", "").strip() or OPENROUTER_API_KEY.strip()
+                
+                if not openrouter_key:
+                    return self._generate_fallback_analysis(recommendation, context_chunks, "Démo Web RAG Autonome (Clé OPENROUTER_API_KEY non détectée sur Vercel)", language)
                 
                 url = "https://openrouter.ai/api/v1/chat/completions"
                 headers = {
-                    "Authorization": f"Bearer {OPENROUTER_API_KEY}",
+                    "Authorization": f"Bearer {openrouter_key}",
                     "Content-Type": "application/json",
-                    "HTTP-Referer": "http://localhost:8000",
+                    "HTTP-Referer": "https://assistant-aptitude-medicale.vercel.app",
                     "X-Title": "Assistant d'Aptitude Medicale (Demo Web)"
                 }
                 payload = {
-                    "model": model_name if model_name != "demo" else "qwen/qwen-2.5-72b-instruct",
+                    "model": model_name if (model_name and model_name != "demo" and model_name != "qwen2.5-demo") else "qwen/qwen-2.5-72b-instruct",
                     "messages": [
                         {"role": "system", "content": SYSTEM_PROMPT + lang_prompt},
                         {"role": "user", "content": user_content}
@@ -198,7 +200,9 @@ class LLMConnector:
                     content = res_data["choices"][0]["message"]["content"]
                     return self._parse_json_response(content)
                 else:
-                    return self._generate_fallback_analysis(recommendation, context_chunks, f"Erreur API Démo ({r.status_code})", language)
+                    err_msg = f"Erreur API OpenRouter ({r.status_code}): {r.text[:150]}"
+                    print(f"[!] OpenRouter API Error: {err_msg}")
+                    return self._generate_fallback_analysis(recommendation, context_chunks, err_msg, language)
 
             else:
                 # Si Ollama n'est pas accessible, basculement automatique sur le mode autonome RAG
@@ -313,9 +317,10 @@ class LLMConnector:
             elif has_any_defect:
                 reformulation = recommendation + " pour une durée de 3 mois."
 
-        fallback_note = "💡 ملاحظة: تحليل تنظيم الصحة والسلامة والمهنية (RAG)." if is_ar else (
-            "💡 Note: Analysis based on occupational health regulatory standards (RAG)." if is_en else
-            "💡 Note : Analyse basée sur le référentiel réglementaire et les guides d'aptitude médicale (RAG)."
+        note_prefix = f" ({error_msg})" if error_msg else ""
+        fallback_note = ("💡 ملاحظة: تحليل تنظيم الصحة والسلامة والمهنية (RAG)." + note_prefix) if is_ar else (
+            ("💡 Note: Analysis based on occupational health regulatory standards (RAG)." + note_prefix) if is_en else
+            ("💡 Note : Analyse basée sur le référentiel réglementaire et les guides d'aptitude médicale (RAG)." + note_prefix)
         )
 
         return {
