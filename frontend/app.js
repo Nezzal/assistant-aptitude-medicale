@@ -1183,7 +1183,8 @@ JSON Format:
             formPlaceholderText: "أدخل التوصيات على اليسار ثم اضغط على مراجعة (الذكاء الاصطناعي) للمصادقة القانونية قبل الطباعة.",
             formReformulationTitle: "إعادة الصياغة التلقائية المطبقة",
             btnFormUseRef: "اعتماد هذه الصياغة",
-            formCriteriaTitle: "تحليل معايير جودة الصياغة"
+            formCriteriaTitle: "تحليل معايير جودة الصياغة",
+            translationHint: "💡 ملاحظة: عند تغيير اللغة، يجب عليك النقر على \"مراجعة (الذكاء الاصطناعي)\" لترجمة النص تلقائياً."
         },
         fr: {
             appHeaderTitle: "Assistant d'Aptitude Médicale",
@@ -1274,7 +1275,8 @@ JSON Format:
             formPlaceholderText: "Remplissez la zone \"Préconisations\" à gauche et cliquez sur \"Relecture critique\" pour valider juridiquement le texte avant l'impression.",
             formReformulationTitle: "Reformulation automatique appliquée",
             btnFormUseRef: "Utiliser cette version",
-            formCriteriaTitle: "Analyse des critères de qualité"
+            formCriteriaTitle: "Analyse des critères de qualité",
+            translationHint: "💡 Note : Lors d'un changement de langue, cliquez obligatoirement sur \"Relecture (IA)\" pour traduire automatiquement votre texte."
         },
         en: {
             appHeaderTitle: "Medical Fitness Assistant",
@@ -1365,7 +1367,8 @@ JSON Format:
             formPlaceholderText: "Fill in Recommendations on the left and click AI Review for legal validation before printing.",
             formReformulationTitle: "Applied Automatic Reformulation",
             btnFormUseRef: "Use this version",
-            formCriteriaTitle: "Quality Criteria Analysis"
+            formCriteriaTitle: "Quality Criteria Analysis",
+            translationHint: "💡 Note: When changing language, you must click \"AI Review\" to automatically translate your text."
         }
     };
 
