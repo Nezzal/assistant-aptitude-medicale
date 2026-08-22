@@ -50,6 +50,8 @@ function startPythonBackend() {
 }
 
 function createWindow() {
+    const frontendPath = app.isPackaged ? path.join(process.resourcesPath, 'frontend') : path.join(__dirname, 'frontend');
+
     mainWindow = new BrowserWindow({
         width: 1200,
         height: 850,
@@ -58,7 +60,7 @@ function createWindow() {
             nodeIntegration: false,
             contextIsolation: true
         },
-        icon: path.join(__dirname, 'frontend', 'logo.png')
+        icon: path.join(frontendPath, 'logo.png')
     });
 
     // Masquer le menu par défaut pour faire une app pro
@@ -79,7 +81,7 @@ function createWindow() {
     };
 
     // Charger la page d'attente locale pendant que le backend démarre
-    mainWindow.loadFile(path.join(__dirname, 'frontend', 'loading.html'));
+    mainWindow.loadFile(path.join(frontendPath, 'loading.html'));
     
     // Commencer à vérifier si le serveur est prêt
     checkServerReady();

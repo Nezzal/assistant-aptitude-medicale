@@ -1981,7 +1981,7 @@ JSON Format:
                     model_name: modelName,
                     provider: provider,
                     use_rag: useRag,
-                    language: languageSelectElement ? languageSelectElement.value : "fr"
+                    language: document.getElementById("form-language-select") ? document.getElementById("form-language-select").value : (languageSelectElement ? languageSelectElement.value : "fr")
                 })
             });
 

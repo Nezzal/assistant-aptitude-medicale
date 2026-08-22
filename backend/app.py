@@ -13,7 +13,7 @@ import shutil
 import subprocess
 from typing import Optional, List
 
-from config import PORT, DOCUMENTS_DIR
+from config import PORT, DOCUMENTS_DIR, USER_DATA_DIR
 from rag_engine import RAGEngine
 from llm_connector import LLMConnector
 
@@ -31,7 +31,7 @@ class FicheSchema(BaseModel):
     conclusion: str
     recommendation: str
 
-SAVED_FICHES_PATH = Path(__file__).resolve().parent / "saved_fiches.json"
+SAVED_FICHES_PATH = USER_DATA_DIR / "saved_fiches.json"
 
 def read_saved_fiches() -> list:
     if not SAVED_FICHES_PATH.exists():
@@ -137,8 +137,8 @@ async def install_ollama():
             completed_size = 0
             
             # Dossier temporaire pour stocker le zip
-            scratch_dir = Path(__file__).resolve().parent / "scratch"
-            scratch_dir.mkdir(exist_ok=True)
+            scratch_dir = USER_DATA_DIR / "scratch"
+            scratch_dir.mkdir(parents=True, exist_ok=True)
             zip_path = scratch_dir / "ollama.zip"
 
             with open(zip_path, 'wb') as f:
@@ -305,7 +305,8 @@ async def delete_fiche(fiche_id: str):
         raise HTTPException(status_code=500, detail=str(e))
 
 # 5. Servir l'interface utilisateur
-frontend_dir = Path(__file__).resolve().parent.parent / "frontend"
+from config import BASE_DIR
+frontend_dir = BASE_DIR / "frontend"
 
 if frontend_dir.exists():
     # Servir les fichiers statiques de style/script
@@ -322,7 +323,15 @@ else:
     print("[!] Attention : Dossier frontend/ non trouvé. Le serveur ne servira que l'API.")
 
 if __name__ == "__main__":
+    import sys
     host = os.getenv("HOST", "127.0.0.1")
-    reload_mode = os.getenv("RENDER") is None
-    print(f"[*] Démarrage du serveur sur http://{host}:{PORT}")
-    uvicorn.run("app:app", host=host, port=PORT, reload=reload_mode)
+    # Désactiver le reload automatique si on est compilé avec PyInstaller ou sur Render
+    is_frozen = getattr(sys, 'frozen', False)
+    reload_mode = (os.getenv("RENDER") is None) and not is_frozen
+    
+    print(f"[*] Démarrage du serveur sur http://{host}:{PORT} (Reload: {reload_mode})")
+    if is_frozen:
+        # En mode PyInstaller, il faut passer l'instance app directement et non sous forme de chaîne
+        uvicorn.run(app, host=host, port=PORT)
+    else:
+        uvicorn.run("app:app", host=host, port=PORT, reload=reload_mode)

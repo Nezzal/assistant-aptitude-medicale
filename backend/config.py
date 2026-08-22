@@ -1,12 +1,23 @@
 import os
+import sys
 from pathlib import Path
 from dotenv import load_dotenv
 
-# Trouver le chemin racine du projet (un niveau au-dessus du dossier backend)
-BASE_DIR = Path(__file__).resolve().parent.parent
+# Trouver le chemin racine du projet
+if getattr(sys, 'frozen', False):
+    # Si on est dans le binaire PyInstaller (ex: app.exe)
+    BASE_DIR = Path(sys.executable).resolve().parent.parent
+else:
+    BASE_DIR = Path(__file__).resolve().parent.parent
 
-# Charger le fichier .env depuis la racine du projet
-load_dotenv(BASE_DIR / ".env")
+# Dossier des données utilisateur (pour éviter les erreurs de permission sur Windows)
+USER_DATA_DIR = Path.home() / ".assistant_aptitude"
+USER_DATA_DIR.mkdir(parents=True, exist_ok=True)
+
+# Charger le fichier .env depuis la racine du projet s'il existe
+env_path = BASE_DIR / ".env"
+if env_path.exists():
+    load_dotenv(env_path)
 
 PORT = int(os.getenv("PORT", 8000))
 OLLAMA_BASE_URL = os.getenv("OLLAMA_BASE_URL", "http://localhost:11434").rstrip("/")
@@ -16,10 +27,12 @@ OPENAI_API_KEY = os.getenv("OPENAI_API_KEY", "")
 
 # Dossier des documents de référence (RAG)
 DOCUMENTS_DIR = BASE_DIR / "documents"
-DOCUMENTS_DIR.mkdir(exist_ok=True)
+if not DOCUMENTS_DIR.exists():
+    DOCUMENTS_DIR = USER_DATA_DIR / "documents"
+    DOCUMENTS_DIR.mkdir(exist_ok=True)
 
 # Index vectoriel local (fichier JSON simple pour la persistance)
-VECTOR_DB_PATH = BASE_DIR / "backend" / "vector_db.json"
+VECTOR_DB_PATH = USER_DATA_DIR / "vector_db.json"
 
 # Configuration des Embeddings pour le RAG
 EMBEDDING_PROVIDER = os.getenv("EMBEDDING_PROVIDER", "ollama").lower()  # 'ollama', 'gemini', 'openai'

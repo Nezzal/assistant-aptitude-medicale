@@ -24,6 +24,16 @@
         "from": "backend/dist/app",
         "to": "backend",
         "filter": ["**/*"]
+      },
+      {
+        "from": "frontend",
+        "to": "frontend",
+        "filter": ["**/*"]
+      },
+      {
+        "from": "documents",
+        "to": "documents",
+        "filter": ["**/*"]
       }
     ],
     "mac": {
